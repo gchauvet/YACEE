@@ -15,9 +15,12 @@
  */
 package com.zatarox.chess.skychess.engine;
 
+import chesspresso.move.IllegalMoveException;
+import chesspresso.move.Move;
+import chesspresso.position.Position;
 import com.zatarox.chess.skychess.Notification;
-import com.zatarox.chess.skychess.board.Board;
-import com.zatarox.chess.skychess.board.Move;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * class Perft
@@ -40,9 +43,9 @@ public class Perft {
      * value
      * @return number of nodes
      */
-    public static long perft(Board board, int depth, boolean divide) {
+    public static long perft(Position board, int depth, boolean divide) {
         long nNodes;
-        long zobrist = board.zobristKey;
+        long zobrist = board.getHashCode();
 
         if (divide) {
             nNodes = divide(board, depth);
@@ -50,7 +53,7 @@ public class Perft {
             nNodes = miniMax(board, depth);
         }
 
-        if (zobrist != board.zobristKey) {
+        if (zobrist != board.getHashCode()) {
             Notification.getInstance().getLogger().error("Error in zobrist update!");
         }
 
@@ -67,30 +70,26 @@ public class Perft {
      * @param depth
      * The depth to search to
      */
-    private static long divide(Board board, int depth) {
-        Move[] moves = new Move[128];
-
-        for (int i = 0; i < 128; i++) {
-            moves[i] = new Move();
-        }
-        int totalMoves = board.gen_allLegalMoves(moves, 0);
-        Long[] children = new Long[128];
-
-        for (int i = 0; i < totalMoves; i++) {
-
-            board.makeMove(moves[i].move);
-            children[i] = new Long(miniMax(board, depth - 1));
-            board.unmakeMove(moves[i].move);
+    private static long divide(Position board, int depth) {
+        List<Long> children = new LinkedList<>();
+        final short[] moves = board.getAllMoves();
+        for (final short move : moves) {
+            try {
+                board.doMove(move);
+                children.add(miniMax(board, depth - 1));
+                board.undoMove();
+            } catch (IllegalMoveException ex) {
+            }
         }
 
         long nodes = 0;
-        for (int i = 0; i < totalMoves; i++) {
-            System.out.print(Move.inputNotation(moves[i].move) + " ");
-            System.out.println(((Long) children[i]).longValue());
-            nodes += ((Long) children[i]).longValue();
+        for (int i = 0; i < children.size(); i++) {
+            System.out.print(Move.getString(moves[i]) + " ");
+            System.out.println(children.get(i));
+            nodes += children.get(i);
         }
 
-        System.out.println("Moves: " + totalMoves);
+        System.out.println("Moves: " + children.size());
         return nodes;
     }
 
@@ -104,23 +103,22 @@ public class Perft {
      * The depth currently at
      * @return int The number of moves found
      */
-    private static long miniMax(Board board, int depth) {
+    private static long miniMax(Position board, int depth) {
         long nodes = 0;
 
         if (depth == 0) {
             return 1;
         }
 
-        Move[] moves = new Move[128];
-        for (int i = 0; i < 128; i++) {
-            moves[i] = new Move();
-        }
-        int totalMoves = board.gen_allLegalMoves(moves, 0);
-
-        for (int i = 0; i < totalMoves; i++) {
-            board.makeMove(moves[i].move);
-            nodes += miniMax(board, depth - 1);
-            board.unmakeMove(moves[i].move);
+        for (final short move : board.getAllMoves()) {
+            try {
+                board.doMove(move);
+                nodes += miniMax(board, depth - 1);
+                board.undoMove();
+            } catch (IllegalMoveException ex) {
+            } catch(RuntimeException ex) {
+                System.err.println(board);
+            }
         }
 
         return nodes;

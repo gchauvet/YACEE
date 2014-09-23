@@ -15,29 +15,26 @@
  */
 package com.zatarox.chess.skychess;
 
+import chesspresso.move.Move;
 import com.fluxchess.jcpi.AbstractEngine;
 import com.fluxchess.jcpi.commands.*;
 import com.fluxchess.jcpi.models.GenericColor;
 import com.fluxchess.jcpi.models.GenericMove;
 import com.fluxchess.jcpi.models.IllegalNotationException;
-import com.fluxchess.jcpi.options.CheckboxOption;
-import com.fluxchess.jcpi.options.SpinnerOption;
-import com.zatarox.chess.skychess.board.Board;
-import com.zatarox.chess.skychess.board.Move;
+import com.zatarox.chess.skychess.engine.Board;
+import com.zatarox.chess.skychess.engine.Board.Side;
 import com.zatarox.chess.skychess.engine.Engine;
-import com.zatarox.chess.skychess.engine.Engine.LineEval;
+import com.zatarox.chess.skychess.tables.RepetitionTable;
+import com.zatarox.chess.skychess.tables.TranspositionTable;
 import java.io.IOException;
 
 /**
- * class MainApp
- *
- * This is the main class of MainApp which is used to connect to Winboard etc.
- *
- * @author Jonatan Pettersson (mediocrechess@gmail.com) Date: 2006-12-27
+ * This is the main class of SkyChess which is used to connect througth UCI protocol.
  */
 public class MainApp extends AbstractEngine {
 
-    Board board = new Board(); // Create a board on which we will be
+    private Board game = new Board();
+    private Engine engine = new Engine(game);
 
     public static void main(String args[]) throws IOException {
         MainApp main = new MainApp();
@@ -50,35 +47,18 @@ public class MainApp extends AbstractEngine {
 
     @Override
     public void receive(EngineInitializeRequestCommand command) {
-        Settings.getInstance();
         ProtocolInitializeAnswerCommand request = new ProtocolInitializeAnswerCommand("SkyChess", "Guillaume Chauvet");
-        request.addOption(new SpinnerOption(Settings.OPTION_HASH, Settings.DEFAULT_HASH_SIZE, 1, 512));
-        request.addOption(new SpinnerOption(Settings.OPTION_EVAL_HASH, Settings.DEFAULT_EVAL_HASH_SIZE, 1, 32));
-        request.addOption(new SpinnerOption(Settings.OPTION_PAWN_HASH, Settings.DEFAULT_EVAL_HASH_SIZE, 1, 32));
-        request.addOption(new CheckboxOption(Settings.OPTION_PONDER, Settings.DEFAULT_PONDER));
-        request.addOption(new CheckboxOption(Settings.OPTION_OWN_BOOK, Settings.DEFAULT_USE_OWN_BOOK));
+        //request.addOption(new SpinnerOption(Settings.OPTION_HASH, Settings.DEFAULT_HASH_SIZE, 1, 512));
         getProtocol().send(request);
     }
 
     @Override
     public void receive(EngineSetOptionCommand command) {
-        switch (command.name) {
-            case Settings.OPTION_EVAL_HASH:
-                Settings.getInstance().setEvalTableSize(Integer.valueOf(command.value));
-                break;
-            case Settings.OPTION_HASH:
-                Settings.getInstance().setTranspositionTableSize(Integer.valueOf(command.value));
-                break;
-            case Settings.OPTION_PAWN_HASH:
-                Settings.getInstance().setPawnTableSize(Integer.valueOf(command.value));
-                break;
-            case Settings.OPTION_OWN_BOOK:
-                Settings.getInstance().setUseOwnBook(Boolean.valueOf(command.value));
-                break;
-            case Settings.OPTION_PONDER:
-                Settings.getInstance().setPonder(Boolean.valueOf(command.value));
-                break;
-        }
+        /*switch (command.name) {
+         case Settings.OPTION_HASH:
+         Settings.getInstance().setTranspositionTableSize(Integer.valueOf(command.value));
+         break;
+         }*/
     }
 
     @Override
@@ -92,42 +72,15 @@ public class MainApp extends AbstractEngine {
 
     @Override
     public void receive(EngineNewGameCommand command) {
-        Settings.getInstance().getRepTable().clear(); // Reset the history
-        Settings.getInstance().getTranspositionTable().clear(); // Reset transposition table
-    }
-
-    /**
-     * Takes an inputted move-string and matches it with a legal move generated
-     * from the board
-     *
-     * @param move
-     * The inputted move
-     * @param board
-     * The board on which to find moves
-     * @return int The matched move
-     */
-    private int receiveMove(String move, Board board) {
-        Move[] legalMoves = new Move[256];
-        for (int i = 0; i < 256; i++) {
-            legalMoves[i] = new Move();
-        }
-        int totalMoves = board.gen_allLegalMoves(legalMoves, 0); // All moves
-
-        for (int i = 0; i < totalMoves; i++) {
-            if (Move.inputNotation(legalMoves[i].move).equals(move)) {
-                return legalMoves[i].move;
-            }
-        }
-        return 0;
+        game.reset();
+        RepetitionTable.getInstance().clear();
+        TranspositionTable.getInstance().clear();
     }
 
     @Override
     public void receive(EngineAnalyzeCommand command) {
-        board.inputFen(command.board.toString());
-        for (GenericMove move : command.moves) {
-            board.makeMove(receiveMove(move.toString(), board));
-            Settings.getInstance().getRepTable().recordRep(board.zobristKey);
-        }
+        game.reset(command.board.toString());
+        game.play(command.moves);
     }
 
     @Override
@@ -152,7 +105,7 @@ public class MainApp extends AbstractEngine {
         // board)
         int engineTime;
         int engineInc;
-        if (board.toMove == 1) {
+        if (game.getPlayer() == Side.WHITE) {
             engineTime = wtime;
             engineInc = winc;
         } else {
@@ -160,47 +113,36 @@ public class MainApp extends AbstractEngine {
             engineInc = binc;
         }
 
-        // The engine's turn to move, so find the best line
-        LineEval bestLine = new LineEval();
+        try {
+            engine.setDepth((short) searchDepth);
+            engine.setEngineTime(engineTime);
+            engine.setEngineIncrement(engineInc);
+            engine.setMoveTime(movetime);
+            engine.setPonder(ponder);
 
-        boolean useBook = false;
-        if (Settings.getInstance().isUseOwnBook()) {
-            String bookMove = Settings.getInstance().getBook().getMoveFromBoard(board);
-
-            if (!bookMove.equals("")) {
-                bestLine.line[0] = receiveMove(bookMove, board);
-                useBook = true;
+            Thread thread = new Thread(engine);
+            thread.run();
+            thread.join();
+            game.play(engine.getBestMove()); // Make best move on the board
+            RepetitionTable.getInstance().recordRep(game);
+            GenericMove pMove = null;
+            if (false) { // Ponder ?
+                short ponderMove = Move.NO_MOVE;
+                pMove = new GenericMove(Move.getString(ponderMove));
             }
-        }
-        if (!useBook) {
-            try {
-                bestLine = Engine.search(board, searchDepth, engineTime, engineInc, movetime, ponder);
-            } catch (Exception e) {
-                Notification.getInstance().getLogger().error("Error while searching", e);
-            }
-        }
-        if (bestLine.line[0] != 0) {
-            try {
-                board.makeMove(bestLine.line[0]); // Make best move on the board
-
-                Settings.getInstance().getRepTable().recordRep(board.zobristKey);
-                GenericMove pMove = null;
-                if (Settings.getInstance().getPonder() & bestLine.line[1] != 0) {
-                    pMove = new GenericMove(Move.inputNotation(bestLine.line[1]));
-                }
-                getProtocol().send(new ProtocolBestMoveCommand(new GenericMove(Move.inputNotation(bestLine.line[0])), pMove));
-            } catch (IllegalNotationException ex) {
-            }
+            getProtocol().send(new ProtocolBestMoveCommand(new GenericMove(Move.getString(engine.getBestMove())), pMove));
+        } catch (IllegalNotationException | InterruptedException e) {
+            Notification.getInstance().getLogger().error("Error while searching", e);
         }
     }
 
     @Override
     public void receive(EngineStopCalculatingCommand command) {
-        Engine.setStopSearch(true);
+        engine.stop();
     }
 
     @Override
     public void receive(EnginePonderHitCommand command) {
-        Engine.setPonder(true);
+        engine.setPonder(true);
     }
 }

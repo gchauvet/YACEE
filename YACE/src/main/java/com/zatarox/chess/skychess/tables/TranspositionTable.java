@@ -15,128 +15,125 @@
  */
 package com.zatarox.chess.skychess.tables;
 
-import com.zatarox.chess.skychess.board.Board;
+import chesspresso.move.Move;
+import com.zatarox.chess.skychess.engine.Board;
+import com.zatarox.chess.skychess.tables.TranspositionTable.Entry;
+import java.io.Serializable;
+import org.apache.commons.collections.map.LRUMap;
 
 /**
- * class Transposition table
- *
- * This class holds a hashtable and entrys
- *
- * @author Jonatan Pettersson (mediocrechess@gmail.com)
+ * This class implements a transposition table.
  */
-public class TranspositionTable {
+public class TranspositionTable extends AbstractTable<Board, Entry> {
 
-    public int[] hashtable; // Used for transposition table
-    public int HASHSIZE; // The number of slots either table will have
-    public static final int SLOTS = 4;
+    public enum Flag {
 
-    // Ordinary transposition table
-    public TranspositionTable(int sizeInMb) {
-        this.HASHSIZE = sizeInMb * 1024 * 1024 * 8 / 32 / SLOTS;
-        hashtable = new int[HASHSIZE * SLOTS];
+        EXACT,
+        ALPHA,
+        BETA
     }
 
-    /**
-     * Clears the transposition table
-     */
-    public void clear() {
-        hashtable = new int[HASHSIZE * SLOTS];
-    } // END clear()
+    class Entry implements Serializable {
+
+        public final long hash;
+        public double eval;
+        public Flag flag;
+        public short depth;
+        public short move;
+
+        public Entry(Board board, double eval, Flag flag, short depth, short move) {
+            this.hash = board.hashCode64();
+            this.eval = eval;
+            this.flag = flag;
+            this.depth = depth;
+            this.move = move;
+        }
+
+    }
+
+    private static TranspositionTable INSTANCE = null;
+
+    private TranspositionTable() {
+        super(new LRUMap());
+    }
 
     /**
      * Records the entry if the spot is empty or new position has deeper depth
      * or old position has wrong ancientNodeSwitch
      *
-     * @param zobrist
+     * @param position
      * @param depth
      * @param flag
      * @param eval
      * @param move
-     * @param ancientNodeSwitch
      */
-    public void record(long zobrist, int depth, int flag, int eval, int move) {
-        // Always replace scheme
-
-        int hashkey = (int) (zobrist % HASHSIZE) * SLOTS;
-
-        hashtable[hashkey] = 0 | (eval + 0x1FFFF)
-                | ((1) << 18) | (flag << 20)
-                | (depth << 22);
-        hashtable[hashkey + 1] = move;
-        hashtable[hashkey + 2] = (int) (zobrist >> 32);
-        hashtable[hashkey + 3] = (int) (zobrist & 0xFFFFFFFF);
+    public synchronized void put(Board position, short depth, Flag flag, double eval, short move) {
+        getTable().put(position, new Entry(position, eval, flag, depth, move));
     }
 
     /**
      * Returns true if the entry at the right index is 0 which means we have an
      * entry stored
      *
-     * @param zobrist
+     * @param position
      */
-    public boolean entryExists(long zobrist) {
-        int hashkey = (int) (zobrist % HASHSIZE) * SLOTS;
+    public synchronized boolean has(Board position) {
+        return getTable().containsKey(position) && getTable().get(position).hash == position.hashCode64();
 
-        return hashtable[hashkey + 2] == (int) (zobrist >> 32) && hashtable[hashkey + 3] == (int) (zobrist & 0xFFFFFFFF)
-                && hashtable[hashkey] != 0;
-
-    } // END entryExists
+    } // END has
 
     /**
      * Returns the eval at the right index if the zobrist matches
      *
-     * @param zobrist
+     * @param position
      */
-    public int getEval(long zobrist) {
-        int hashkey = (int) (zobrist % HASHSIZE) * SLOTS;
-
-        if (hashtable[hashkey + 2] == (int) (zobrist >> 32) && hashtable[hashkey + 3] == (int) (zobrist & 0xFFFFFFFF)) {
-            return ((hashtable[hashkey] & 0x3FFFF) - 0x1FFFF);
+    public synchronized double getEval(Board position) {
+        double result = 0;
+        if (getTable().containsKey(position)) {
+            result = ((Entry) getTable().get(position)).eval;
         }
-
-        return 0;
+        return result;
     } // END getEval
 
     /**
      * Returns the flag at the right index if the zobrist matches
      *
-     * @param zobrist
+     * @param position
      */
-    public int getFlag(long zobrist) {
-        int hashkey = (int) (zobrist % HASHSIZE) * SLOTS;
-        if (hashtable[hashkey + 2] == (int) (zobrist >> 32) && hashtable[hashkey + 3] == (int) (zobrist & 0xFFFFFFFF)) {
-            return ((hashtable[hashkey] >> 20) & 3);
+    public synchronized Flag getFlag(Board position) {
+        Flag result = null;
+        if (has(position)) {
+            result = ((Entry) getTable().get(position)).flag;
         }
-
-        return 0;
-    } // END getFlag
+        return result;
+    }
 
     /**
      * Returns the move at the right index if the zobrist matches
      *
-     * @param zobrist
+     * @param position
+     * @return
      */
-    public int getMove(long zobrist) {
-        int hashkey = (int) (zobrist % HASHSIZE) * SLOTS;
-        if (hashtable[hashkey + 2] == (int) (zobrist >> 32) && hashtable[hashkey + 3] == (int) (zobrist & 0xFFFFFFFF)) {
-            return hashtable[hashkey + 1];
+    public synchronized short getMove(Board position) {
+        short result = Move.NO_MOVE;
+        if (getTable().containsKey(position)) {
+            result = ((Entry) getTable().get(position)).move;
         }
-
-        return 0;
-    } // END getMove
+        return result;
+    }
 
     /**
      * Returns the depth at the right index if the zobrist matches
      *
-     * @param zobrist
+     * @param position
      */
-    public int getDepth(long zobrist) {
-        int hashkey = (int) (zobrist % HASHSIZE) * SLOTS;
-        if (hashtable[hashkey + 2] == (int) (zobrist >> 32) && hashtable[hashkey + 3] == (int) (zobrist & 0xFFFFFFFF)) {
-            return (hashtable[hashkey] >> 22);
+    public synchronized short getDepth(Board position) {
+        short result = 0;
+        if (getTable().containsKey(position)) {
+            result = ((Entry) getTable().get(position)).depth;
         }
-
-        return 0;
-    } // END getDepth
+        return result;
+    }
 
     /**
      * Collects the principal variation starting from the position on the board
@@ -148,28 +145,34 @@ public class TranspositionTable {
      * each other infinitely)
      * @return collectString The moves in a string
      */
-    public int[] collectPV(Board board, int current_depth) {
-        int[] arrayPV = new int[128];
-        int move = getMove(board.zobristKey);
+    public synchronized short[] collectPV(Board board, short current_depth) {
+        short[] arrayPV = new short[128];
+        short move = getMove(board);
 
-        // int i = current_depth;
         int i = 20;
         int index = 0;
         while (i > 0) {
-            if (move == 0 || !board.validateHashMove(move)) {
+            if (move == 0) {
                 break;
             }
             arrayPV[index] = move;
-            board.makeMove(move);
-            move = getMove(board.zobristKey);
-            i--;
-            index++;
+            if (board.play(move)) {
+                move = getMove(board);
+                i--;
+                index++;
+            }
         }
-
         // Unmake the moves
         for (i = index - 1; i >= 0; i--) {
-            board.unmakeMove(arrayPV[i]);
+            board.unplay();
         }
         return arrayPV;
-    } // END collectPV()
+    }
+
+    public static TranspositionTable getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new TranspositionTable();
+        }
+        return INSTANCE;
+    }
 }
