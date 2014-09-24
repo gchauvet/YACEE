@@ -27,14 +27,19 @@ import com.zatarox.chess.skychess.engine.Engine;
 import com.zatarox.chess.skychess.tables.RepetitionTable;
 import com.zatarox.chess.skychess.tables.TranspositionTable;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
- * This is the main class of SkyChess which is used to connect througth UCI protocol.
+ * This is the main class of SkyChess which is used to connect to a client chessboard program througth UCI protocol.
  */
 public class MainApp extends AbstractEngine {
 
     private Board game = new Board();
     private Engine engine = new Engine(game);
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     public static void main(String args[]) throws IOException {
         MainApp main = new MainApp();
@@ -43,6 +48,7 @@ public class MainApp extends AbstractEngine {
 
     @Override
     protected void quit() {
+        executor.shutdown();
     }
 
     @Override
@@ -120,18 +126,11 @@ public class MainApp extends AbstractEngine {
             engine.setMoveTime(movetime);
             engine.setPonder(ponder);
 
-            Thread thread = new Thread(engine);
-            thread.run();
-            thread.join();
-            game.play(engine.getBestMove()); // Make best move on the board
+            Future<Short> best = executor.submit(engine);
+            game.play(best.get()); // Make best move on the board
             RepetitionTable.getInstance().recordRep(game);
-            GenericMove pMove = null;
-            if (false) { // Ponder ?
-                short ponderMove = Move.NO_MOVE;
-                pMove = new GenericMove(Move.getString(ponderMove));
-            }
-            getProtocol().send(new ProtocolBestMoveCommand(new GenericMove(Move.getString(engine.getBestMove())), pMove));
-        } catch (IllegalNotationException | InterruptedException e) {
+            getProtocol().send(new ProtocolBestMoveCommand(new GenericMove(Move.getString(best.get())), null));
+        } catch (IllegalNotationException | InterruptedException | ExecutionException e) {
             Notification.getInstance().getLogger().error("Error while searching", e);
         }
     }

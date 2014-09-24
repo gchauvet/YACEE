@@ -18,8 +18,9 @@ package com.zatarox.chess.skychess.engine;
 import chesspresso.move.Move;
 import com.zatarox.chess.skychess.tables.TranspositionTable;
 import com.zatarox.chess.skychess.tables.TranspositionTable.Flag;
+import java.util.concurrent.Callable;
 
-public class Engine implements Runnable {
+public class Engine implements Callable<Short> {
 
     private final Board game;
     private short depth;
@@ -27,7 +28,6 @@ public class Engine implements Runnable {
     private int engineIncrement;
     private int moveTime;
     private boolean ponder;
-    private short bestMove;
     private boolean stop;
 
     public Engine(Board game) {
@@ -74,13 +74,6 @@ public class Engine implements Runnable {
         this.ponder = ponder;
     }
 
-    @Override
-    public void run() {
-        stop = false;
-        bestMove = Move.NO_MOVE;
-        bestMove = search();
-    }
-
     private short search() {
         double best = Double.NEGATIVE_INFINITY;
         short move = Move.NO_MOVE;
@@ -99,10 +92,6 @@ public class Engine implements Runnable {
 
     public void stop() {
         this.stop = true;
-    }
-
-    public short getBestMove() {
-        return bestMove;
     }
 
     private double quiesce(double alpha, double beta) {
@@ -163,5 +152,11 @@ public class Engine implements Runnable {
             TranspositionTable.getInstance().put(game, depth, flag, score, bestMove_);
         }
         return alpha;
+    }
+
+    @Override
+    public Short call() throws Exception {
+        stop = false;
+        return search();
     }
 }
