@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Guillaume.
+ * Copyright 2014 Romain.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,19 @@
  */
 package com.zatarox.chess.openchess.models.moves;
 
-import com.zatarox.chess.openchess.models.materials.ChessBoard;
-import com.zatarox.chess.openchess.models.materials.Square;
+import com.zatarox.chess.openchess.models.materials.*;
 import java.util.List;
 
-public class GeneratorAdapter extends AbstractGenerator {
+final class RookGenerator extends AbstractGenerator {
 
+    @Override
     public List<Move> attacks(ChessBoard board, Square square) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
     public List<Move> fills(ChessBoard board, Square square) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Guillaume CHAUVET.
+ * Copyright 2014 Romain.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,21 @@
  */
 package com.zatarox.chess.openchess.models.moves;
 
-import com.zatarox.chess.openchess.models.materials.*;
-import java.util.List;
+/**
+ * Exception for illegal move on chessboard
+ */
+public final class IllegalMoveException extends Exception {
 
-public abstract class AbstractGenerator implements Generator {
+    public IllegalMoveException(Throwable thrwbl) {
+        super(thrwbl);
+    }
 
-    @Override
-    public final List<Move> alls(ChessBoard board, Square square) {
-        List<Move> result = attacks(board, square);
-        result.addAll(fills(board, square));
-        return result;
+    public IllegalMoveException(String string, Throwable thrwbl) {
+        super(string, thrwbl);
+    }
+
+    public IllegalMoveException(String string) {
+        super(string);
     }
 
 }

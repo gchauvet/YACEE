@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.zatarox.chess.openchess.models.moves;
 
-import com.zatarox.chess.openchess.models.materials.*;
+import com.zatarox.chess.openchess.models.materials.ChessBoard;
+import com.zatarox.chess.openchess.models.materials.Square;
 import java.util.List;
 
-public abstract class AbstractGenerator implements Generator {
+final class KnightGenerator extends AbstractGenerator {
 
     @Override
-    public final List<Move> alls(ChessBoard board, Square square) {
-        List<Move> result = attacks(board, square);
-        result.addAll(fills(board, square));
-        return result;
+    public List<Move> attacks(ChessBoard board, Square square) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public List<Move> fills(ChessBoard board, Square square) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 }

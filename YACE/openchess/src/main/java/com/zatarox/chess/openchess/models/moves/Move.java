@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Guillaume.
+ * Copyright 2014 Guillaume CHAUVET.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,20 @@
 
 package com.zatarox.chess.openchess.models.moves;
 
-public class Move {
+import com.zatarox.chess.openchess.models.materials.ChessBoard;
+
+public interface Move {
+
+    /**
+     * @param board Chess where move will be played
+     * @throws IllegalMoveException
+     */
+    void play(ChessBoard board) throws IllegalMoveException;
+
+    /**
+     * @param board Chessboard unplay move
+     * @throws IllegalMoveException
+     */
+    void unplay(ChessBoard board) throws IllegalMoveException;
     
 }

@@ -16,15 +16,25 @@
 package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
-import java.util.List;
 
-public abstract class AbstractGenerator implements Generator {
+final class EnPassantMove extends BasicMove {
+
+    public EnPassantMove(Square from, Square to) {
+        super(from, to);
+    }
 
     @Override
-    public final List<Move> alls(ChessBoard board, Square square) {
-        List<Move> result = attacks(board, square);
-        result.addAll(fills(board, square));
-        return result;
+    protected void doPlay(ChessBoard board) throws IllegalMoveException {
+        super.doPlay(board);
+        final Square remove = Square.get(getFrom().getRankIndex(), getTo().getFileIndex());
+        board.getSide(board.getTurn().flip()).get(Piece.PAWN).unset(remove);
+    }
+
+    @Override
+    protected void doUnplay(ChessBoard board) throws IllegalMoveException {
+        super.doUnplay(board);
+        final Square remove = Square.get(getFrom().getRankIndex(), getTo().getFileIndex());
+        board.getSide(board.getTurn().flip()).get(Piece.PAWN).set(remove);
     }
 
 }
