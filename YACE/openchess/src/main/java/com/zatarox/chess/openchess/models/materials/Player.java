@@ -22,6 +22,7 @@ import java.util.*;
 public class Player implements Serializable {
     private final Map<Piece, BitBoard> pieces = new EnumMap(Piece.class);
     private final Set<Castle> castles = EnumSet.noneOf(Castle.class);
+    private Square enpassant;
 
     public Player() {
         for (Piece piece : Piece.values()) {
@@ -40,6 +41,18 @@ public class Player implements Serializable {
 
     public Set<Castle> getCastles() {
         return castles;
+    }
+    
+    public boolean isEnpassant() {
+        return enpassant != null;
+    }
+
+    public Square getEnpassant() {
+        return enpassant;
+    }
+
+    public void setEnpassant(Square enpassant) {
+        this.enpassant = enpassant;
     }
     
 }
