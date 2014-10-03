@@ -18,44 +18,17 @@ package com.zatarox.chess.openchess.models.materials;
 import com.zatarox.chess.openchess.models.moves.IllegalMoveException;
 import java.io.Serializable;
 import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Set;
 
 public final class ChessBoard implements Serializable {
 
-    private class Side implements Serializable {
-
-        private final Map<Piece, BitBoard> pieces = new EnumMap(Piece.class);
-        private final Set<Castle> castles = EnumSet.allOf(Castle.class);
-
-        public Side() {
-            for (Piece piece : Piece.values()) {
-                pieces.put(piece, new BitBoard());
-            }
-        }
-
-        public BitBoard get(Piece piece) {
-            return pieces.get(piece);
-        }
-
-        public void setCastles(Set<Castle> castles) {
-            this.castles.clear();
-            this.castles.addAll(castles);
-        }
-
-        public Set<Castle> getCastles() {
-            return castles;
-        }
-
-    }
-
-    private final EnumMap<BoardSide, Side> sides = new EnumMap<>(BoardSide.class);
+    private final EnumMap<BoardSide, Player> sides = new EnumMap<>(BoardSide.class);
     private BoardSide turn;
+    private short halfmove = 0;
+    private short fullmove = 0;
 
     public ChessBoard() {
         for (BoardSide trait : BoardSide.values()) {
-            sides.put(trait, new Side());
+            sides.put(trait, new Player());
         }
     }
 
@@ -65,13 +38,29 @@ public final class ChessBoard implements Serializable {
     public void clear() {
         for (BoardSide trait : BoardSide.values()) {
             for (Piece piece : Piece.values()) {
-                get(trait, piece).clear();
+                getSide(trait).get(piece).clear();
             }
         }
     }
 
-    public BitBoard get(BoardSide trait, Piece piece) {
-        return sides.get(trait).get(piece);
+    public Player getSide(BoardSide side) {
+        return sides.get(side);
+    }
+
+    public short getHalfmove() {
+        return halfmove;
+    }
+
+    public short getFullmove() {
+        return fullmove;
+    }
+
+    public void setFullmove(short fullmove) {
+        this.fullmove = fullmove;
+    }
+
+    public void setHalfmove(short halfmove) {
+        this.halfmove = halfmove;
     }
 
     /**
@@ -81,7 +70,7 @@ public final class ChessBoard implements Serializable {
     public boolean isOccuped(Square square) {
         for (BoardSide t : BoardSide.values()) {
             for (Piece p : Piece.values()) {
-                if (get(t, p).isOccuped(square)) {
+                if (getSide(t).get(p).isOccuped(square)) {
                     return true;
                 }
             }
@@ -96,7 +85,7 @@ public final class ChessBoard implements Serializable {
     public Piece getPiece(Square square) {
         for (BoardSide t : BoardSide.values()) {
             for (Piece p : Piece.values()) {
-                if (get(t, p).isOccuped(square)) {
+                if (getSide(t).get(p).isOccuped(square)) {
                     return p;
                 }
             }
@@ -111,7 +100,7 @@ public final class ChessBoard implements Serializable {
     public BoardSide getSide(Square square) {
         for (BoardSide t : BoardSide.values()) {
             for (Piece p : Piece.values()) {
-                if (get(t, p).isOccuped(square)) {
+                if (getSide(t).get(p).isOccuped(square)) {
                     return t;
                 }
             }
@@ -124,17 +113,17 @@ public final class ChessBoard implements Serializable {
             throw new IllegalMoveException("A piece already defined for square " + square.name());
         }
         if (piece == Piece.KING) {
-            if (get(color, piece).getSize() > 0) {
+            if (getSide(color).get(piece).getSize() > 0) {
                 throw new IllegalArgumentException("King already defined");
             }
         }
-        get(color, piece).set(square);
+        getSide(color).get(piece).set(square);
     }
 
     public void unsetPiece(Square square) {
         for (BoardSide t : BoardSide.values()) {
             for (Piece p : Piece.values()) {
-                get(t, p).unset(square);
+                getSide(t).get(p).unset(square);
             }
         }
     }
@@ -150,14 +139,14 @@ public final class ChessBoard implements Serializable {
     public BitBoard getSnapshot(BoardSide color) {
         BitBoard result = new BitBoard();
         for (Piece piece : Piece.values()) {
-            result.merge(get(color, piece));
+            result.merge(getSide(color).get(piece));
         }
         return result;
     }
 
     public BitBoard getSnapshot(Piece piece) {
-        BitBoard result = new BitBoard(get(BoardSide.WHITE, piece));
-        result.merge(get(BoardSide.BLACK, piece));
+        BitBoard result = new BitBoard(getSide(BoardSide.WHITE).get(piece));
+        result.merge(getSide(BoardSide.BLACK).get(piece));
         return result;
     }
 

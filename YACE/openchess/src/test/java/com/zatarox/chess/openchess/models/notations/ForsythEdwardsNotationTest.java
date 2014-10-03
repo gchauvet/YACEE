@@ -15,14 +15,12 @@
  */
 package com.zatarox.chess.openchess.models.notations;
 
-import com.zatarox.chess.openchess.models.materials.BoardSide;
-import com.zatarox.chess.openchess.models.materials.ChessBoard;
-import com.zatarox.chess.openchess.models.materials.Piece;
-import com.zatarox.chess.openchess.models.materials.Square;
+import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.materials.Square.File;
 import com.zatarox.chess.openchess.models.materials.Square.Rank;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.matchers.JUnitMatchers.hasItems;
 import static org.junit.Assert.*;
 
 public class ForsythEdwardsNotationTest {
@@ -88,6 +86,12 @@ public class ForsythEdwardsNotationTest {
         assertThat(board.getPiece(Square.get(Rank._1, File.E)), is(Piece.KING));
         assertThat(board.getPiece(Square.get(Rank._8, File.E)), is(Piece.KING));
 
+        assertThat(board.getTurn(), is(BoardSide.WHITE));
+        assertThat(board.getHalfmove(), is((short) 0));
+        
+        assertThat(board.getSide(BoardSide.WHITE).getCastles(), hasItems(Castle.values()));
+        assertThat(board.getSide(BoardSide.BLACK).getCastles(), hasItems(Castle.values()));
+        
     }
 
 }

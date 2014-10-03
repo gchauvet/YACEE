@@ -159,11 +159,11 @@ public final class ForsythEdwardsNotation implements Notation {
         }
     }
 
-    private final class IntegerExpression implements Map<String, Integer> {
+    private final class ShortExpression implements Map<String, Short> {
 
         @Override
-        public Integer map(String from) {
-            return Integer.valueOf(from);
+        public Short map(String from) {
+            return Short.valueOf(from);
         }
 
     }
@@ -217,7 +217,7 @@ public final class ForsythEdwardsNotation implements Notation {
             final Parser<RankStones> rank8 = digit17.or(piece).many1().map(new RankExpression()).or(skipRank);
             ranks = rank8.sepBy(Scanners.isChar('/'));
         }
-        // Side
+        // Player
         final Parser<BoardSide> side = Scanners.isChar('w').map(new BoardsideExpression(BoardSide.WHITE)).or(Scanners.isChar('b').map(new BoardsideExpression(BoardSide.BLACK)));
         // Casteling
         final Parser<List<Pair<BoardSide, Castle>>> castling;
@@ -242,19 +242,19 @@ public final class ForsythEdwardsNotation implements Notation {
         final Parser<Void> epsquare = fileLetter.next(epRank);
         final Parser<Void> enpassant = Scanners.isChar('-').or(epsquare);
         // Halfmove Clock
-        final Parser<Integer> halfmove = Scanners.INTEGER.map(new IntegerExpression());
+        final Parser<Short> halfmove = Scanners.INTEGER.map(new ShortExpression());
         // Fullmove counter
-        final Parser<Integer> fullmove = Scanners.INTEGER.map(new IntegerExpression());
+        final Parser<Short> fullmove = Scanners.INTEGER.map(new ShortExpression());
 
         // Parser
         this.parser = Parsers.list(
-            Arrays.asList(
-                ranks.followedBy(Scanners.WHITESPACES),
-                side.followedBy(Scanners.WHITESPACES),
-                castling.followedBy(Scanners.WHITESPACES),
-                enpassant.followedBy(Scanners.WHITESPACES),
-                halfmove.followedBy(Scanners.WHITESPACES),
-                fullmove)
+                Arrays.asList(
+                        ranks.followedBy(Scanners.WHITESPACES),
+                        side.followedBy(Scanners.WHITESPACES),
+                        castling.followedBy(Scanners.WHITESPACES),
+                        enpassant.followedBy(Scanners.WHITESPACES),
+                        halfmove.followedBy(Scanners.WHITESPACES),
+                        fullmove)
         );
         this.notation = notation;
     }
@@ -268,12 +268,19 @@ public final class ForsythEdwardsNotation implements Notation {
             short f = 0;
             for (Stone p : rank) {
                 if (p.hasPiece()) {
-                    result.get(p.getSide(), p.getPiece()).set(Square.get(Rank.values()[r], File.values()[f]));
+                    result.getSide(p.getSide()).get(p.getPiece()).set(Square.get(Rank.values()[r], File.values()[f]));
                 }
                 f += p.getSkip();
             }
             r--;
         }
+        result.setTurn((BoardSide) parsed.get(1));
+
+        for (Pair<BoardSide, Castle> castle : (List<Pair<BoardSide, Castle>>) parsed.get(2)) {
+            result.getSide(castle.a).getCastles().add(castle.b);
+        }
+        result.setHalfmove((short) parsed.get(4));
+        result.setFullmove((short) parsed.get(5));
         return result;
     }
 

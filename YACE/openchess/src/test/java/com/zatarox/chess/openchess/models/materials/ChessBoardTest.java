@@ -29,7 +29,7 @@ public final class ChessBoardTest {
         int count = 0;
         for (BoardSide trait : BoardSide.values()) {
             for (Piece piece : Piece.values()) {
-                count += instance.get(trait, piece).getSize();
+                count += instance.getSide(trait).get(piece).getSize();
             }
         }
         assertThat(count, is(0));
@@ -42,7 +42,7 @@ public final class ChessBoardTest {
         Square square = Square.C7;
         ChessBoard instance = new ChessBoard();
         instance.setPiece(color, piece, square);
-        assertTrue(instance.get(color, piece).isOccuped(square));
+        assertTrue(instance.getSide(color).get(piece).isOccuped(square));
         assertThat(instance.getSide(square), is(BoardSide.WHITE));
     }
 
