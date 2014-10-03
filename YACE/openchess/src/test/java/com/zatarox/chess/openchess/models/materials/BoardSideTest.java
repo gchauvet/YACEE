@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Guillaume.
+ * Copyright 2014 Guillaume CHAUVET.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.zatarox.chess.openchess.models.materials;
 
-public enum Trait {
-    
-    WHITE,
-    BLACK
-    
+import org.junit.Test;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
+public class BoardSideTest {
+
+    @Test
+    public void testValues() {
+        assertThat(BoardSide.values().length, is(2));
+    }
+
+    @Test
+    public void testFlip() {
+        assertThat(BoardSide.WHITE.flip(), is(BoardSide.BLACK));
+        assertThat(BoardSide.BLACK.flip(), is(BoardSide.WHITE));
+    }
+
 }

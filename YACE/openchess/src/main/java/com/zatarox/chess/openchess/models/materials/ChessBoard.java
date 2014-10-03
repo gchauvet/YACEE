@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Guillaume.
+ * Copyright 2014 Guillaume CHAUVET.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,62 @@
  */
 package com.zatarox.chess.openchess.models.materials;
 
+import com.zatarox.chess.openchess.models.moves.IllegalMoveException;
 import java.io.Serializable;
 import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
 
-public class ChessBoard implements Serializable {
+public final class ChessBoard implements Serializable {
 
     private class Side implements Serializable {
 
-        private EnumMap<Piece, BitBoard> pieces = new EnumMap(Piece.class);
+        private final Map<Piece, BitBoard> pieces = new EnumMap(Piece.class);
+        private final Set<Castle> castles = EnumSet.allOf(Castle.class);
+
+        public Side() {
+            for (Piece piece : Piece.values()) {
+                pieces.put(piece, new BitBoard());
+            }
+        }
 
         public BitBoard get(Piece piece) {
             return pieces.get(piece);
         }
+
+        public void setCastles(Set<Castle> castles) {
+            this.castles.clear();
+            this.castles.addAll(castles);
+        }
+
+        public Set<Castle> getCastles() {
+            return castles;
+        }
+
     }
 
-    private EnumMap<Trait, Side> sides = new EnumMap<Trait, Side>(Trait.class);
-    private Trait turn;
+    private final EnumMap<BoardSide, Side> sides = new EnumMap<>(BoardSide.class);
+    private BoardSide turn;
 
-    public BitBoard get(Trait trait, Piece piece) {
+    public ChessBoard() {
+        for (BoardSide trait : BoardSide.values()) {
+            sides.put(trait, new Side());
+        }
+    }
+
+    /**
+     * Clear chessboard
+     */
+    public void clear() {
+        for (BoardSide trait : BoardSide.values()) {
+            for (Piece piece : Piece.values()) {
+                get(trait, piece).clear();
+            }
+        }
+    }
+
+    public BitBoard get(BoardSide trait, Piece piece) {
         return sides.get(trait).get(piece);
     }
 
@@ -41,7 +79,7 @@ public class ChessBoard implements Serializable {
      * @return True if occuped.
      */
     public boolean isOccuped(Square square) {
-        for (Trait t : Trait.values()) {
+        for (BoardSide t : BoardSide.values()) {
             for (Piece p : Piece.values()) {
                 if (get(t, p).isOccuped(square)) {
                     return true;
@@ -56,7 +94,7 @@ public class ChessBoard implements Serializable {
      * @return The piece type on the square
      */
     public Piece getPiece(Square square) {
-        for (Trait t : Trait.values()) {
+        for (BoardSide t : BoardSide.values()) {
             for (Piece p : Piece.values()) {
                 if (get(t, p).isOccuped(square)) {
                     return p;
@@ -70,8 +108,8 @@ public class ChessBoard implements Serializable {
      * @param square Square to check
      * @return The color on the piece
      */
-    public Trait getSide(Square square) {
-        for (Trait t : Trait.values()) {
+    public BoardSide getSide(Square square) {
+        for (BoardSide t : BoardSide.values()) {
             for (Piece p : Piece.values()) {
                 if (get(t, p).isOccuped(square)) {
                     return t;
@@ -81,9 +119,9 @@ public class ChessBoard implements Serializable {
         return null;
     }
 
-    public void setPiece(Trait color, Piece piece, Square square) {
+    public void setPiece(BoardSide color, Piece piece, Square square) throws IllegalMoveException {
         if (isOccuped(square)) {
-            throw new IllegalArgumentException("A piece already defined for square " + square.name());
+            throw new IllegalMoveException("A piece already defined for square " + square.name());
         }
         if (piece == Piece.KING) {
             if (get(color, piece).getSize() > 0) {
@@ -92,21 +130,35 @@ public class ChessBoard implements Serializable {
         }
         get(color, piece).set(square);
     }
-    
+
     public void unsetPiece(Square square) {
-        for (Trait t : Trait.values()) {
+        for (BoardSide t : BoardSide.values()) {
             for (Piece p : Piece.values()) {
                 get(t, p).unset(square);
             }
         }
     }
 
-    public Trait getTurn() {
+    public BoardSide getTurn() {
         return turn;
     }
 
-    public void setTurn(Trait turn) {
+    public void setTurn(BoardSide turn) {
         this.turn = turn;
+    }
+
+    public BitBoard getSnapshot(BoardSide color) {
+        BitBoard result = new BitBoard();
+        for (Piece piece : Piece.values()) {
+            result.merge(get(color, piece));
+        }
+        return result;
+    }
+
+    public BitBoard getSnapshot(Piece piece) {
+        BitBoard result = new BitBoard(get(BoardSide.WHITE, piece));
+        result.merge(get(BoardSide.BLACK, piece));
+        return result;
     }
 
 }

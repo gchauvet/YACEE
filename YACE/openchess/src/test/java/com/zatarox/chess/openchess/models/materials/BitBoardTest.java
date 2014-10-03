@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Guillaume.
+ * Copyright 2014 Guillaume CHAUVET.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,5 +67,18 @@ public final class BitBoardTest {
         assertThat(b1, not(equalTo(b2)));
         assertThat(b1, equalTo(b3));
         assertThat(b2, not(equalTo(b3)));
+    }
+    
+    @Test
+    public void testMerge() {
+        final BitBoard b1 = new BitBoard();
+        b1.set(Square.A1);
+        final BitBoard b2 = new BitBoard();
+        b1.set(Square.H1);
+        final BitBoard a = new BitBoard(b1);
+        a.merge(b2);
+        assertThat(a.getSize(), is(2));
+        assertTrue(a.isOccuped(Square.A1));
+        assertTrue(a.isOccuped(Square.H1));
     }
 }

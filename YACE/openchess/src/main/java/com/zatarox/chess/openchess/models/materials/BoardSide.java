@@ -15,13 +15,13 @@
  */
 package com.zatarox.chess.openchess.models.materials;
 
-public enum Piece {
+public enum BoardSide {
 
-    PAWN,
-    KNIGHT,
-    BISHOP,
-    ROOK,
-    QUEEN,
-    KING
+    WHITE,
+    BLACK;
+
+    public BoardSide flip() {
+        return this == WHITE ? BLACK : WHITE;
+    }
 
 }

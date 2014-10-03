@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Guillaume.
+ * Copyright 2014 Guillaume CHAUVET.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,6 +85,13 @@ public final class BitBoard implements Serializable, Iterable<Square> {
             result = board == cast.board;
         }
         return result;
+    }
+    
+    /**
+     * @param board board to append
+     */
+    public void merge(BitBoard board) {
+        this.board |= board.board;
     }
 
     @Override
