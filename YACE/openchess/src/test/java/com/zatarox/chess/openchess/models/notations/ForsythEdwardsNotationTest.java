@@ -34,13 +34,13 @@ public class ForsythEdwardsNotationTest {
         // Whites
         for (File file : File.values()) {
             for (Rank rank : new Rank[]{Rank._1, Rank._2}) {
-                assertThat(board.getSide(Square.get(rank, file)), is(BoardSide.WHITE));
+                assertThat(board.getStone(Square.get(rank, file)).getSide(), is(BoardSide.WHITE));
             }
         }
         // Blacks
         for (File file : File.values()) {
             for (Rank rank : new Rank[]{Rank._8, Rank._7}) {
-                assertThat(board.getSide(Square.get(rank, file)), is(BoardSide.BLACK));
+                assertThat(board.getStone(Square.get(rank, file)).getSide(), is(BoardSide.BLACK));
             }
         }
 
@@ -54,37 +54,37 @@ public class ForsythEdwardsNotationTest {
         // Check pieces
         // Pawns
         for (File file : File.values()) {
-            assertThat(board.getPiece(Square.get(Rank._2, file)), is(Piece.PAWN));
-            assertThat(board.getPiece(Square.get(Rank._7, file)), is(Piece.PAWN));
+            assertThat(board.getStone(Square.get(Rank._2, file)).getPiece(), is(Piece.PAWN));
+            assertThat(board.getStone(Square.get(Rank._7, file)).getPiece(), is(Piece.PAWN));
         }
         
         // Rooks
-        assertThat(board.getPiece(Square.get(Rank._1, File.A)), is(Piece.ROOK));
-        assertThat(board.getPiece(Square.get(Rank._8, File.A)), is(Piece.ROOK));
-        assertThat(board.getPiece(Square.get(Rank._1, File.A.mirror())), is(Piece.ROOK));
-        assertThat(board.getPiece(Square.get(Rank._8, File.A.mirror())), is(Piece.ROOK));
+        assertThat(board.getStone(Square.get(Rank._1, File.A)).getPiece(), is(Piece.ROOK));
+        assertThat(board.getStone(Square.get(Rank._8, File.A)).getPiece(), is(Piece.ROOK));
+        assertThat(board.getStone(Square.get(Rank._1, File.A.mirror())).getPiece(), is(Piece.ROOK));
+        assertThat(board.getStone(Square.get(Rank._8, File.A.mirror())).getPiece(), is(Piece.ROOK));
         
         // Knights
-        assertThat(board.getPiece(Square.get(Rank._1, File.B)), is(Piece.KNIGHT));
-        assertThat(board.getPiece(Square.get(Rank._8, File.B)), is(Piece.KNIGHT));
-        assertThat(board.getPiece(Square.get(Rank._1, File.B.mirror())), is(Piece.KNIGHT));
-        assertThat(board.getPiece(Square.get(Rank._8, File.B.mirror())), is(Piece.KNIGHT));
+        assertThat(board.getStone(Square.get(Rank._1, File.B)).getPiece(), is(Piece.KNIGHT));
+        assertThat(board.getStone(Square.get(Rank._8, File.B)).getPiece(), is(Piece.KNIGHT));
+        assertThat(board.getStone(Square.get(Rank._1, File.B.mirror())).getPiece(), is(Piece.KNIGHT));
+        assertThat(board.getStone(Square.get(Rank._8, File.B.mirror())).getPiece(), is(Piece.KNIGHT));
         
         // Bishops
-        assertThat(board.getPiece(Square.get(Rank._1, File.C)), is(Piece.BISHOP));
-        assertThat(board.getPiece(Square.get(Rank._8, File.C)), is(Piece.BISHOP));
-        assertThat(board.getPiece(Square.get(Rank._1, File.C.mirror())), is(Piece.BISHOP));
-        assertThat(board.getPiece(Square.get(Rank._8, File.C.mirror())), is(Piece.BISHOP));
+        assertThat(board.getStone(Square.get(Rank._1, File.C)).getPiece(), is(Piece.BISHOP));
+        assertThat(board.getStone(Square.get(Rank._8, File.C)).getPiece(), is(Piece.BISHOP));
+        assertThat(board.getStone(Square.get(Rank._1, File.C.mirror())).getPiece(), is(Piece.BISHOP));
+        assertThat(board.getStone(Square.get(Rank._8, File.C.mirror())).getPiece(), is(Piece.BISHOP));
         
         
         // Asymetric pieces
         // Queen
-        assertThat(board.getPiece(Square.get(Rank._1, File.D)), is(Piece.QUEEN));
-        assertThat(board.getPiece(Square.get(Rank._8, File.D)), is(Piece.QUEEN));
+        assertThat(board.getStone(Square.get(Rank._1, File.D)).getPiece(), is(Piece.QUEEN));
+        assertThat(board.getStone(Square.get(Rank._8, File.D)).getPiece(), is(Piece.QUEEN));
         
         // King
-        assertThat(board.getPiece(Square.get(Rank._1, File.E)), is(Piece.KING));
-        assertThat(board.getPiece(Square.get(Rank._8, File.E)), is(Piece.KING));
+        assertThat(board.getStone(Square.get(Rank._1, File.E)).getPiece(), is(Piece.KING));
+        assertThat(board.getStone(Square.get(Rank._8, File.E)).getPiece(), is(Piece.KING));
 
         assertThat(board.getTurn(), is(BoardSide.WHITE));
         assertThat(board.getHalfmove(), is((short) 0));

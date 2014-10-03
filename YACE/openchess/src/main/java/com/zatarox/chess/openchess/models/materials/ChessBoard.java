@@ -80,44 +80,29 @@ public final class ChessBoard implements Serializable {
 
     /**
      * @param square Square to check
-     * @return The piece type on the square
+     * @return The stone (piece+color) type on the square
      */
-    public Piece getPiece(Square square) {
+    public Stone getStone(Square square) {
         for (BoardSide t : BoardSide.values()) {
             for (Piece p : Piece.values()) {
                 if (getSide(t).get(p).isOccuped(square)) {
-                    return p;
+                    return new Stone(p, t);
                 }
             }
         }
         return null;
     }
 
-    /**
-     * @param square Square to check
-     * @return The color on the piece
-     */
-    public BoardSide getSide(Square square) {
-        for (BoardSide t : BoardSide.values()) {
-            for (Piece p : Piece.values()) {
-                if (getSide(t).get(p).isOccuped(square)) {
-                    return t;
-                }
-            }
-        }
-        return null;
-    }
-
-    public void setPiece(BoardSide color, Piece piece, Square square) throws IllegalMoveException {
+    public void setPiece(Square square, Stone stone) throws IllegalMoveException {
         if (isOccuped(square)) {
             throw new IllegalMoveException("A piece already defined for square " + square.name());
         }
-        if (piece == Piece.KING) {
-            if (getSide(color).get(piece).getSize() > 0) {
+        if (stone.getPiece() == Piece.KING) {
+            if (getSide(stone.getSide()).get(stone.getPiece()).getSize() > 0) {
                 throw new IllegalArgumentException("King already defined");
             }
         }
-        getSide(color).get(piece).set(square);
+        getSide(stone.getSide()).get(stone.getPiece()).set(square);
     }
 
     public void unsetPiece(Square square) {

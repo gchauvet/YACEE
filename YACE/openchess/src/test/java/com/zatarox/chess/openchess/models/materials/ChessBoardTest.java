@@ -41,16 +41,16 @@ public final class ChessBoardTest {
         Piece piece = Piece.ROOK;
         Square square = Square.C7;
         ChessBoard instance = new ChessBoard();
-        instance.setPiece(color, piece, square);
+        instance.setPiece(square, new Stone(piece, color));
         assertTrue(instance.getSide(color).get(piece).isOccuped(square));
-        assertThat(instance.getSide(square), is(BoardSide.WHITE));
+        assertThat(instance.getStone(square).getSide(), is(BoardSide.WHITE));
     }
 
     @Test
     public void testUnsetPiece() throws IllegalMoveException {
         Square square = Square.H2;
         ChessBoard instance = new ChessBoard();
-        instance.setPiece(BoardSide.WHITE, Piece.PAWN, square);
+        instance.setPiece(square, new Stone(Piece.PAWN, BoardSide.WHITE));
         assertTrue(instance.isOccuped(square));
         instance.unsetPiece(square);
         assertFalse(instance.isOccuped(square));
@@ -70,11 +70,11 @@ public final class ChessBoardTest {
     @Test
     public void testSnapshot() throws IllegalMoveException {
         final ChessBoard instance = new ChessBoard();
-        instance.setPiece(BoardSide.WHITE, Piece.PAWN, Square.A1);
-        instance.setPiece(BoardSide.WHITE, Piece.KNIGHT, Square.A2);
-        instance.setPiece(BoardSide.BLACK, Piece.ROOK, Square.H4);
-        instance.setPiece(BoardSide.BLACK, Piece.QUEEN, Square.C7);
-        instance.setPiece(BoardSide.BLACK, Piece.BISHOP, Square.G1);
+        instance.setPiece(Square.A1, new Stone(Piece.PAWN, BoardSide.WHITE));
+        instance.setPiece(Square.A2, new Stone(Piece.KNIGHT, BoardSide.WHITE));
+        instance.setPiece(Square.H4, new Stone(Piece.ROOK, BoardSide.BLACK));
+        instance.setPiece(Square.C7, new Stone(Piece.QUEEN, BoardSide.BLACK));
+        instance.setPiece(Square.G1, new Stone(Piece.BISHOP, BoardSide.BLACK));
         final BitBoard white = instance.getSnapshot(BoardSide.WHITE);
         assertThat(white.getSize(), is(2));
         assertTrue(white.isOccuped(Square.A1));
@@ -89,10 +89,10 @@ public final class ChessBoardTest {
     @Test
     public void testSnapshotForPieces() throws IllegalMoveException {
         final ChessBoard instance = new ChessBoard();
-        instance.setPiece(BoardSide.WHITE, Piece.PAWN, Square.A1);
-        instance.setPiece(BoardSide.BLACK, Piece.PAWN, Square.H4);
-        instance.setPiece(BoardSide.WHITE, Piece.ROOK, Square.A2);
-        instance.setPiece(BoardSide.BLACK, Piece.ROOK, Square.C7);
+        instance.setPiece(Square.A1, new Stone(Piece.PAWN, BoardSide.WHITE));
+        instance.setPiece(Square.H4, new Stone(Piece.PAWN, BoardSide.BLACK));
+        instance.setPiece(Square.A2, new Stone(Piece.ROOK, BoardSide.WHITE));
+        instance.setPiece(Square.C7, new Stone(Piece.ROOK, BoardSide.BLACK));
         final BitBoard pawns = instance.getSnapshot(Piece.PAWN);
         assertThat(pawns.getSize(), is(2));
         assertTrue(pawns.isOccuped(Square.A1));
