@@ -157,20 +157,32 @@ public final class ForsythEdwardsNotation implements Notation {
 
     }
 
-    static final class FileExpression implements Map<Token, File> {
+    static final class FileExpression implements Map<Void, File> {
+
+        private final File result;
+
+        public FileExpression(File result) {
+            this.result = result;
+        }
 
         @Override
-        public File map(Token from) {
-            return File.values()['a' - ((String) from.value()).charAt(0)];
+        public File map(Void from) {
+            return result;
         }
 
     }
 
-    static final class EPRankExpression implements Map<Token, Rank> {
+    static final class EPRankExpression implements Map<Void, Rank> {
 
+        private final Rank result;
+
+        public EPRankExpression(Rank result) {
+            this.result = result;
+        }
+        
         @Override
-        public Rank map(Token from) {
-            return Rank.values()[Short.valueOf((String) from.value())];
+        public Rank map(Void from) {
+            return result;
         }
 
     }
@@ -234,9 +246,20 @@ public final class ForsythEdwardsNotation implements Notation {
         return Scanners.isChar('w').map(new BoardsideExpression(BoardSide.WHITE)).or(Scanners.isChar('b').map(new BoardsideExpression(BoardSide.BLACK)));
     }
 
+    static Parser<File> createFileParser() {
+        final List<Parser<File>> parsers = new LinkedList<>();
+        for (File f : File.values()) {
+            parsers.add(Scanners.isChar(Character.toLowerCase(f.name().charAt(0))).map(new FileExpression(f)));
+        }
+        return Parsers.or(parsers);
+    }
+
     static Parser<Square> createEnPassantParser() {
-        final Parser<File> fileLetter = Scanners.among("abcdefgh").token().map(new FileExpression());
-        final Parser<Rank> epRank = Scanners.among("36").token().map(new EPRankExpression());
+        final Parser<File> fileLetter = createFileParser();
+        final Parser<Rank> epRank = Parsers.or(
+            Scanners.isChar('3').map(new EPRankExpression(Rank._3)),
+            Scanners.isChar('6').map(new EPRankExpression(Rank._6))
+        );
         final Parser<Square> epsquare = Parsers.tuple(fileLetter, epRank).map(new Map<Pair<File, Rank>, Square>() {
             @Override
             public Square map(Pair<File, Rank> from) {

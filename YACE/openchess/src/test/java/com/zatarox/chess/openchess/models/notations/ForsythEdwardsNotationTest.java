@@ -60,6 +60,13 @@ public class ForsythEdwardsNotationTest {
             }
         }
     }
+    
+    @Test
+    public void enPassant() {
+        assertNull(ForsythEdwardsNotation.createEnPassantParser().parse("-"));
+        assertThat(ForsythEdwardsNotation.createFileParser().parse("c"), is(File.C));
+        assertThat(ForsythEdwardsNotation.createEnPassantParser().parse("d3"), is(Square.D3));
+    }
 
     @Test
     public void createDefaultBoard() {
