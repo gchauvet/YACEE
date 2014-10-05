@@ -18,7 +18,7 @@ package com.zatarox.chess.openchess.models.moves;
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
-import java.util.List;
+import java.util.Queue;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -39,56 +39,56 @@ public class QueenGeneratorTest {
     @Test
     public void attacksQueenD4() {
         final ChessBoard board = notation.create();
-        final List<Move> attacks = instance.attacks(board, Square.D4);
+        final Queue<Move> attacks = instance.attacks(board, Square.D4);
         assertThat(attacks.size(), is(2));
         assertThat(attacks, hasItems(
-            (Move) new CaptureMove(Square.D4, Square.G7, Piece.ROOK),
-            new CaptureMove(Square.D4, Square.D5, Piece.PAWN)
+                (Move) new CaptureMove(Square.D4, Square.G7, Piece.ROOK),
+                new CaptureMove(Square.D4, Square.D5, Piece.PAWN)
         ));
     }
 
     @Test
     public void attacksQueenG8() {
         final ChessBoard board = notation.create();
-        final List<Move> attacks = instance.attacks(board, Square.G8);
+        final Queue<Move> attacks = instance.attacks(board, Square.G8);
         assertTrue(attacks.isEmpty());
     }
 
     @Test
     public void fillQueenD4() {
         final ChessBoard board = notation.create();
-        final List<Move> fills = instance.fills(board, Square.D4);
+        final Queue<Move> fills = instance.fills(board, Square.D4);
         assertThat(fills.size(), is(15));
         assertThat(fills, hasItems(
-            (Move) new BasicMove(Square.D4, Square.C4),
-            new BasicMove(Square.D4, Square.E4),
-            new BasicMove(Square.D4, Square.F4),
-            new BasicMove(Square.D4, Square.G4),
-            new BasicMove(Square.D4, Square.D3),
-            new BasicMove(Square.D4, Square.D2),
-            new BasicMove(Square.D4, Square.D1), 
-            new BasicMove(Square.D4, Square.C3),
-            new BasicMove(Square.D4, Square.B2),
-            new BasicMove(Square.D4, Square.A1),
-            new BasicMove(Square.D4, Square.E3),
-            new BasicMove(Square.D4, Square.F2),
-            new BasicMove(Square.D4, Square.G1),
-            new BasicMove(Square.D4, Square.E5),
-            new BasicMove(Square.D4, Square.F6)
+                (Move) new BasicMove(Square.D4, Square.C4),
+                new BasicMove(Square.D4, Square.E4),
+                new BasicMove(Square.D4, Square.F4),
+                new BasicMove(Square.D4, Square.G4),
+                new BasicMove(Square.D4, Square.D3),
+                new BasicMove(Square.D4, Square.D2),
+                new BasicMove(Square.D4, Square.D1),
+                new BasicMove(Square.D4, Square.C3),
+                new BasicMove(Square.D4, Square.B2),
+                new BasicMove(Square.D4, Square.A1),
+                new BasicMove(Square.D4, Square.E3),
+                new BasicMove(Square.D4, Square.F2),
+                new BasicMove(Square.D4, Square.G1),
+                new BasicMove(Square.D4, Square.E5),
+                new BasicMove(Square.D4, Square.F6)
         ));
     }
 
     @Test
     public void fillQueenG8() {
         final ChessBoard board = notation.create();
-        final List<Move> fills = instance.fills(board, Square.G8);
+        final Queue<Move> fills = instance.fills(board, Square.G8);
         assertThat(fills.size(), is(5));
         assertThat(fills, hasItems(
-            (Move) new BasicMove(Square.G8, Square.H8),
-            new BasicMove(Square.G8, Square.C8),
-            new BasicMove(Square.G8, Square.D8),
-            new BasicMove(Square.G8, Square.E8),
-            new BasicMove(Square.G8, Square.F8)
+                (Move) new BasicMove(Square.G8, Square.H8),
+                new BasicMove(Square.G8, Square.C8),
+                new BasicMove(Square.G8, Square.D8),
+                new BasicMove(Square.G8, Square.E8),
+                new BasicMove(Square.G8, Square.F8)
         ));
     }
 

@@ -18,7 +18,7 @@ package com.zatarox.chess.openchess.models.moves;
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
-import java.util.List;
+import java.util.Queue;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -39,23 +39,23 @@ public class RookGeneratorTest {
     @Test
     public void attacks() {
         final ChessBoard board = notation.create();
-        final List<Move> attacks = instance.attacks(board, Square.D3);
+        final Queue<Move> attacks = instance.attacks(board, Square.D3);
         assertThat(attacks.size(), is(1));
         assertThat(attacks, hasItems((Move) new CaptureMove(Square.D3, Square.D7, Piece.PAWN)));
     }
-    
+
     @Test
     public void fills() {
         final ChessBoard board = notation.create();
-        final List<Move> fills = instance.fills(board, Square.D3);
+        final Queue<Move> fills = instance.fills(board, Square.D3);
         assertThat(fills.size(), is(6));
         assertThat(fills, hasItems(
-            (Move) new BasicMove(Square.D3, Square.D1),
-            new BasicMove(Square.D3, Square.D2),
-            new BasicMove(Square.D3, Square.E3),
-            new BasicMove(Square.D3, Square.D4),
-            new BasicMove(Square.D3, Square.D5),
-            new BasicMove(Square.D3, Square.D6)
+                (Move) new BasicMove(Square.D3, Square.D1),
+                new BasicMove(Square.D3, Square.D2),
+                new BasicMove(Square.D3, Square.E3),
+                new BasicMove(Square.D3, Square.D4),
+                new BasicMove(Square.D3, Square.D5),
+                new BasicMove(Square.D3, Square.D6)
         ));
     }
 

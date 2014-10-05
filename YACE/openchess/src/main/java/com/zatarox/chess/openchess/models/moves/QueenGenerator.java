@@ -16,32 +16,32 @@
 package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 final class QueenGenerator implements Generator {
 
     @Override
-    public List<Move> attacks(ChessBoard board, Square square) {
+    public Queue<Move> attacks(ChessBoard board, Square square) {
         final Generator rooker = GeneratorsFactorySingleton.getInstance().build(Piece.ROOK);
         final Generator bishoper = GeneratorsFactorySingleton.getInstance().build(Piece.BISHOP);
-        final List<Move> result = rooker.attacks(board, square);
+        final Queue<Move> result = rooker.attacks(board, square);
         result.addAll(bishoper.attacks(board, square));
         return result;
     }
 
     @Override
-    public List<Move> fills(ChessBoard board, Square square) {
+    public Queue<Move> fills(ChessBoard board, Square square) {
         final Generator rooker = GeneratorsFactorySingleton.getInstance().build(Piece.ROOK);
         final Generator bishoper = GeneratorsFactorySingleton.getInstance().build(Piece.BISHOP);
-        final List<Move> result = rooker.fills(board, square);
+        final Queue<Move> result = rooker.fills(board, square);
         result.addAll(bishoper.fills(board, square));
         return result;
     }
 
     @Override
-    public final List<Move> attacks(ChessBoard board) {
-        final List<Move> result = new LinkedList<>();
+    public final Queue<Move> attacks(ChessBoard board) {
+        final Queue<Move> result = new PriorityQueue<>();
         for (Square index : board.getSide(board.getTurn()).get(Piece.QUEEN)) {
             result.addAll(attacks(board, index));
         }
@@ -49,8 +49,8 @@ final class QueenGenerator implements Generator {
     }
 
     @Override
-    public final List<Move> alls(ChessBoard board) {
-        final List<Move> result = new LinkedList<>();
+    public final Queue<Move> alls(ChessBoard board) {
+        final Queue<Move> result = new PriorityQueue<>();
         for (Square index : board.getSide(board.getTurn()).get(Piece.QUEEN)) {
             result.addAll(fills(board, index));
         }
@@ -58,8 +58,8 @@ final class QueenGenerator implements Generator {
     }
 
     @Override
-    public List<Move> alls(ChessBoard board, Square square) {
-        List<Move> result = attacks(board, square);
+    public Queue<Move> alls(ChessBoard board, Square square) {
+        Queue<Move> result = attacks(board, square);
         result.addAll(fills(board, square));
         return result;
     }

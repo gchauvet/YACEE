@@ -17,7 +17,7 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.ChessBoard;
 import com.zatarox.chess.openchess.models.materials.Square;
-import java.util.List;
+import java.util.Queue;
 
 public interface Generator {
 
@@ -25,33 +25,33 @@ public interface Generator {
      * @param board
      * @return All attacking moves for current player
      */
-    List<Move> attacks(ChessBoard board);
+    Queue<Move> attacks(ChessBoard board);
     
     /**
      * @param board Current chessboard
      * @param square Start position
      * @return All attacking moves from this position
      */
-    List<Move> attacks(ChessBoard board, Square square);
+    Queue<Move> attacks(ChessBoard board, Square square);
     
     /**
      * @param board Current chessboard
      * @param square Start position
      * @return All non attacking moves from this position
      */
-    List<Move> fills(ChessBoard board, Square square);
+    Queue<Move> fills(ChessBoard board, Square square);
     
     /**
      * @param board Current chessboard
      * @return All moves for current player
      */
-    List<Move> alls(ChessBoard board);
+    Queue<Move> alls(ChessBoard board);
     
     /**
      * @param board Current chessboard
      * @param square Start position
      * @return All capturing/basic moves.
      */
-    List<Move> alls(ChessBoard board, Square square);
+    Queue<Move> alls(ChessBoard board, Square square);
 
 }

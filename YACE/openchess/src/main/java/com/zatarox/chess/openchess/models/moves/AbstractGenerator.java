@@ -17,7 +17,8 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public abstract class AbstractGenerator implements Generator {
 
@@ -119,11 +120,11 @@ public abstract class AbstractGenerator implements Generator {
     }
 
     @Override
-    public final List<Move> attacks(ChessBoard board, Square square) {
+    public final Queue<Move> attacks(ChessBoard board, Square square) {
         final BitBoard all = board.getSnapshot(BoardSide.WHITE);
         all.merge(board.getSnapshot(BoardSide.BLACK));
         final BitBoard attacks = new BitBoard(coverage(square, all) & board.getSnapshot(board.getStone(square).getSide().flip()).unwrap());
-        final List<Move> result = new LinkedList<>();
+        final Queue<Move> result = new PriorityQueue<>();
         for (Square to : attacks) {
             result.add(MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to).getPiece()));
         }
@@ -131,11 +132,11 @@ public abstract class AbstractGenerator implements Generator {
     }
 
     @Override
-    public final List<Move> fills(ChessBoard board, Square square) {
+    public final Queue<Move> fills(ChessBoard board, Square square) {
         final BitBoard all = board.getSnapshot(BoardSide.WHITE);
         all.merge(board.getSnapshot(BoardSide.BLACK));
         final BitBoard attacks = new BitBoard(coverage(square, all) & ~all.unwrap());
-        final List<Move> result = new LinkedList<>();
+        final Queue<Move> result = new PriorityQueue<>();
         for (Square to : attacks) {
             result.add(MovesFactorySingleton.getInstance().createNormal(square, to));
         }
@@ -143,8 +144,8 @@ public abstract class AbstractGenerator implements Generator {
     }
 
     @Override
-    public final List<Move> attacks(ChessBoard board) {
-        final List<Move> result = new LinkedList<>();
+    public final Queue<Move> attacks(ChessBoard board) {
+        final Queue<Move> result = new LinkedList<>();
         for (Square index : board.getSide(board.getTurn()).get(type)) {
             result.addAll(attacks(board, index));
         }
@@ -152,8 +153,8 @@ public abstract class AbstractGenerator implements Generator {
     }
 
     @Override
-    public final List<Move> alls(ChessBoard board) {
-        final List<Move> result = new LinkedList<>();
+    public final Queue<Move> alls(ChessBoard board) {
+        final Queue<Move> result = new PriorityQueue<>();
         for (Square index : board.getSide(board.getTurn()).get(type)) {
             result.addAll(fills(board, index));
         }
@@ -161,8 +162,8 @@ public abstract class AbstractGenerator implements Generator {
     }
 
     @Override
-    public final List<Move> alls(ChessBoard board, Square square) {
-        List<Move> result = attacks(board, square);
+    public final Queue<Move> alls(ChessBoard board, Square square) {
+        Queue<Move> result = attacks(board, square);
         result.addAll(fills(board, square));
         return result;
     }

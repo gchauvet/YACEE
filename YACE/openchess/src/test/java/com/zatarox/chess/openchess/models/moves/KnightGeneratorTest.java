@@ -18,7 +18,7 @@ package com.zatarox.chess.openchess.models.moves;
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
-import java.util.List;
+import java.util.Queue;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -39,22 +39,22 @@ public class KnightGeneratorTest {
     @Test
     public void attacks() {
         final ChessBoard board = notation.create();
-        final List<Move> attacks = instance.attacks(board, Square.G6);
+        final Queue<Move> attacks = instance.attacks(board, Square.G6);
         assertThat(attacks.size(), is(1));
         assertThat(attacks, hasItems((Move) new CaptureMove(Square.G6, Square.F4, Piece.PAWN)));
     }
-    
+
     @Test
     public void fills() {
         final ChessBoard board = notation.create();
-        final List<Move> fills = instance.fills(board, Square.G6);
+        final Queue<Move> fills = instance.fills(board, Square.G6);
         assertThat(fills.size(), is(5));
         assertThat(fills, hasItems(
-            (Move) new BasicMove(Square.G6, Square.F8),
-            new BasicMove(Square.G6, Square.H8),
-            new BasicMove(Square.G6, Square.E7),
-            new BasicMove(Square.G6, Square.E5),
-            new BasicMove(Square.G6, Square.H4)
+                (Move) new BasicMove(Square.G6, Square.F8),
+                new BasicMove(Square.G6, Square.H8),
+                new BasicMove(Square.G6, Square.E7),
+                new BasicMove(Square.G6, Square.E5),
+                new BasicMove(Square.G6, Square.H4)
         ));
     }
 

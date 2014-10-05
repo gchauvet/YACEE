@@ -18,7 +18,7 @@ package com.zatarox.chess.openchess.models.moves;
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
-import java.util.List;
+import java.util.Queue;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -39,7 +39,7 @@ public class BishopGeneratorTest {
     @Test
     public void attacksBishopG2() {
         final ChessBoard board = notation.create();
-        final List<Move> attacks = instance.attacks(board, Square.G2);
+        final Queue<Move> attacks = instance.attacks(board, Square.G2);
         assertThat(attacks.size(), is(1));
         assertThat(attacks, hasItems((Move) new CaptureMove(Square.G2, Square.E4, Piece.KNIGHT)));
     }
@@ -47,14 +47,14 @@ public class BishopGeneratorTest {
     @Test
     public void attacksBishopF2() {
         final ChessBoard board = notation.create();
-        final List<Move> attacks = instance.attacks(board, Square.F2);
+        final Queue<Move> attacks = instance.attacks(board, Square.F2);
         assertTrue(attacks.isEmpty());
     }
 
     @Test
     public void fillBishopF2() {
         final ChessBoard board = notation.create();
-        final List<Move> fills = instance.fills(board, Square.F2);
+        final Queue<Move> fills = instance.fills(board, Square.F2);
         assertThat(fills.size(), is(7));
         assertThat(fills, hasItems(
                 (Move) new BasicMove(Square.F2, Square.G1),
@@ -70,7 +70,7 @@ public class BishopGeneratorTest {
     @Test
     public void fillBishopG2() {
         final ChessBoard board = notation.create();
-        final List<Move> fills = instance.fills(board, Square.G2);
+        final Queue<Move> fills = instance.fills(board, Square.G2);
         assertThat(fills.size(), is(4));
         assertThat(fills, hasItems(
                 (Move) new BasicMove(Square.G2, Square.H1),

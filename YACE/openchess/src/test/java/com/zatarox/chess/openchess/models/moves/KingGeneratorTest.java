@@ -18,7 +18,7 @@ package com.zatarox.chess.openchess.models.moves;
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
-import java.util.List;
+import java.util.Queue;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -39,7 +39,7 @@ public class KingGeneratorTest {
     @Test
     public void attacks() {
         final ChessBoard board = notation.create();
-        final List<Move> attacks = instance.attacks(board, Square.H8);
+        final Queue<Move> attacks = instance.attacks(board, Square.H8);
         assertThat(attacks.size(), is(1));
         assertThat(attacks, hasItems((Move) new CaptureMove(Square.H8, Square.H7, Piece.BISHOP)));
     }
@@ -47,7 +47,7 @@ public class KingGeneratorTest {
     @Test
     public void fills() {
         final ChessBoard board = notation.create();
-        final List<Move> fills = instance.fills(board, Square.H8);
+        final Queue<Move> fills = instance.fills(board, Square.H8);
         assertThat(fills.size(), is(2));
         assertThat(fills, hasItems(
             (Move) new BasicMove(Square.H8, Square.G8),
