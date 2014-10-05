@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Romain.
+ * Copyright 2014 Guillaume CHAUVET.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ final class RookGenerator extends AbstractGenerator {
     }
 
     @Override
-    protected long coverage(Square index, BitBoard all) {
+    protected long coverage(Square index, BitBoard all, BoardSide turn) {
         int i = magicTransform(all.unwrap() & rookMask[index.ordinal()], rookMagicNumber[index.ordinal()], rookShiftBits[index.ordinal()]);
         return rookMagic[index.ordinal()][i];
     }

@@ -83,7 +83,7 @@ final class BishopGenerator extends AbstractGenerator {
     }
 
     @Override
-    protected long coverage(Square index, BitBoard all) {
+    protected long coverage(Square index, BitBoard all, BoardSide turn) {
         int i = magicTransform(all.unwrap() & bishopMask[index.ordinal()], bishopMagicNumber[index.ordinal()], bishopShiftBits[index.ordinal()]);
         return bishopMagic[index.ordinal()][i];
     }

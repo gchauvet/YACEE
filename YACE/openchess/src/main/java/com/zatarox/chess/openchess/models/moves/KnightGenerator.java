@@ -44,7 +44,7 @@ final class KnightGenerator extends AbstractGenerator {
     }
 
     @Override
-    protected long coverage(Square index, BitBoard all) {
+    protected long coverage(Square index, BitBoard all, BoardSide turn) {
         return knight[index.ordinal()];
     }
 

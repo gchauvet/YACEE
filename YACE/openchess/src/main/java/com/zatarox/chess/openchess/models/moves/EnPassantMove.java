@@ -19,6 +19,8 @@ import com.zatarox.chess.openchess.models.materials.*;
 
 final class EnPassantMove extends BasicMove {
 
+    private Square enpassant = null;
+            
     public EnPassantMove(Square from, Square to) {
         super(from, to);
     }
@@ -26,8 +28,9 @@ final class EnPassantMove extends BasicMove {
     @Override
     protected void doPlay(ChessBoard board) throws IllegalMoveException {
         super.doPlay(board);
-        final Square remove = Square.from(getTo().getFileIndex(), getFrom().getRankIndex());
-        board.getSide(board.getTurn().flip()).get(Piece.PAWN).unset(remove);
+        enpassant = board.getSide(board.getTurn()).getEnpassant();
+        board.getSide(board.getTurn().flip()).get(Piece.PAWN).unset(enpassant);
+        board.getSide(board.getTurn()).setEnpassant(null);
     }
 
     @Override
@@ -35,6 +38,8 @@ final class EnPassantMove extends BasicMove {
         super.doUnplay(board);
         final Square remove = Square.from(getTo().getFileIndex(), getFrom().getRankIndex());
         board.getSide(board.getTurn().flip()).get(Piece.PAWN).set(remove);
+        board.getSide(board.getTurn().flip()).setEnpassant(enpassant);
+        enpassant = null;
     }
 
 }

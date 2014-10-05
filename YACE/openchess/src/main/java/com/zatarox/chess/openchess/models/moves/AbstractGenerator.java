@@ -120,10 +120,11 @@ public abstract class AbstractGenerator implements Generator {
     }
 
     @Override
-    public final Queue<Move> attacks(ChessBoard board, Square square) {
+    public Queue<Move> attacks(ChessBoard board, Square square) {
+        // Can't be final, for pawns generation...
         final BitBoard all = board.getSnapshot(BoardSide.WHITE);
         all.merge(board.getSnapshot(BoardSide.BLACK));
-        final BitBoard attacks = new BitBoard(coverage(square, all) & board.getSnapshot(board.getStone(square).getSide().flip()).unwrap());
+        final BitBoard attacks = new BitBoard(coverage(square, all, board.getTurn()) & board.getSnapshot(board.getStone(square).getSide().flip()).unwrap());
         final Queue<Move> result = new PriorityQueue<>();
         for (Square to : attacks) {
             result.add(MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to).getPiece()));
@@ -132,10 +133,11 @@ public abstract class AbstractGenerator implements Generator {
     }
 
     @Override
-    public final Queue<Move> fills(ChessBoard board, Square square) {
+    public Queue<Move> fills(ChessBoard board, Square square) {
+        // Can't be final, for pawns generation...
         final BitBoard all = board.getSnapshot(BoardSide.WHITE);
         all.merge(board.getSnapshot(BoardSide.BLACK));
-        final BitBoard attacks = new BitBoard(coverage(square, all) & ~all.unwrap());
+        final BitBoard attacks = new BitBoard(coverage(square, all, board.getTurn()) & ~all.unwrap());
         final Queue<Move> result = new PriorityQueue<>();
         for (Square to : attacks) {
             result.add(MovesFactorySingleton.getInstance().createNormal(square, to));
@@ -173,9 +175,10 @@ public abstract class AbstractGenerator implements Generator {
      *
      * @param index
      * @param all
+     * @param color
      * @return
      */
-    abstract protected long coverage(Square index, BitBoard all);
+    abstract protected long coverage(Square index, BitBoard all, BoardSide color);
     
     /**
      * Call it from final constructor for magic bitboard initialization.
