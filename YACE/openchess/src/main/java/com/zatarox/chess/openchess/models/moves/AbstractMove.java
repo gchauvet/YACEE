@@ -15,6 +15,7 @@
  */
 package com.zatarox.chess.openchess.models.moves;
 
+import com.google.common.base.Objects;
 import com.zatarox.chess.openchess.models.materials.ChessBoard;
 import com.zatarox.chess.openchess.models.materials.Square;
 import java.io.Serializable;
@@ -26,6 +27,8 @@ abstract class AbstractMove implements Serializable, Comparable<AbstractMove>, M
     private float score;
 
     protected AbstractMove(Square from, Square to) {
+        assert from != null;
+        assert to != null;
         this.from = from;
         this.to = to;
     }
@@ -58,7 +61,7 @@ abstract class AbstractMove implements Serializable, Comparable<AbstractMove>, M
         doPlay(board);
         played = true;
     }
-    
+
     protected abstract void doPlay(ChessBoard board) throws IllegalMoveException;
 
     /**
@@ -73,13 +76,33 @@ abstract class AbstractMove implements Serializable, Comparable<AbstractMove>, M
         doUnplay(board);
         played = false;
     }
-    
+
     protected abstract void doUnplay(ChessBoard board) throws IllegalMoveException;
 
     @Override
     public final int compareTo(AbstractMove t) {
         // Hight score in first
         return -((Float) score).compareTo(t.score);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean result = false;
+        if (o instanceof AbstractMove) {
+            AbstractMove other = (AbstractMove) o;
+            result = other.from == from && other.to == to;
+        }
+        return result;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(from, to);
+    }
+
+    @Override
+    public String toString() {
+        return from + "-" + to;
     }
 
 }

@@ -26,14 +26,14 @@ final class EnPassantMove extends BasicMove {
     @Override
     protected void doPlay(ChessBoard board) throws IllegalMoveException {
         super.doPlay(board);
-        final Square remove = Square.get(getFrom().getRankIndex(), getTo().getFileIndex());
+        final Square remove = Square.from(getTo().getFileIndex(), getFrom().getRankIndex());
         board.getSide(board.getTurn().flip()).get(Piece.PAWN).unset(remove);
     }
 
     @Override
     protected void doUnplay(ChessBoard board) throws IllegalMoveException {
         super.doUnplay(board);
-        final Square remove = Square.get(getFrom().getRankIndex(), getTo().getFileIndex());
+        final Square remove = Square.from(getTo().getFileIndex(), getFrom().getRankIndex());
         board.getSide(board.getTurn().flip()).get(Piece.PAWN).set(remove);
     }
 

@@ -15,20 +15,18 @@
  */
 package com.zatarox.chess.openchess.models.moves;
 
-import com.zatarox.chess.openchess.models.materials.ChessBoard;
-import com.zatarox.chess.openchess.models.materials.Square;
-import java.util.List;
+import com.zatarox.chess.openchess.models.materials.*;
 
-final class BishopGenerator extends AbstractGenerator {
+final class BishopGenerator extends AbstractSlideGenerator {
 
-    @Override
-    public List<Move> attacks(ChessBoard board, Square square) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public BishopGenerator() {
+        super(Piece.BISHOP);
     }
 
     @Override
-    public List<Move> fills(ChessBoard board, Square square) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected long attacks(Square index, BitBoard all) {
+        int i = magicTransform(all.unwrap() & bishopMask[index.ordinal()], bishopMagicNumber[index.ordinal()], bishopShiftBits[index.ordinal()]);
+        return bishopMagic[index.ordinal()][i];
     }
 
 }

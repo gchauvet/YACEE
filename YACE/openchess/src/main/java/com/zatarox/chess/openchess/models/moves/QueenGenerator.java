@@ -20,6 +20,10 @@ import java.util.List;
 
 final class QueenGenerator extends AbstractGenerator {
 
+    public QueenGenerator() {
+        super(Piece.QUEEN);
+    }
+
     @Override
     public List<Move> attacks(ChessBoard board, Square square) {
         final Generator rooker = GeneratorsFactorySingleton.getInstance().build(Piece.ROOK);

@@ -22,23 +22,35 @@ import java.util.List;
 public interface Generator {
 
     /**
+     * @param board
+     * @return All attacking moves for current player
+     */
+    List<Move> attacks(ChessBoard board);
+    
+    /**
      * @param board Current chessboard
      * @param square Start position
-     * @return All attacking move from this position
+     * @return All attacking moves from this position
      */
     List<Move> attacks(ChessBoard board, Square square);
     
     /**
      * @param board Current chessboard
      * @param square Start position
-     * @return All non attacking moves
+     * @return All non attacking moves from this position
      */
     List<Move> fills(ChessBoard board, Square square);
     
     /**
      * @param board Current chessboard
+     * @return All moves for current player
+     */
+    List<Move> alls(ChessBoard board);
+    
+    /**
+     * @param board Current chessboard
      * @param square Start position
-     * @return All capturing/moving moves.
+     * @return All capturing/basic moves.
      */
     List<Move> alls(ChessBoard board, Square square);
 

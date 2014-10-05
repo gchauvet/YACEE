@@ -15,12 +15,15 @@
  */
 package com.zatarox.chess.openchess.models.moves;
 
-import com.zatarox.chess.openchess.models.materials.ChessBoard;
-import com.zatarox.chess.openchess.models.materials.Square;
+import com.zatarox.chess.openchess.models.materials.*;
 import java.util.List;
 
 final class PawnGenerator extends AbstractGenerator {
 
+    public PawnGenerator() {
+        super(Piece.PAWN);
+    }
+    
     @Override
     public List<Move> attacks(ChessBoard board, Square square) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

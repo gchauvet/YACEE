@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.zatarox.chess.openchess.models.moves;
 
-import com.zatarox.chess.openchess.models.materials.ChessBoard;
-import com.zatarox.chess.openchess.models.materials.Square;
+import com.zatarox.chess.openchess.models.materials.*;
 import java.util.List;
 
 final class KingGenerator extends AbstractGenerator {
+
+    public KingGenerator() {
+        super(Piece.KING);
+    }
 
     @Override
     public List<Move> attacks(ChessBoard board, Square square) {
@@ -31,5 +33,5 @@ final class KingGenerator extends AbstractGenerator {
     public List<Move> fills(ChessBoard board, Square square) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

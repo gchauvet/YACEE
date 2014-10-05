@@ -16,18 +16,17 @@
 package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
-import java.util.List;
 
-final class RookGenerator extends AbstractGenerator {
+final class RookGenerator extends AbstractSlideGenerator {
 
-    @Override
-    public List<Move> attacks(ChessBoard board, Square square) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public RookGenerator() {
+        super(Piece.ROOK);
     }
 
     @Override
-    public List<Move> fills(ChessBoard board, Square square) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected long attacks(Square index, BitBoard all) {
+        int i = magicTransform(all.unwrap() & rookMask[index.ordinal()], rookMagicNumber[index.ordinal()], rookShiftBits[index.ordinal()]);
+        return rookMagic[index.ordinal()][i];
     }
 
 }

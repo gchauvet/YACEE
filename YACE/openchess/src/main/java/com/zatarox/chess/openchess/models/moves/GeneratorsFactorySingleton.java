@@ -22,7 +22,7 @@ import java.util.Map;
 public class GeneratorsFactorySingleton {
 
     private static final GeneratorsFactorySingleton INSTANCE = new GeneratorsFactorySingleton();
-    
+
     private final Map<Piece, Generator> generators = new EnumMap<>(Piece.class);
 
     private GeneratorsFactorySingleton() {

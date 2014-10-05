@@ -23,6 +23,7 @@ final class CaptureMove extends BasicMove {
 
     public CaptureMove(Square from, Square to, Piece captured) {
         super(from, to);
+        assert captured != null;
         this.captured = captured;
     }
 
@@ -36,5 +37,21 @@ final class CaptureMove extends BasicMove {
     protected void doUnplay(ChessBoard board) throws IllegalMoveException {
         super.doUnplay(board);
         board.getSide(board.getTurn().flip()).get(captured).set(getTo());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean result = super.equals((BasicMove) o);
+        if(o instanceof CaptureMove) {
+            CaptureMove other = (CaptureMove) o;
+            result &= other.captured == captured;
+        }
+        return result;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7 * 67 + captured.hashCode();
+        return hash ^ super.hashCode();
     }
 }

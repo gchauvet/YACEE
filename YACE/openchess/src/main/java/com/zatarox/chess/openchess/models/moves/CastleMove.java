@@ -23,7 +23,7 @@ public final class CastleMove extends AbstractMove {
     private final Castle castle;
     
     private static Square castleFrom(BoardSide trait) {
-        return trait ==  BoardSide.WHITE ? Square.E1 : Square.E8;
+        return trait == BoardSide.WHITE ? Square.E1 : Square.E8;
     }
     
     private static Square castleTo(BoardSide trait, Castle castle) {
