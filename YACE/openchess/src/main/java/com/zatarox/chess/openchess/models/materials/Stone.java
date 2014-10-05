@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.zatarox.chess.openchess.models.materials;
 
+import com.google.common.base.Objects;
 import java.io.Serializable;
 
-public class Stone implements  Serializable{
+public class Stone implements Serializable {
 
     private final Piece piece;
     private final BoardSide side;
 
+    public Stone() {
+        this.piece = null;
+        this.side = null;
+    }
+
     public Stone(Piece piece, BoardSide side) {
+        assert piece != null;
+        assert side != null;
         this.piece = piece;
         this.side = side;
     }
@@ -35,5 +42,30 @@ public class Stone implements  Serializable{
     public BoardSide getSide() {
         return side;
     }
-    
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(piece, side);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean result = false;
+        if (obj instanceof Stone) {
+            final Stone other = (Stone) obj;
+            result = other.piece == piece && other.side == side;
+        }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        String result;
+        if (piece != null & side != null) {
+            result = piece.name() + " " + side.name();
+        } else {
+            result = super.toString();
+        }
+        return result;
+    }
 }

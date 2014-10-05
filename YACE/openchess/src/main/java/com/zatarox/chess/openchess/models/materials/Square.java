@@ -32,29 +32,39 @@ public enum Square {
     A7, B7, C7, D7, E7, F7, G7, H7,
     //
     A8, B8, C8, D8, E8, F8, G8, H8;
-    
+
     public enum File {
+
         A, B, C, D, E, F, G, H;
-        
+
         public File mirror() {
             return values()[values().length - ordinal() - 1];
         }
     }
-    
+
     public enum Rank {
-        _1, _2, _3, _4, _5, _6, _7, _8
+
+        _1, _2, _3, _4, _5, _6, _7, _8;
+
+        public static Rank[] reverse() {
+            Rank[] result = new Rank[Rank.values().length];
+            for (int i = 0; i < values().length; i++) {
+                result[i] = values()[values().length - i - 1];
+            }
+            return result;
+        }
     }
 
     public File getFileIndex() {
-        return File.values()[this.ordinal() / 8];
+        return File.values()[this.ordinal() % 8];
     }
 
     public Rank getRankIndex() {
-        return Rank.values()[this.ordinal() % 8];
+        return Rank.values()[this.ordinal() / 8];
     }
 
-    public static Square get(Rank rank, File file) {
-        return values()[rank.ordinal() + 8 * file.ordinal()];
+    public static Square from(File file, Rank rank) {
+        return values()[8 * rank.ordinal() + file.ordinal()];
     }
 
 }

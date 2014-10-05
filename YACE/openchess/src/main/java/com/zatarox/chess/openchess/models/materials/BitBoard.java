@@ -29,6 +29,10 @@ public final class BitBoard implements Serializable, Iterable<Square> {
 
     public BitBoard() {
     }
+    
+    public BitBoard(long board) {
+        this.board = board;
+    }
 
     public BitBoard(BitBoard bitboard) {
         this.board = bitboard.board;
@@ -92,6 +96,17 @@ public final class BitBoard implements Serializable, Iterable<Square> {
      */
     public void merge(BitBoard board) {
         this.board |= board.board;
+    }
+    
+    /**
+     * @return Internat bitboard representation
+     */
+    public long unwrap() {
+        return board;
+    }
+    
+    public boolean isEmpty() {
+        return board == 0;
     }
 
     @Override

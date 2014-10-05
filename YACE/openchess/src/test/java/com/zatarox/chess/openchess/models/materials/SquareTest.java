@@ -26,25 +26,25 @@ public class SquareTest {
     @Test
     public void testGetFileIndex() {
         assertThat(Square.A1.getFileIndex(), is(File.A));
-        assertThat(Square.A8.getFileIndex(), is(File.H));
-        assertThat(Square.H1.getFileIndex(), is(File.A));
+        assertThat(Square.A8.getFileIndex(), is(File.A));
+        assertThat(Square.H1.getFileIndex(), is(File.H));
         assertThat(Square.H8.getFileIndex(), is(File.H));
     }
 
     @Test
     public void testGetRankIndex() {
         assertThat(Square.A1.getRankIndex(), is(Rank._1));
-        assertThat(Square.A8.getRankIndex(), is(Rank._1));
-        assertThat(Square.H1.getRankIndex(), is(Rank._8));
+        assertThat(Square.A8.getRankIndex(), is(Rank._8));
+        assertThat(Square.H1.getRankIndex(), is(Rank._1));
         assertThat(Square.H8.getRankIndex(), is(Rank._8));
     }
 
     @Test
-    public void testGet() {
-        assertThat(Square.A1, is(Square.get(Rank._1, File.A)));
-        assertThat(Square.A8, is(Square.get(Rank._1, File.H)));
-        assertThat(Square.H1, is(Square.get(Rank._8, File.A)));
-        assertThat(Square.H8, is(Square.get(Rank._8, File.H)));
+    public void testFrom() {
+        assertThat(Square.A1, is(Square.from(File.A, Rank._1)));
+        assertThat(Square.A8, is(Square.from(File.A, Rank._8)));
+        assertThat(Square.H1, is(Square.from(File.H, Rank._1)));
+        assertThat(Square.H8, is(Square.from(File.H, Rank._8)));
     }
     
     @Test

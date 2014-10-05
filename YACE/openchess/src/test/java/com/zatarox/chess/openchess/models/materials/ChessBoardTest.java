@@ -25,7 +25,6 @@ public final class ChessBoardTest {
     @Test
     public void testClear() {
         ChessBoard instance = new ChessBoard();
-        instance.clear();
         int count = 0;
         for (BoardSide trait : BoardSide.values()) {
             for (Piece piece : Piece.values()) {

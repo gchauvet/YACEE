@@ -15,6 +15,8 @@
  */
 package com.zatarox.chess.openchess.models.materials;
 
+import com.zatarox.chess.openchess.models.materials.Square.File;
+import com.zatarox.chess.openchess.models.materials.Square.Rank;
 import com.zatarox.chess.openchess.models.moves.IllegalMoveException;
 import java.io.Serializable;
 import java.util.EnumMap;
@@ -41,6 +43,19 @@ public final class ChessBoard implements Serializable {
                 getSide(trait).get(piece).clear();
             }
         }
+    }
+
+    /**
+     * @return Check if chessboard is empty
+     */
+    public boolean isEmpty() {
+        boolean result = true;
+        for (BoardSide trait : BoardSide.values()) {
+            for (Piece piece : Piece.values()) {
+                result &= getSide(trait).get(piece).isEmpty();
+            }
+        }
+        return result;
     }
 
     public Player getSide(BoardSide side) {
@@ -133,6 +148,25 @@ public final class ChessBoard implements Serializable {
         BitBoard result = new BitBoard(getSide(BoardSide.WHITE).get(piece));
         result.merge(getSide(BoardSide.BLACK).get(piece));
         return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (Rank r : Rank.reverse()) {
+            for (File f : File.values()) {
+                Stone stone = getStone(Square.from(f, r));
+                if (stone != null) {
+                    final char p = stone.getPiece() == Piece.KNIGHT ? 'N' : stone.getPiece().name().charAt(0);
+                    result.append(stone.getSide() == BoardSide.WHITE ? Character.toUpperCase(p) : Character.toLowerCase(p));
+                } else {
+                    result.append('.');
+                }
+                result.append(' ');
+            }
+            result.append("\n");
+        }
+        return result.toString();
     }
 
 }

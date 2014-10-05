@@ -22,15 +22,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import org.codehaus.jparsec.*;
 import org.codehaus.jparsec.functors.Map;
 import org.codehaus.jparsec.functors.Pair;
-import org.codehaus.jparsec.util.Lists;
 
 public final class ForsythEdwardsNotation implements Notation {
 
-    private final class StoneExpression extends Stone {
+    static final class StoneExpression extends Stone {
 
         private final short skip;
 
@@ -40,8 +40,11 @@ public final class ForsythEdwardsNotation implements Notation {
         }
 
         public StoneExpression(short skip) {
-            super(null, null);
             this.skip = skip;
+        }
+
+        public StoneExpression() {
+            this((short) 1);
         }
 
         public boolean hasPiece() {
@@ -54,12 +57,22 @@ public final class ForsythEdwardsNotation implements Notation {
 
     }
 
-    private final class TokenStoneExpression implements Map<Void, StoneExpression> {
+    static final class TokenStoneExpression implements Map<Void, StoneExpression> {
 
         private final StoneExpression result;
 
         public TokenStoneExpression(BoardSide side, Piece piece) {
             this.result = new StoneExpression(piece, side);
+        }
+
+        public TokenStoneExpression(char skip) {
+            this((short) (skip - '0'));
+            assert Character.isDigit(skip);
+        }
+
+        public TokenStoneExpression(short skip) {
+            assert skip >= 0 && skip <= 7;
+            this.result = new StoneExpression(skip);
         }
 
         @Override
@@ -68,37 +81,34 @@ public final class ForsythEdwardsNotation implements Notation {
         }
     }
 
-    private final class TokenSkipStoneExpression implements Map<Token, StoneExpression> {
+    static final class RankStoneExpression implements Iterable<File> {
+
+        private final EnumMap<File, StoneExpression> pieces = new EnumMap<>(File.class);
+
+        public void put(StoneExpression piece, File index) {
+            pieces.put(index, piece);
+        }
+
+        public StoneExpression get(File index) {
+            return pieces.get(index);
+        }
 
         @Override
-        public StoneExpression map(Token from) {
-            return new StoneExpression(Short.valueOf((String) from.value()));
+        public Iterator<File> iterator() {
+            return pieces.keySet().iterator();
         }
     }
 
-    private final class RankStones implements Iterable<StoneExpression> {
-
-        private List<StoneExpression> pieces = Lists.arrayList(8);
-
-        public void put(StoneExpression piece, short index) {
-            pieces.add(index, piece);
-        }
+    static final class RankExpression implements Map<List<StoneExpression>, RankStoneExpression> {
 
         @Override
-        public Iterator<StoneExpression> iterator() {
-            return pieces.iterator();
-        }
-    }
-
-    private final class RankExpression implements Map<List<StoneExpression>, RankStones> {
-
-        @Override
-        public RankStones map(List<StoneExpression> from) {
+        public RankStoneExpression map(List<StoneExpression> from) {
+            final RankStoneExpression result = new RankStoneExpression();
             short i = 0;
-            RankStones result = new RankStones();
+
             for (StoneExpression stone : from) {
                 if (stone.hasPiece()) {
-                    result.put(stone, i);
+                    result.put(stone, File.values()[i]);
                     i++;
                 } else {
                     i += stone.getSkip();
@@ -109,18 +119,9 @@ public final class ForsythEdwardsNotation implements Notation {
 
     }
 
-    private final class EmptyRankExpression implements Map<Void, RankStones> {
+    static final class BoardsideExpression implements Map<Void, BoardSide> {
 
-        @Override
-        public RankStones map(Void from) {
-            return new RankStones();
-        }
-
-    }
-
-    private final class BoardsideExpression implements Map<Void, BoardSide> {
-
-        final BoardSide result;
+        private final BoardSide result;
 
         public BoardsideExpression(BoardSide result) {
             this.result = result;
@@ -133,9 +134,9 @@ public final class ForsythEdwardsNotation implements Notation {
 
     }
 
-    private final class CastleExpression implements Map<Void, Pair<BoardSide, Castle>> {
+    static final class CastleExpression implements Map<Void, Pair<BoardSide, Castle>> {
 
-        private Pair<BoardSide, Castle> result;
+        private final Pair<BoardSide, Castle> result;
 
         public CastleExpression(BoardSide side, Castle castle) {
             this.result = new Pair<>(side, castle);
@@ -147,7 +148,7 @@ public final class ForsythEdwardsNotation implements Notation {
         }
     }
 
-    private final class ShortExpression implements Map<String, Short> {
+    static final class ShortExpression implements Map<String, Short> {
 
         @Override
         public Short map(String from) {
@@ -156,7 +157,7 @@ public final class ForsythEdwardsNotation implements Notation {
 
     }
 
-    private final class FileExpression implements Map<Token, File> {
+    static final class FileExpression implements Map<Token, File> {
 
         @Override
         public File map(Token from) {
@@ -165,7 +166,7 @@ public final class ForsythEdwardsNotation implements Notation {
 
     }
 
-    private final class EPRankExpression implements Map<Token, Rank> {
+    static final class EPRankExpression implements Map<Token, Rank> {
 
         @Override
         public Rank map(Token from) {
@@ -174,7 +175,7 @@ public final class ForsythEdwardsNotation implements Notation {
 
     }
 
-    private Parser<StoneExpression> createStoneParser(BoardSide side) {
+    static Parser<StoneExpression> createStoneParser(BoardSide side) {
         final EnumMap<Piece, Character> pieces = new EnumMap(Piece.class);
         pieces.put(Piece.PAWN, 'P');
         pieces.put(Piece.KNIGHT, 'N');
@@ -183,18 +184,75 @@ public final class ForsythEdwardsNotation implements Notation {
         pieces.put(Piece.QUEEN, 'Q');
         pieces.put(Piece.KING, 'K');
 
-        Parser<StoneExpression> result = null;
+        List<Parser<StoneExpression>> result = new LinkedList<>();
         for (Piece p : pieces.keySet()) {
             char c = pieces.get(p);
             c = side == BoardSide.WHITE ? Character.toUpperCase(c) : Character.toLowerCase(c);
-            Parser<StoneExpression> parse = Scanners.isChar(c).map(new TokenStoneExpression(side, p));
-            if (result == null) {
-                result = parse;
-            } else {
-                result = result.or(parse);
-            }
+            result.add(Scanners.isChar(c).map(new TokenStoneExpression(side, p)));
         }
-        return result;
+        return Parsers.or(result);
+    }
+
+    static Parser<RankStoneExpression> createRankParser() {
+        final Parser<StoneExpression> whites = createStoneParser(BoardSide.WHITE);
+        final Parser<StoneExpression> blacks = createStoneParser(BoardSide.BLACK);
+        List<Parser<StoneExpression>> stones = new LinkedList<>();
+        for (char number = '0'; number <= '7'; number++) {
+            stones.add(Scanners.isChar(number).map(new TokenStoneExpression(number)));
+        }
+        final Parser<StoneExpression> digit17 = Parsers.or(stones);
+
+        // Ranks
+        final Parser<RankStoneExpression> skipRank = Scanners.isChar('8').map(new Map<Void, RankStoneExpression>() {
+            @Override
+            public RankStoneExpression map(Void from) {
+                return new RankStoneExpression();
+            }
+        });
+        return Parsers.or(digit17, blacks, whites).times(1, 8).map(new RankExpression()).or(skipRank);
+    }
+
+    static Parser<List<RankStoneExpression>> createBoardParser() {
+        return createRankParser().sepBy(Scanners.isChar('/'));
+    }
+
+    static Parser<List<Pair<BoardSide, Castle>>> createCastelingParser() {
+        final Parser<Pair<BoardSide, Castle>> whiteShortCastle = Scanners.isChar('K').map(new CastleExpression(BoardSide.WHITE, Castle.SHORT));
+        final Parser<Pair<BoardSide, Castle>> whiteLongCastle = Scanners.isChar('Q').map(new CastleExpression(BoardSide.WHITE, Castle.LONG));
+        final Parser<Pair<BoardSide, Castle>> blackShortCastle = Scanners.isChar('k').map(new CastleExpression(BoardSide.BLACK, Castle.SHORT));
+        final Parser<Pair<BoardSide, Castle>> blackLongCastle = Scanners.isChar('q').map(new CastleExpression(BoardSide.BLACK, Castle.LONG));
+
+        return Scanners.isChar('-').map(new Map<Void, List<Pair<BoardSide, Castle>>>() {
+            @Override
+            public List<Pair<BoardSide, Castle>> map(Void from) {
+                return Collections.emptyList();
+            }
+        }).or(Parsers.list(Arrays.asList(whiteShortCastle, whiteLongCastle, blackShortCastle, blackLongCastle)));
+    }
+
+    static Parser<BoardSide> createTurnParser() {
+        return Scanners.isChar('w').map(new BoardsideExpression(BoardSide.WHITE)).or(Scanners.isChar('b').map(new BoardsideExpression(BoardSide.BLACK)));
+    }
+
+    static Parser<Square> createEnPassantParser() {
+        final Parser<File> fileLetter = Scanners.among("abcdefgh").token().map(new FileExpression());
+        final Parser<Rank> epRank = Scanners.among("36").token().map(new EPRankExpression());
+        final Parser<Square> epsquare = Parsers.tuple(fileLetter, epRank).map(new Map<Pair<File, Rank>, Square>() {
+            @Override
+            public Square map(Pair<File, Rank> from) {
+                return Square.from(from.a, from.b);
+            }
+        });
+        return Scanners.isChar('-').map(new Map<Void, Square>() {
+            @Override
+            public Square map(Void from) {
+                return null;
+            }
+        }).or(epsquare);
+    }
+
+    static Parser<Short> createShortParser() {
+        return Scanners.INTEGER.map(new ShortExpression());
     }
 
     private final Parser<List<Object>> parser;
@@ -209,68 +267,12 @@ public final class ForsythEdwardsNotation implements Notation {
     }
 
     public ForsythEdwardsNotation(String notation) {
-        //// Piece positions
-        // Terminals
-        final Parser<List<RankStones>> ranks;
-        {
-            final Parser<StoneExpression> whites = createStoneParser(BoardSide.WHITE);
-            final Parser<StoneExpression> blacks = createStoneParser(BoardSide.BLACK);
-            final Parser<StoneExpression> digit17 = Scanners.among("1234567").token().map(new TokenSkipStoneExpression());
-            final Parser<StoneExpression> piece = whites.or(blacks);
-
-            // Ranks
-            final Parser<RankStones> skipRank = Scanners.isChar('8').map(new EmptyRankExpression());
-            final Parser<RankStones> rank8 = digit17.or(piece).many1().map(new RankExpression()).or(skipRank);
-            ranks = rank8.sepBy(Scanners.isChar('/'));
-        }
-        // Player
-        final Parser<BoardSide> side = Scanners.isChar('w').map(new BoardsideExpression(BoardSide.WHITE)).or(Scanners.isChar('b').map(new BoardsideExpression(BoardSide.BLACK)));
-        // Casteling
-        final Parser<List<Pair<BoardSide, Castle>>> castling;
-        {
-            final Parser<Pair<BoardSide, Castle>> whiteShortCastle = Scanners.isChar('K').map(new CastleExpression(BoardSide.WHITE, Castle.SHORT));
-            final Parser<Pair<BoardSide, Castle>> whiteLongCastle = Scanners.isChar('Q').map(new CastleExpression(BoardSide.WHITE, Castle.LONG));
-            final Parser<Pair<BoardSide, Castle>> blackShortCastle = Scanners.isChar('k').map(new CastleExpression(BoardSide.BLACK, Castle.SHORT));
-            final Parser<Pair<BoardSide, Castle>> blackLongCastle = Scanners.isChar('q').map(new CastleExpression(BoardSide.BLACK, Castle.LONG));
-
-            castling = Scanners.isChar('-').map(new Map<Void, List<Pair<BoardSide, Castle>>>() {
-
-                @Override
-                public List<Pair<BoardSide, Castle>> map(Void from) {
-                    return Collections.emptyList();
-                }
-
-            }).or(Parsers.list(Arrays.asList(whiteShortCastle, whiteLongCastle, blackShortCastle, blackLongCastle)));
-        }
-        // En passant
-        final Parser<File> fileLetter = Scanners.among("abcdefgh").token().map(new FileExpression());
-        final Parser<Rank> epRank = Scanners.among("36").token().map(new EPRankExpression());
-        final Parser<Square> epsquare = Parsers.tuple(fileLetter, epRank).map(new Map<Pair<File, Rank>, Square>() {
-            @Override
-            public Square map(Pair<File, Rank> from) {
-                return Square.get(from.b, from.a);
-            }
-        });
-        final Parser<Square> enpassant = Scanners.isChar('-').map(new Map<Void, Square>() {
-            @Override
-            public Square map(Void from) {
-                return null;
-            }
-        }).or(epsquare);
-        // Halfmove Clock
-        final Parser<Short> halfmove = Scanners.INTEGER.map(new ShortExpression());
-        // Fullmove counter
-        final Parser<Short> fullmove = Scanners.INTEGER.map(new ShortExpression());
-
-        // Parser
-        this.parser = Parsers.list(
-                Arrays.asList(
-                        ranks.followedBy(Scanners.WHITESPACES),
-                        side.followedBy(Scanners.WHITESPACES),
-                        castling.followedBy(Scanners.WHITESPACES),
-                        enpassant.followedBy(Scanners.WHITESPACES),
-                        halfmove.followedBy(Scanners.WHITESPACES),
-                        fullmove)
+        this.parser = Parsers.list(Arrays.asList(createBoardParser().followedBy(Scanners.WHITESPACES),
+                createTurnParser().followedBy(Scanners.WHITESPACES),
+                createCastelingParser().followedBy(Scanners.WHITESPACES),
+                createEnPassantParser().followedBy(Scanners.WHITESPACES),
+                createShortParser().followedBy(Scanners.WHITESPACES),
+                createShortParser())
         );
         this.notation = notation;
     }
@@ -280,13 +282,10 @@ public final class ForsythEdwardsNotation implements Notation {
         final List<Object> parsed = parser.parse(notation);
         final ChessBoard result = new ChessBoard();
         short r = 7;
-        for (RankStones rank : ((List<RankStones>) parsed.get(0))) {
-            short f = 0;
-            for (StoneExpression p : rank) {
-                if (p.hasPiece()) {
-                    result.getSide(p.getSide()).get(p.getPiece()).set(Square.get(Rank.values()[r], File.values()[f]));
-                }
-                f += p.getSkip();
+        for (RankStoneExpression rank : ((List<RankStoneExpression>) parsed.get(0))) {
+            for (File f : rank) {
+                final StoneExpression p = rank.get(f);
+                result.getSide(p.getSide()).get(p.getPiece()).set(Square.from(f, Rank.values()[r]));
             }
             r--;
         }

@@ -81,4 +81,19 @@ public final class BitBoardTest {
         assertTrue(a.isOccuped(Square.A1));
         assertTrue(a.isOccuped(Square.H1));
     }
+    
+    @Test
+    public void testUnwrap() {
+        final long test = 0xFFEEDDAA8811BBCCL;
+        final BitBoard instance = new BitBoard(test);
+        assertThat(instance.unwrap(), is(test));
+    }
+    
+    @Test
+    public void testEmpty() {
+        final BitBoard instance = new BitBoard(0xFFFFFFFFFFFFFFFFL);
+        assertFalse(instance.isEmpty());
+        instance.clear();
+        assertTrue(instance.isEmpty());
+    }
 }
