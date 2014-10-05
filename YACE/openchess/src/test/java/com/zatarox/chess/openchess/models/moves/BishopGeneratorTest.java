@@ -28,16 +28,17 @@ import static org.junit.matchers.JUnitMatchers.hasItems;
 public class BishopGeneratorTest {
 
     private Notation notation;
+    private Generator instance;
 
     @Before
     public void setUp() {
         notation = new ForsythEdwardsNotation("k7/8/P1N5/8/2K1n3/6p1/5bB1/8 w - - 0 1");
+        instance = new BishopGenerator();
     }
 
     @Test
     public void attacksBishopG2() {
         final ChessBoard board = notation.create();
-        final Generator instance = new BishopGenerator();
         final List<Move> attacks = instance.attacks(board, Square.G2);
         assertThat(attacks.size(), is(1));
         assertThat(attacks, hasItems((Move) new CaptureMove(Square.G2, Square.E4, Piece.KNIGHT)));
@@ -46,7 +47,6 @@ public class BishopGeneratorTest {
     @Test
     public void attacksBishopF2() {
         final ChessBoard board = notation.create();
-        final Generator instance = new BishopGenerator();
         final List<Move> attacks = instance.attacks(board, Square.F2);
         assertTrue(attacks.isEmpty());
     }
@@ -54,7 +54,6 @@ public class BishopGeneratorTest {
     @Test
     public void fillBishopF2() {
         final ChessBoard board = notation.create();
-        final Generator instance = new BishopGenerator();
         final List<Move> fills = instance.fills(board, Square.F2);
         assertThat(fills.size(), is(7));
         assertThat(fills, hasItems(
@@ -71,7 +70,6 @@ public class BishopGeneratorTest {
     @Test
     public void fillBishopG2() {
         final ChessBoard board = notation.create();
-        final Generator instance = new BishopGenerator();
         final List<Move> fills = instance.fills(board, Square.G2);
         assertThat(fills.size(), is(4));
         assertThat(fills, hasItems(
