@@ -16,21 +16,33 @@
 package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
-import java.util.List;
 
 final class KnightGenerator extends AbstractGenerator {
 
+    private final long[] knight;
+
     public KnightGenerator() {
         super(Piece.KNIGHT);
+        knight = new long[64];
+
+        long square = 1;
+        byte i = 0;
+        while (square != 0) {
+            knight[i] = squareAttackedAux(square, +17, b2_u | b_l)
+                    | squareAttackedAux(square, +15, b2_u | b_r)
+                    | squareAttackedAux(square, -15, b2_d | b_l)
+                    | squareAttackedAux(square, -17, b2_d | b_r)
+                    | squareAttackedAux(square, +10, b_u | b2_l)
+                    | squareAttackedAux(square, +6, b_u | b2_r)
+                    | squareAttackedAux(square, -6, b_d | b2_l)
+                    | squareAttackedAux(square, -10, b_d | b2_r);
+            square <<= 1;
+            i++;
+        }
     }
 
     @Override
-    public List<Move> attacks(ChessBoard board, Square square) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<Move> fills(ChessBoard board, Square square) {
+    protected long attacks(Square index, BitBoard all) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
