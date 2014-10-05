@@ -16,33 +16,28 @@
 package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
-import java.util.List;
 
 final class PawnGenerator extends AbstractGenerator {
 
-    private final long[] pawnDownwards;
-    private final long[] pawnUpwards;
+    private final long[] pawnDownwards = new long[64];
+    private final long[] pawnUpwards = new long[64];
 
     public PawnGenerator() {
         super(Piece.PAWN);
-        pawnDownwards = new long[64];
-        pawnUpwards = new long[64];
-
-        long square = 1;
-        byte i = 0;
-        while (square != 0) {
-            pawnUpwards[i] = squareAttackedAux(square, 7, b_u | b_r)
-                    | squareAttackedAux(square, 9, b_u | b_l);
-
-            pawnDownwards[i] = squareAttackedAux(square, -7, b_d | b_l)
-                    | squareAttackedAux(square, -9, b_d | b_r);
-            square <<= 1;
-            i++;
-        }
+        populate();
     }
 
     @Override
-    protected long attacks(Square index, BitBoard all) {
+    protected void populate(short index, long square) {
+        pawnUpwards[index] = squareAttackedAux(square, 7, b_u | b_r)
+                | squareAttackedAux(square, 9, b_u | b_l);
+
+        pawnDownwards[index] = squareAttackedAux(square, -7, b_d | b_l)
+                | squareAttackedAux(square, -9, b_d | b_r);
+    }
+
+    @Override
+    protected long coverage(Square index, BitBoard all) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

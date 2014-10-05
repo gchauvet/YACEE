@@ -51,9 +51,9 @@ final class RookGenerator extends AbstractGenerator {
         12, 11, 11, 11, 11, 11, 11, 12
     };
 
-    private static long[] rook;
-    private static long[] rookMask;
-    private static long[][] rookMagic;
+    private long[] rook = new long[64];
+    private long[] rookMask = new long[64];
+    private long[][] rookMagic = new long[64][];
 
     /**
      * without magic bitboards, too expensive, but neccesary for magic
@@ -68,36 +68,32 @@ final class RookGenerator extends AbstractGenerator {
 
     public RookGenerator() {
         super(Piece.ROOK);
-        rook = new long[64];
-        rookMask = new long[64];
-        rookMagic = new long[64][];
-        long square = 1;
-        byte i = 0;
-        while (square != 0) {
-            rook[i] = squareAttackedAuxSlider(square, +8, b_u)
-                    | squareAttackedAuxSlider(square, -8, b_d)
-                    | squareAttackedAuxSlider(square, -1, b_r)
-                    | squareAttackedAuxSlider(square, +1, b_l);
+        populate();
+    }
 
-            rookMask[i] = squareAttackedAuxSliderMask(square, +8, b_u)
-                    | squareAttackedAuxSliderMask(square, -8, b_d)
-                    | squareAttackedAuxSliderMask(square, -1, b_r)
-                    | squareAttackedAuxSliderMask(square, +1, b_l);
-            // And now generate magics			
-            int rookPositions = (1 << rookShiftBits[i]);
-            rookMagic[i] = new long[rookPositions];
-            for (int j = 0; j < rookPositions; j++) {
-                long pieces = generatePieces(j, rookShiftBits[i], rookMask[i]);
-                int magicIndex = magicTransform(pieces, rookMagicNumber[i], rookShiftBits[i]);
-                rookMagic[i][magicIndex] = getRookShiftAttacks(square, pieces);
-            }
-            square <<= 1;
-            i++;
+    @Override
+    protected void populate(short index, long square) {
+        rook[index] = squareAttackedAuxSlider(square, +8, b_u)
+                | squareAttackedAuxSlider(square, -8, b_d)
+                | squareAttackedAuxSlider(square, -1, b_r)
+                | squareAttackedAuxSlider(square, +1, b_l);
+
+        rookMask[index] = squareAttackedAuxSliderMask(square, +8, b_u)
+                | squareAttackedAuxSliderMask(square, -8, b_d)
+                | squareAttackedAuxSliderMask(square, -1, b_r)
+                | squareAttackedAuxSliderMask(square, +1, b_l);
+        // And now generate magics			
+        int rookPositions = (1 << rookShiftBits[index]);
+        rookMagic[index] = new long[rookPositions];
+        for (int j = 0; j < rookPositions; j++) {
+            long pieces = generatePieces(j, rookShiftBits[index], rookMask[index]);
+            int magicIndex = magicTransform(pieces, rookMagicNumber[index], rookShiftBits[index]);
+            rookMagic[index][magicIndex] = getRookShiftAttacks(square, pieces);
         }
     }
 
     @Override
-    protected long attacks(Square index, BitBoard all) {
+    protected long coverage(Square index, BitBoard all) {
         int i = magicTransform(all.unwrap() & rookMask[index.ordinal()], rookMagicNumber[index.ordinal()], rookShiftBits[index.ordinal()]);
         return rookMagic[index.ordinal()][i];
     }

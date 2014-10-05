@@ -19,31 +19,33 @@ import com.zatarox.chess.openchess.models.materials.*;
 
 final class KnightGenerator extends AbstractGenerator {
 
-    private final long[] knight;
+    // Board borders (2 squares),for the knight
+    private static final long b2_d = 0x000000000000ffffL; // down
+    private static final long b2_u = 0xffff000000000000L; // up
+    private static final long b2_r = 0x0303030303030303L; // right
+    private static final long b2_l = 0xC0C0C0C0C0C0C0C0L; // left
+    private final long[] knight = new long[64];
 
     public KnightGenerator() {
         super(Piece.KNIGHT);
-        knight = new long[64];
-
-        long square = 1;
-        byte i = 0;
-        while (square != 0) {
-            knight[i] = squareAttackedAux(square, +17, b2_u | b_l)
-                    | squareAttackedAux(square, +15, b2_u | b_r)
-                    | squareAttackedAux(square, -15, b2_d | b_l)
-                    | squareAttackedAux(square, -17, b2_d | b_r)
-                    | squareAttackedAux(square, +10, b_u | b2_l)
-                    | squareAttackedAux(square, +6, b_u | b2_r)
-                    | squareAttackedAux(square, -6, b_d | b2_l)
-                    | squareAttackedAux(square, -10, b_d | b2_r);
-            square <<= 1;
-            i++;
-        }
+        populate();
     }
 
     @Override
-    protected long attacks(Square index, BitBoard all) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected void populate(short index, long square) {
+        knight[index] = squareAttackedAux(square, +17, b2_u | b_l)
+                | squareAttackedAux(square, +15, b2_u | b_r)
+                | squareAttackedAux(square, -15, b2_d | b_l)
+                | squareAttackedAux(square, -17, b2_d | b_r)
+                | squareAttackedAux(square, +10, b_u | b2_l)
+                | squareAttackedAux(square, +6, b_u | b2_r)
+                | squareAttackedAux(square, -6, b_d | b2_l)
+                | squareAttackedAux(square, -10, b_d | b2_r);
+    }
+
+    @Override
+    protected long coverage(Square index, BitBoard all) {
+        return knight[index.ordinal()];
     }
 
 }

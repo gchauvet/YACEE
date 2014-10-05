@@ -30,7 +30,7 @@ final class BishopGenerator extends AbstractGenerator {
         6, 5, 5, 5, 5, 5, 5, 6
     };
 
-    private static long bishopMagicNumber[] = {
+    private long bishopMagicNumber[] = {
         0x1020041000484080L, 0x20204010a0000L, 0x8020420240000L, 0x404040085006400L, 0x804242000000108L,
         0x8901008800000L, 0x1010110400080L, 0x402401084004L, 0x1000200810208082L, 0x20802208200L,
         0x4200100102082000L, 0x1024081040020L, 0x20210000000L, 0x8210400100L, 0x10110022000L, 0x80090088010820L,
@@ -45,9 +45,9 @@ final class BishopGenerator extends AbstractGenerator {
         0x1004100882000L, 0x41044100L, 0x840400L, 0x4208204L, 0x80000200282020cL, 0x8a001240100L, 0x2040104040080L
     };
 
-    private final long[] bishop;
-    private final long[] bishopMask;
-    private final long[][] bishopMagic;
+    private final long[] bishop = new long[64];
+    private final long[] bishopMask = new long[64];
+    private final long[][] bishopMagic = new long[64][];
 
     private long getBishopShiftAttacks(long square, long all) {
         return checkSquareAttackedAux(square, all, +9, b_u | b_l)
@@ -58,38 +58,32 @@ final class BishopGenerator extends AbstractGenerator {
 
     public BishopGenerator() {
         super(Piece.BISHOP);
-        bishop = new long[64];
-        bishopMask = new long[64];
-        bishopMagic = new long[64][];
-        
-        long square = 1;
-        byte i = 0;
-        while (square != 0) {
-            bishop[i] = squareAttackedAuxSlider(square, +9, b_u | b_l)
-                    | squareAttackedAuxSlider(square, +7, b_u | b_r)
-                    | squareAttackedAuxSlider(square, -7, b_d | b_l)
-                    | squareAttackedAuxSlider(square, -9, b_d | b_r);
+        populate();
+    }
 
-            bishopMask[i] = squareAttackedAuxSliderMask(square, +9, b_u | b_l)
-                    | squareAttackedAuxSliderMask(square, +7, b_u | b_r)
-                    | squareAttackedAuxSliderMask(square, -7, b_d | b_l)
-                    | squareAttackedAuxSliderMask(square, -9, b_d | b_r);
-            
-            int bishopPositions = (1 << bishopShiftBits[i]);
-            bishopMagic[i] = new long[bishopPositions];
-            for (int j = 0; j < bishopPositions; j++) {
-                long pieces = generatePieces(j, bishopShiftBits[i], bishopMask[i]);
-                int magicIndex = magicTransform(pieces, bishopMagicNumber[i], bishopShiftBits[i]);
-                bishopMagic[i][magicIndex] = getBishopShiftAttacks(square, pieces);
-            }
-            
-            square <<= 1;
-            i++;
+    @Override
+    protected void populate(short index, long square) {
+        bishop[index] = squareAttackedAuxSlider(square, +9, b_u | b_l)
+                | squareAttackedAuxSlider(square, +7, b_u | b_r)
+                | squareAttackedAuxSlider(square, -7, b_d | b_l)
+                | squareAttackedAuxSlider(square, -9, b_d | b_r);
+
+        bishopMask[index] = squareAttackedAuxSliderMask(square, +9, b_u | b_l)
+                | squareAttackedAuxSliderMask(square, +7, b_u | b_r)
+                | squareAttackedAuxSliderMask(square, -7, b_d | b_l)
+                | squareAttackedAuxSliderMask(square, -9, b_d | b_r);
+
+        int bishopPositions = (1 << bishopShiftBits[index]);
+        bishopMagic[index] = new long[bishopPositions];
+        for (int j = 0; j < bishopPositions; j++) {
+            long pieces = generatePieces(j, bishopShiftBits[index], bishopMask[index]);
+            int magicIndex = magicTransform(pieces, bishopMagicNumber[index], bishopShiftBits[index]);
+            bishopMagic[index][magicIndex] = getBishopShiftAttacks(square, pieces);
         }
     }
 
     @Override
-    protected long attacks(Square index, BitBoard all) {
+    protected long coverage(Square index, BitBoard all) {
         int i = magicTransform(all.unwrap() & bishopMask[index.ordinal()], bishopMagicNumber[index.ordinal()], bishopShiftBits[index.ordinal()]);
         return bishopMagic[index.ordinal()][i];
     }

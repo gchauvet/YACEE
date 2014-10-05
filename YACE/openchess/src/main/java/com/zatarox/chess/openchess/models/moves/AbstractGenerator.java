@@ -27,18 +27,16 @@ public abstract class AbstractGenerator implements Generator {
     protected static final long b_r = 0x0101010101010101L; // right
     protected static final long b_l = 0x8080808080808080L; // left
 
-    // Board borders (2 squares),for the knight
-    protected static final long b2_d = 0x000000000000ffffL; // down
-    protected static final long b2_u = 0xffff000000000000L; // up
-    protected static final long b2_r = 0x0303030303030303L; // right
-    protected static final long b2_l = 0xC0C0C0C0C0C0C0C0L; // left
-
     protected static final long b3_d = 0x0000000000ffffffL; // down
     protected static final long b3_u = 0xffffff0000000000L; // up
 
     private final Piece type;
 
-    protected long squareAttackedAux(long square, int shift, long border) {
+    protected AbstractGenerator(Piece type) {
+        this.type = type;
+    }
+
+    final protected long squareAttackedAux(long square, int shift, long border) {
         if ((square & border) == 0) {
             if (shift > 0) {
                 square <<= shift;
@@ -50,7 +48,7 @@ public abstract class AbstractGenerator implements Generator {
         return 0;
     }
 
-    protected long squareAttackedAuxSlider(long square, int shift, long border) {
+    final protected long squareAttackedAuxSlider(long square, int shift, long border) {
         long ret = 0;
         while ((square & border) == 0) {
             if (shift > 0) {
@@ -63,7 +61,7 @@ public abstract class AbstractGenerator implements Generator {
         return ret;
     }
 
-    protected long squareAttackedAuxSliderMask(long square, int shift, long border) {
+    final protected long squareAttackedAuxSliderMask(long square, int shift, long border) {
         long ret = 0;
         while ((square & border) == 0) {
             if (shift > 0) {
@@ -78,7 +76,7 @@ public abstract class AbstractGenerator implements Generator {
         return ret;
     }
 
-    protected int magicTransform(long b, long magic, byte bits) {
+    final protected int magicTransform(long b, long magic, byte bits) {
         return (int) ((b * magic) >>> (64 - bits));
     }
 
@@ -86,7 +84,7 @@ public abstract class AbstractGenerator implements Generator {
      * Fills pieces from a mask. Neccesary for magic generation variable bits is
      * the mask bytes number index goes from 0 to 2^bits
      */
-    protected long generatePieces(int index, int bits, long mask) {
+    final protected long generatePieces(int index, int bits, long mask) {
         int i;
         long lsb;
         long result = 0L;
@@ -103,7 +101,7 @@ public abstract class AbstractGenerator implements Generator {
     /**
      * Attacks for sliding pieces
      */
-    protected long checkSquareAttackedAux(long square, long all, int shift, long border) {
+    final protected long checkSquareAttackedAux(long square, long all, int shift, long border) {
         long ret = 0;
         while ((square & border) == 0) {
             if (shift > 0) {
@@ -120,15 +118,11 @@ public abstract class AbstractGenerator implements Generator {
         return ret;
     }
 
-    protected AbstractGenerator(Piece type) {
-        this.type = type;
-    }
-
     @Override
     public final List<Move> attacks(ChessBoard board, Square square) {
         final BitBoard all = board.getSnapshot(BoardSide.WHITE);
         all.merge(board.getSnapshot(BoardSide.BLACK));
-        final BitBoard attacks = new BitBoard(attacks(square, all) & board.getSnapshot(board.getStone(square).getSide().flip()).unwrap());
+        final BitBoard attacks = new BitBoard(coverage(square, all) & board.getSnapshot(board.getStone(square).getSide().flip()).unwrap());
         final List<Move> result = new LinkedList<>();
         for (Square to : attacks) {
             result.add(MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to).getPiece()));
@@ -140,7 +134,7 @@ public abstract class AbstractGenerator implements Generator {
     public final List<Move> fills(ChessBoard board, Square square) {
         final BitBoard all = board.getSnapshot(BoardSide.WHITE);
         all.merge(board.getSnapshot(BoardSide.BLACK));
-        final BitBoard attacks = new BitBoard(attacks(square, all) & ~all.unwrap());
+        final BitBoard attacks = new BitBoard(coverage(square, all) & ~all.unwrap());
         final List<Move> result = new LinkedList<>();
         for (Square to : attacks) {
             result.add(MovesFactorySingleton.getInstance().createNormal(square, to));
@@ -174,12 +168,27 @@ public abstract class AbstractGenerator implements Generator {
     }
 
     /**
-     * Magic! attacks, very fast method
+     * Magic! coverage, very fast method
      *
      * @param index
      * @param all
      * @return
      */
-    abstract protected long attacks(Square index, BitBoard all);
+    abstract protected long coverage(Square index, BitBoard all);
+    
+    /**
+     * Call it from final constructor for magic bitboard initialization.
+     */
+    protected void populate() {
+        long square = 1;
+        short i = 0;
+        while (square != 0) {
+            populate(i, square);
+            square <<= 1;
+            i++;
+        }
+    }
+    
+    abstract protected void populate(short index, long square);
 
 }
