@@ -20,11 +20,11 @@ import com.zatarox.chess.openchess.models.materials.ChessBoard;
 import com.zatarox.chess.openchess.models.materials.Square;
 import java.io.Serializable;
 
-abstract class AbstractMove implements Serializable, Comparable<AbstractMove>, Move {
+public abstract class AbstractMove implements Serializable, Comparable<AbstractMove>, Move, MoveVisitable {
 
     private final Square from, to;
     private boolean played = false;
-    private float score;
+    private float score = Float.NaN;
 
     protected AbstractMove(Square from, Square to) {
         assert from != null;
@@ -40,7 +40,7 @@ abstract class AbstractMove implements Serializable, Comparable<AbstractMove>, M
     public void setScore(float score) {
         this.score = score;
     }
-
+    
     public Square getFrom() {
         return from;
     }
@@ -82,7 +82,7 @@ abstract class AbstractMove implements Serializable, Comparable<AbstractMove>, M
     @Override
     public final int compareTo(AbstractMove t) {
         // Hight score in first
-        return -((Float) score).compareTo(t.score);
+        return -((Float) getScore()).compareTo(t.getScore());
     }
 
     @Override

@@ -19,8 +19,8 @@ import com.zatarox.chess.openchess.models.materials.Piece;
 
 abstract class AbstractSliderGenerator extends AbstractGenerator {
 
-    public AbstractSliderGenerator(Piece type) {
-        super(type);
+    public AbstractSliderGenerator(Piece type, MovePonderingStrategy ponder) {
+        super(type, ponder);
     }
 
     @Override

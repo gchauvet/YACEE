@@ -59,8 +59,8 @@ final class RookGenerator extends AbstractSliderGenerator {
                 | checkSquareAttacked(square, all, +1, b_l);
     }
 
-    public RookGenerator() {
-        super(Piece.ROOK);
+    public RookGenerator(MovePonderingStrategy ponder) {
+        super(Piece.ROOK, ponder);
         populate();
     }
 

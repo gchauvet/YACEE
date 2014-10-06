@@ -22,6 +22,12 @@ import java.util.Queue;
 
 final class QueenGenerator implements Generator {
 
+    private MovePonderingStrategy ponder;
+
+    public QueenGenerator(MovePonderingStrategy ponder) {
+        this.ponder = ponder;
+    }
+    
     @Override
     public Queue<Move> attacks(ChessBoard board, Square square) {
         final Generator rooker = GeneratorsFactorySingleton.getInstance().from(Piece.ROOK);

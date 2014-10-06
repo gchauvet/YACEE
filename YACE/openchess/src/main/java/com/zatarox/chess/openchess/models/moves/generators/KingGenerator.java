@@ -21,8 +21,8 @@ final class KingGenerator extends AbstractPushGenerator {
 
     private final long[] king = new long[64];
 
-    public KingGenerator() {
-        super(Piece.KING);
+    public KingGenerator(MovePonderingStrategy ponder) {
+        super(Piece.KING, ponder);
         populate();
     }
 

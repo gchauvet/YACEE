@@ -34,9 +34,17 @@ public abstract class AbstractGenerator implements Generator {
     protected static final long b3_u = 0xffffff0000000000L; // up
 
     private final Piece type;
+    private MovePonderingStrategy ponder;
 
-    protected AbstractGenerator(Piece type) {
+    protected AbstractGenerator(Piece type, MovePonderingStrategy ponder) {
+        assert type != null;
+        assert ponder != null;
         this.type = type;
+        this.ponder = ponder;
+    }
+
+    protected final MovePonderingStrategy getPonder() {
+        return ponder;
     }
 
     abstract protected long squareAttacked(long square, int shift, long border);

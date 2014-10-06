@@ -22,6 +22,33 @@ public enum Piece {
     BISHOP,
     ROOK,
     QUEEN,
-    KING
+    KING;
+
+    public float getPonderation() {
+        float result;
+        switch (this) {
+            case PAWN:
+                result = 1f;
+                break;
+            case BISHOP:
+                result = 3.33f;
+                break;
+            case KNIGHT:
+                result = 3.20f;
+                break;
+            case ROOK:
+                result = 5.10f;
+                break;
+            case QUEEN:
+                result = 8.80f;
+                break;
+            case KING:
+                result = 16f * 10.24f;
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        return result;
+    }
 
 }

@@ -26,8 +26,8 @@ final class PawnGenerator extends AbstractPushGenerator {
     private final long[] pawnDownwards = new long[64];
     private final long[] pawnUpwards = new long[64];
 
-    public PawnGenerator() {
-        super(Piece.PAWN);
+    public PawnGenerator(MovePonderingStrategy ponder) {
+        super(Piece.PAWN, ponder);
         populate();
     }
 

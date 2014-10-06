@@ -15,25 +15,11 @@
  */
 package com.zatarox.chess.openchess.models.moves.generators;
 
-import com.zatarox.chess.openchess.models.materials.Piece;
+import com.zatarox.chess.openchess.models.materials.ChessBoard;
+import com.zatarox.chess.openchess.models.moves.AbstractMove;
 
-abstract class AbstractPushGenerator extends AbstractGenerator {
+public interface MovePonderingStrategy {
 
-    public AbstractPushGenerator(Piece type, MovePonderingStrategy ponder) {
-        super(type, ponder);
-    }
-
-    @Override
-    final protected long squareAttacked(long square, int shift, long border) {
-        if ((square & border) == 0) {
-            if (shift > 0) {
-                square <<= shift;
-            } else {
-                square >>>= -shift;
-            }
-            return square;
-        }
-        return 0;
-    }
+    void compute(ChessBoard board, AbstractMove move);
 
 }

@@ -18,12 +18,17 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 
-final class CastleMove extends AbstractMove {
+public final class CastleMove extends AbstractMove {
 
     private final Castle castle;
     
     private static Square castleFrom(BoardSide trait) {
         return trait == BoardSide.WHITE ? Square.E1 : Square.E8;
+    }
+
+    @Override
+    public float getScore() {
+        return 5000;
     }
     
     private static Square castleTo(BoardSide trait, Castle castle) {
@@ -54,6 +59,11 @@ final class CastleMove extends AbstractMove {
     @Override
     protected void doUnplay(ChessBoard board) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void accept(MoveVisitor visitor) {
+        visitor.visit(this);
     }
     
 }

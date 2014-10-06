@@ -17,7 +17,7 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 
-final class CaptureMove extends BasicMove {
+public final class CaptureMove extends BasicMove {
 
     private final Piece captured;
 
@@ -25,6 +25,10 @@ final class CaptureMove extends BasicMove {
         super(from, to);
         assert captured != null;
         this.captured = captured;
+    }
+
+    public Piece getCaptured() {
+        return captured;
     }
 
     @Override
@@ -53,5 +57,10 @@ final class CaptureMove extends BasicMove {
     public int hashCode() {
         int hash = 7 * 67 + captured.hashCode();
         return hash ^ super.hashCode();
+    }
+    
+    @Override
+    public void accept(MoveVisitor visitor) {
+        visitor.visit(this);
     }
 }

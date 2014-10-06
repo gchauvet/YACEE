@@ -15,7 +15,9 @@
  */
 package com.zatarox.chess.openchess.models.moves.generators;
 
+import com.zatarox.chess.openchess.models.materials.ChessBoard;
 import com.zatarox.chess.openchess.models.materials.Piece;
+import com.zatarox.chess.openchess.models.moves.AbstractMove;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -23,7 +25,22 @@ public class GeneratorsFactorySingleton {
 
     private static final GeneratorsFactorySingleton INSTANCE = new GeneratorsFactorySingleton();
 
+    private class MovePonderingStrategyBridge implements MovePonderingStrategy {
+
+        private MovePonderingStrategy ponder = new WinningPonderStrategy();
+
+        public void setPonder(MovePonderingStrategy ponder) {
+            this.ponder = ponder;
+        }
+
+        @Override
+        public void compute(ChessBoard board, AbstractMove move) {
+            ponder.compute(board, move);
+        }
+    }
+
     private final Map<Piece, Generator> generators = new EnumMap<>(Piece.class);
+    private final MovePonderingStrategyBridge ponder = new MovePonderingStrategyBridge();
 
     private GeneratorsFactorySingleton() {
     }
@@ -33,22 +50,22 @@ public class GeneratorsFactorySingleton {
             Generator result;
             switch (piece) {
                 case PAWN:
-                    result = new PawnGenerator();
+                    result = new PawnGenerator(ponder);
                     break;
                 case KNIGHT:
-                    result = new KnightGenerator();
+                    result = new KnightGenerator(ponder);
                     break;
                 case BISHOP:
-                    result = new BishopGenerator();
+                    result = new BishopGenerator(ponder);
                     break;
                 case ROOK:
-                    result = new RookGenerator();
+                    result = new RookGenerator(ponder);
                     break;
                 case QUEEN:
-                    result = new QueenGenerator();
+                    result = new QueenGenerator(ponder);
                     break;
                 case KING:
-                    result = new KingGenerator();
+                    result = new KingGenerator(ponder);
                     break;
                 default:
                     throw new IllegalArgumentException();
@@ -56,6 +73,10 @@ public class GeneratorsFactorySingleton {
             generators.put(piece, result);
         }
         return generators.get(piece);
+    }
+
+    public void setPonder(MovePonderingStrategy ponder) {
+        this.ponder.setPonder(ponder);
     }
 
     public static GeneratorsFactorySingleton getInstance() {

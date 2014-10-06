@@ -55,8 +55,8 @@ final class BishopGenerator extends AbstractSliderGenerator {
                 | checkSquareAttacked(square, all, -9, b_d | b_r);
     }
 
-    public BishopGenerator() {
-        super(Piece.BISHOP);
+    public BishopGenerator(MovePonderingStrategy ponder) {
+        super(Piece.BISHOP, ponder);
         populate();
     }
 

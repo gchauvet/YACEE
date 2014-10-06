@@ -17,7 +17,7 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 
- class BasicMove extends AbstractMove {
+ public class BasicMove extends AbstractMove {
 
     public BasicMove(Square from, Square to) {
         super(from, to);
@@ -41,6 +41,11 @@ import com.zatarox.chess.openchess.models.materials.*;
         final BitBoard bitboard = board.getSide(color).get(stone.getPiece());
         bitboard.unset(getTo());
         bitboard.set(getFrom());
+    }
+
+    @Override
+    public void accept(MoveVisitor visitor) {
+        visitor.visit(this);
     }
 
 }

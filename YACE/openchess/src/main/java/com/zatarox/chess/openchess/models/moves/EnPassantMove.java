@@ -17,7 +17,7 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 
-final class EnPassantMove extends BasicMove {
+public final class EnPassantMove extends BasicMove {
 
     private Square enpassant = null;
             
@@ -40,6 +40,11 @@ final class EnPassantMove extends BasicMove {
         board.getSide(board.getTurn().flip()).get(Piece.PAWN).set(remove);
         board.getSide(board.getTurn().flip()).setEnpassant(enpassant);
         enpassant = null;
+    }
+    
+    @Override
+    public void accept(MoveVisitor visitor) {
+        visitor.visit(this);
     }
 
 }

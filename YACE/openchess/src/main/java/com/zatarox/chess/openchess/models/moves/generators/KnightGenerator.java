@@ -26,8 +26,8 @@ final class KnightGenerator extends AbstractPushGenerator {
     private static final long b2_l = 0xC0C0C0C0C0C0C0C0L; // left
     private final long[] knight = new long[64];
 
-    public KnightGenerator() {
-        super(Piece.KNIGHT);
+    public KnightGenerator(MovePonderingStrategy ponder) {
+        super(Piece.KNIGHT, ponder);
         populate();
     }
 

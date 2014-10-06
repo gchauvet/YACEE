@@ -18,7 +18,7 @@ package com.zatarox.chess.openchess.models.moves;
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.materials.Square.Rank;
 
-class ChargeMove extends BasicMove {
+public class ChargeMove extends BasicMove {
 
     public ChargeMove(Square from, Square to) {
         super(from, to);
@@ -35,6 +35,11 @@ class ChargeMove extends BasicMove {
     protected void doUnplay(ChessBoard board) throws IllegalMoveException {
         super.doUnplay(board);
         board.getSide(board.getTurn()).setEnpassant(null);
+    }
+    
+    @Override
+    public void accept(MoveVisitor visitor) {
+        visitor.visit(this);
     }
 
 }
