@@ -15,6 +15,7 @@
  */
 package com.zatarox.chess.openchess.models.moves;
 
+import com.zatarox.chess.openchess.models.moves.exceptions.IllegalMoveException;
 import com.google.common.base.Objects;
 import com.zatarox.chess.openchess.models.materials.ChessBoard;
 import com.zatarox.chess.openchess.models.materials.Square;

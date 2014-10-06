@@ -15,7 +15,7 @@
  */
 package com.zatarox.chess.openchess.models.materials;
 
-import com.zatarox.chess.openchess.models.moves.IllegalMoveException;
+import com.zatarox.chess.openchess.models.moves.exceptions.IllegalMoveException;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;

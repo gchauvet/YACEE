@@ -16,6 +16,7 @@
 
 package com.zatarox.chess.openchess.models.moves;
 
+import com.zatarox.chess.openchess.models.moves.exceptions.IllegalMoveException;
 import com.zatarox.chess.openchess.models.materials.*;
 
 public final class CastleMove extends AbstractMove {

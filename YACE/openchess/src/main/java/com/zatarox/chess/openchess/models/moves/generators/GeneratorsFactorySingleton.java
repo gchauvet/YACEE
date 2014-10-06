@@ -17,7 +17,7 @@ package com.zatarox.chess.openchess.models.moves.generators;
 
 import com.zatarox.chess.openchess.models.materials.ChessBoard;
 import com.zatarox.chess.openchess.models.materials.Piece;
-import com.zatarox.chess.openchess.models.moves.AbstractMove;
+import com.zatarox.chess.openchess.models.moves.MoveVisitable;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -25,7 +25,7 @@ public class GeneratorsFactorySingleton {
 
     private static final GeneratorsFactorySingleton INSTANCE = new GeneratorsFactorySingleton();
 
-    private class MovePonderingStrategyBridge implements MovePonderingStrategy {
+    private final class MovePonderingStrategyBridge implements MovePonderingStrategy {
 
         private MovePonderingStrategy ponder = new WinningPonderStrategy();
 
@@ -34,7 +34,7 @@ public class GeneratorsFactorySingleton {
         }
 
         @Override
-        public void compute(ChessBoard board, AbstractMove move) {
+        public void compute(ChessBoard board, MoveVisitable move) {
             ponder.compute(board, move);
         }
     }

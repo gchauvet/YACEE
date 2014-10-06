@@ -17,6 +17,7 @@ package com.zatarox.chess.openchess.models.moves.generators;
 
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.moves.Move;
+import com.zatarox.chess.openchess.models.moves.MoveVisitable;
 import com.zatarox.chess.openchess.models.moves.MovesFactorySingleton;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -42,7 +43,9 @@ final class PawnGenerator extends AbstractPushGenerator {
         final BitBoard attacks = new BitBoard(mask & ~all.unwrap());
         final Queue<Move> result = new PriorityQueue<>();
         if (!attacks.isEmpty()) {
-            result.add(MovesFactorySingleton.getInstance().createNormal(square, attacks.iterator().next()));
+            Move move = MovesFactorySingleton.getInstance().createNormal(square, attacks.iterator().next());
+            getPonder().compute(board, (MoveVisitable) move);
+            result.add(move);
             attacks.clear();
             if (square.getRankIndex() == Square.Rank._2 || square.getRankIndex() == Square.Rank._7) {
                 mask = color == BoardSide.WHITE
@@ -51,7 +54,9 @@ final class PawnGenerator extends AbstractPushGenerator {
                 attacks.merge(new BitBoard(mask));
             }
             if (!attacks.isEmpty()) {
-                result.add(MovesFactorySingleton.getInstance().createCharge(square, attacks.iterator().next()));
+                move = MovesFactorySingleton.getInstance().createCharge(square, attacks.iterator().next());
+                getPonder().compute(board, (MoveVisitable) move);
+                result.add(move);
             }
         }
         return result;
@@ -67,15 +72,21 @@ final class PawnGenerator extends AbstractPushGenerator {
             if (to.getRankIndex() == Square.Rank._1 && board.getStone(square).getSide() == BoardSide.BLACK
                     || to.getRankIndex() == Square.Rank._8 && board.getStone(square).getSide() == BoardSide.WHITE) {
                 for (Piece piece : new Piece[]{Piece.BISHOP, Piece.KNIGHT, Piece.QUEEN, Piece.ROOK}) {
-                    result.add(MovesFactorySingleton.getInstance().createPromotion(square, to, piece));
+                    final Move move = MovesFactorySingleton.getInstance().createPromotion(square, to, piece);
+                    getPonder().compute(board, (MoveVisitable) move);
+                    result.add(move);
                 }
             } else {
-                result.add(MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to).getPiece()));
+                final Move move = MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to).getPiece());
+                getPonder().compute(board, (MoveVisitable) move);
+                result.add(move);
             }
         }
         final BoardSide attacker = board.getStone(square).getSide();
         if (board.getSide(attacker).isEnpassant()) {
-            result.add(MovesFactorySingleton.getInstance().createEnpassant(square, board.getSide(attacker).getEnpassant()));
+            final Move move = MovesFactorySingleton.getInstance().createEnpassant(square, board.getSide(attacker).getEnpassant());
+            getPonder().compute(board, (MoveVisitable) move);
+            result.add(move);
         }
         return result;
     }

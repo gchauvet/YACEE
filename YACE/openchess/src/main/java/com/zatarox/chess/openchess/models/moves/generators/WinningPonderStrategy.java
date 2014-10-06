@@ -26,7 +26,7 @@ import com.zatarox.chess.openchess.models.moves.*;
 public final class WinningPonderStrategy implements MovePonderingStrategy {
 
     @Override
-    public void compute(final ChessBoard board, final AbstractMove move) {
+    public void compute(final ChessBoard board, final MoveVisitable move) {
         move.accept(new MoveVisitor() {
             @Override
             public void visit(BasicMove visit) {

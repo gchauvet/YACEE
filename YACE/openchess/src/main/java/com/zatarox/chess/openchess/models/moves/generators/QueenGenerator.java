@@ -22,10 +22,7 @@ import java.util.Queue;
 
 final class QueenGenerator implements Generator {
 
-    private MovePonderingStrategy ponder;
-
     public QueenGenerator(MovePonderingStrategy ponder) {
-        this.ponder = ponder;
     }
     
     @Override

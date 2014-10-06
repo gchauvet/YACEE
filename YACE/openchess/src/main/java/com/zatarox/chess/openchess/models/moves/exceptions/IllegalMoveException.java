@@ -13,13 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zatarox.chess.openchess.models.moves.generators;
+package com.zatarox.chess.openchess.models.moves.exceptions;
 
-import com.zatarox.chess.openchess.models.materials.ChessBoard;
-import com.zatarox.chess.openchess.models.moves.MoveVisitable;
+/**
+ * Exception for illegal move on chessboard (no piece for example)
+ */
+public final class IllegalMoveException extends Exception {
 
-public interface MovePonderingStrategy {
+    public IllegalMoveException(Throwable thrwbl) {
+        super(thrwbl);
+    }
 
-    void compute(ChessBoard board, MoveVisitable move);
+    public IllegalMoveException(String string, Throwable thrwbl) {
+        super(string, thrwbl);
+    }
+
+    public IllegalMoveException(String string) {
+        super(string);
+    }
 
 }

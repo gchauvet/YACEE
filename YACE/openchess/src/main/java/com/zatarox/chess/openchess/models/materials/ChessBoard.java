@@ -17,7 +17,7 @@ package com.zatarox.chess.openchess.models.materials;
 
 import com.zatarox.chess.openchess.models.materials.Square.File;
 import com.zatarox.chess.openchess.models.materials.Square.Rank;
-import com.zatarox.chess.openchess.models.moves.IllegalMoveException;
+import com.zatarox.chess.openchess.models.moves.exceptions.IllegalMoveException;
 import java.io.Serializable;
 import java.util.EnumMap;
 

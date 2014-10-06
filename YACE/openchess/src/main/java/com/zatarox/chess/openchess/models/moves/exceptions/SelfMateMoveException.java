@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zatarox.chess.openchess.models.moves;
+package com.zatarox.chess.openchess.models.moves.exceptions;
 
 /**
- * Exception for illegal move on chessboard (auto-mate for example)
+ * Exception for illegal move when auto-mate is played
  */
-public final class IllegalMoveException extends Exception {
+public final class SelfMateMoveException extends Exception {
 
-    public IllegalMoveException(Throwable thrwbl) {
+    public SelfMateMoveException(Throwable thrwbl) {
         super(thrwbl);
     }
 
-    public IllegalMoveException(String string, Throwable thrwbl) {
+    public SelfMateMoveException(String string, Throwable thrwbl) {
         super(string, thrwbl);
     }
 
-    public IllegalMoveException(String string) {
+    public SelfMateMoveException(String string) {
         super(string);
     }
 

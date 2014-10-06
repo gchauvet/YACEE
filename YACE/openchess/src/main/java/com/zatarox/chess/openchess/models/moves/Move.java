@@ -17,6 +17,7 @@
 package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.ChessBoard;
+import com.zatarox.chess.openchess.models.moves.exceptions.*;
 
 public interface Move {
 
@@ -24,7 +25,7 @@ public interface Move {
      * @param board Chess where move will be played
      * @throws IllegalMoveException
      */
-    void play(ChessBoard board) throws IllegalMoveException;
+    void play(ChessBoard board) throws IllegalMoveException, SelfMateMoveException;
 
     /**
      * @param board Chessboard unplay move

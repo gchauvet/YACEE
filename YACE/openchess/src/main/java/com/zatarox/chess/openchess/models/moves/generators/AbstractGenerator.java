@@ -17,6 +17,7 @@ package com.zatarox.chess.openchess.models.moves.generators;
 
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.moves.Move;
+import com.zatarox.chess.openchess.models.moves.MoveVisitable;
 import com.zatarox.chess.openchess.models.moves.MovesFactorySingleton;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
@@ -58,7 +59,9 @@ public abstract class AbstractGenerator implements Generator {
         final BitBoard attacks = new BitBoard(coverage(square, all, board.getTurn()) & board.getSide(stone.getSide().flip()).getSnapshot().unwrap());
         final Queue<Move> result = new PriorityQueue<>();
         for (Square to : attacks) {
-            result.add(MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to).getPiece()));
+            final Move move = MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to).getPiece());
+            getPonder().compute(board, (MoveVisitable) move);
+            result.add(move);
         }
         return result;
     }
@@ -71,7 +74,9 @@ public abstract class AbstractGenerator implements Generator {
         final BitBoard attacks = new BitBoard(coverage(square, all, board.getTurn()) & ~all.unwrap());
         final Queue<Move> result = new PriorityQueue<>();
         for (Square to : attacks) {
-            result.add(MovesFactorySingleton.getInstance().createNormal(square, to));
+            final Move move = MovesFactorySingleton.getInstance().createNormal(square, to);
+            getPonder().compute(board, (MoveVisitable) move);
+            result.add(move);
         }
         return result;
     }
