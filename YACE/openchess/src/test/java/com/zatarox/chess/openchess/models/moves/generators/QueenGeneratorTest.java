@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zatarox.chess.openchess.models.moves;
+package com.zatarox.chess.openchess.models.moves.generators;
 
+import com.zatarox.chess.openchess.models.moves.generators.QueenGenerator;
+import com.zatarox.chess.openchess.models.moves.generators.Generator;
 import com.zatarox.chess.openchess.models.materials.*;
+import com.zatarox.chess.openchess.models.moves.BasicMove;
+import com.zatarox.chess.openchess.models.moves.CaptureMove;
+import com.zatarox.chess.openchess.models.moves.Move;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
 import java.util.Queue;

@@ -17,7 +17,7 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 
-final class CaptureMove extends BasicMove {
+public final class CaptureMove extends BasicMove {
 
     private final Piece captured;
 

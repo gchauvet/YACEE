@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zatarox.chess.openchess.models.moves;
+package com.zatarox.chess.openchess.models.moves.generators;
 
 import com.zatarox.chess.openchess.models.materials.Piece;
 import java.util.EnumMap;

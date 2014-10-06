@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zatarox.chess.openchess.models.moves;
+package com.zatarox.chess.openchess.models.moves.generators;
 
+import com.zatarox.chess.openchess.models.moves.generators.PawnGenerator;
+import com.zatarox.chess.openchess.models.moves.generators.Generator;
 import com.zatarox.chess.openchess.models.materials.*;
+import com.zatarox.chess.openchess.models.moves.BasicMove;
+import com.zatarox.chess.openchess.models.moves.EnPassantMove;
+import com.zatarox.chess.openchess.models.moves.Move;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
 import java.util.Queue;
@@ -23,38 +28,36 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import static org.hamcrest.CoreMatchers.*;
+import org.junit.Ignore;
 import static org.junit.matchers.JUnitMatchers.hasItems;
 
-public class KnightGeneratorTest {
+public class PawnGeneratorTest {
 
     private Notation notation;
     private Generator instance;
 
     @Before
     public void setUp() {
-        notation = new ForsythEdwardsNotation("8/8/2P1k1N1/6b1/5p2/p7/P3K3/8 w - - 0 1");
-        instance = new KnightGenerator();
+        notation = new ForsythEdwardsNotation("8/6bb/8/8/R1pP2k1/4P3/P7/K7 b - d3 0 1");
+        instance = new PawnGenerator();
     }
-
+   
     @Test
-    public void attacks() {
+    public void fillsPawnE4() {
         final ChessBoard board = notation.create();
-        final Queue<Move> attacks = instance.attacks(board, Square.G6);
-        assertThat(attacks.size(), is(1));
-        assertThat(attacks, hasItems((Move) new CaptureMove(Square.G6, Square.F4, Piece.PAWN)));
+        final Queue<Move> fills = instance.fills(board, Square.E3);
+        assertThat(fills.size(), is(1));
+        assertThat(fills, hasItems((Move) new BasicMove(Square.E3, Square.E4)));
     }
-
+    
     @Test
-    public void fills() {
+    @Ignore
+    public void fillsPawnC4() {
         final ChessBoard board = notation.create();
-        final Queue<Move> fills = instance.fills(board, Square.G6);
-        assertThat(fills.size(), is(5));
-        assertThat(fills, hasItems(
-                (Move) new BasicMove(Square.G6, Square.F8),
-                new BasicMove(Square.G6, Square.H8),
-                new BasicMove(Square.G6, Square.E7),
-                new BasicMove(Square.G6, Square.E5),
-                new BasicMove(Square.G6, Square.H4)
+        final Queue<Move> fills = instance.fills(board, Square.C4);
+        assertThat(fills.size(), is(2));
+        assertThat(fills, hasItems((Move) new BasicMove(Square.C4, Square.C3),
+                new EnPassantMove(Square.C4, board.getSide(BoardSide.BLACK).getEnpassant())
         ));
     }
 

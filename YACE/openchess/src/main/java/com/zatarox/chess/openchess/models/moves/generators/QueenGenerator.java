@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zatarox.chess.openchess.models.moves;
+package com.zatarox.chess.openchess.models.moves.generators;
 
 import com.zatarox.chess.openchess.models.materials.*;
+import com.zatarox.chess.openchess.models.moves.Move;
 import java.util.PriorityQueue;
 import java.util.Queue;
 

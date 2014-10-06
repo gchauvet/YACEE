@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zatarox.chess.openchess.models.moves;
+package com.zatarox.chess.openchess.models.moves.generators;
 
+import com.zatarox.chess.openchess.models.moves.generators.RookGenerator;
+import com.zatarox.chess.openchess.models.moves.generators.Generator;
 import com.zatarox.chess.openchess.models.materials.*;
+import com.zatarox.chess.openchess.models.moves.BasicMove;
+import com.zatarox.chess.openchess.models.moves.CaptureMove;
+import com.zatarox.chess.openchess.models.moves.Move;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
 import java.util.Queue;
@@ -25,33 +30,37 @@ import org.junit.Before;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.matchers.JUnitMatchers.hasItems;
 
-public class KingGeneratorTest {
+public class RookGeneratorTest {
 
     private Notation notation;
     private Generator instance;
 
     @Before
     public void setUp() {
-        notation = new ForsythEdwardsNotation("2q2r1k/p3b2B/bp2pn1Q/8/3P4/8/PP1B1PPP/6K1 w - - 0 1");
-        instance = new KingGenerator();
+        notation = new ForsythEdwardsNotation("r3k2r/pp1p1pbp/2n3p1/8/8/2NR1N2/PPP2PPP/5RK1 w - - 0 1");
+        instance = new RookGenerator();
     }
 
     @Test
     public void attacks() {
         final ChessBoard board = notation.create();
-        final Queue<Move> attacks = instance.attacks(board, Square.H8);
+        final Queue<Move> attacks = instance.attacks(board, Square.D3);
         assertThat(attacks.size(), is(1));
-        assertThat(attacks, hasItems((Move) new CaptureMove(Square.H8, Square.H7, Piece.BISHOP)));
+        assertThat(attacks, hasItems((Move) new CaptureMove(Square.D3, Square.D7, Piece.PAWN)));
     }
-    
+
     @Test
     public void fills() {
         final ChessBoard board = notation.create();
-        final Queue<Move> fills = instance.fills(board, Square.H8);
-        assertThat(fills.size(), is(2));
+        final Queue<Move> fills = instance.fills(board, Square.D3);
+        assertThat(fills.size(), is(6));
         assertThat(fills, hasItems(
-            (Move) new BasicMove(Square.H8, Square.G8),
-            new BasicMove(Square.H8, Square.G7)
+                (Move) new BasicMove(Square.D3, Square.D1),
+                new BasicMove(Square.D3, Square.D2),
+                new BasicMove(Square.D3, Square.E3),
+                new BasicMove(Square.D3, Square.D4),
+                new BasicMove(Square.D3, Square.D5),
+                new BasicMove(Square.D3, Square.D6)
         ));
     }
 

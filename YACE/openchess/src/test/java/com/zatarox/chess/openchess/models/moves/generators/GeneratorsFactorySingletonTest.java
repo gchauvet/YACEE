@@ -13,8 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zatarox.chess.openchess.models.moves;
+package com.zatarox.chess.openchess.models.moves.generators;
 
+import com.zatarox.chess.openchess.models.moves.generators.RookGenerator;
+import com.zatarox.chess.openchess.models.moves.generators.PawnGenerator;
+import com.zatarox.chess.openchess.models.moves.generators.GeneratorsFactorySingleton;
+import com.zatarox.chess.openchess.models.moves.generators.BishopGenerator;
+import com.zatarox.chess.openchess.models.moves.generators.QueenGenerator;
+import com.zatarox.chess.openchess.models.moves.generators.KnightGenerator;
+import com.zatarox.chess.openchess.models.moves.generators.KingGenerator;
 import com.zatarox.chess.openchess.models.materials.Piece;
 import org.junit.Test;
 import static org.junit.Assert.*;
