@@ -15,12 +15,9 @@
  */
 package com.zatarox.chess.openchess.models.moves.generators;
 
-import com.zatarox.chess.openchess.models.moves.generators.Generator;
-import com.zatarox.chess.openchess.models.moves.generators.KingGenerator;
 import com.zatarox.chess.openchess.models.materials.*;
-import com.zatarox.chess.openchess.models.moves.BasicMove;
-import com.zatarox.chess.openchess.models.moves.CaptureMove;
 import com.zatarox.chess.openchess.models.moves.Move;
+import com.zatarox.chess.openchess.models.moves.MovesFactorySingleton;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
 import java.util.Queue;
@@ -46,7 +43,7 @@ public class KingGeneratorTest {
         final ChessBoard board = notation.create();
         final Queue<Move> attacks = instance.attacks(board, Square.H8);
         assertThat(attacks.size(), is(1));
-        assertThat(attacks, hasItems((Move) new CaptureMove(Square.H8, Square.H7, Piece.BISHOP)));
+        assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.H8, Square.H7, Piece.BISHOP)));
     }
     
     @Test
@@ -55,8 +52,8 @@ public class KingGeneratorTest {
         final Queue<Move> fills = instance.fills(board, Square.H8);
         assertThat(fills.size(), is(2));
         assertThat(fills, hasItems(
-            (Move) new BasicMove(Square.H8, Square.G8),
-            new BasicMove(Square.H8, Square.G7)
+            MovesFactorySingleton.getInstance().createNormal(Square.H8, Square.G8),
+            MovesFactorySingleton.getInstance().createNormal(Square.H8, Square.G7)
         ));
     }
 

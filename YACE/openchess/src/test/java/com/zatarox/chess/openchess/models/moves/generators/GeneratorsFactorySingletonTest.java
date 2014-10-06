@@ -31,12 +31,12 @@ public final class GeneratorsFactorySingletonTest {
     @Test
     public void testBuild() {
         final GeneratorsFactorySingleton generator = GeneratorsFactorySingleton.getInstance();
-        assertEquals(generator.build(Piece.PAWN).getClass(), PawnGenerator.class);
-        assertEquals(generator.build(Piece.KNIGHT).getClass(), KnightGenerator.class);
-        assertEquals(generator.build(Piece.BISHOP).getClass(), BishopGenerator.class);
-        assertEquals(generator.build(Piece.ROOK).getClass(), RookGenerator.class);
-        assertEquals(generator.build(Piece.QUEEN).getClass(), QueenGenerator.class);
-        assertEquals(generator.build(Piece.KING).getClass(), KingGenerator.class);
+        assertEquals(generator.from(Piece.PAWN).getClass(), PawnGenerator.class);
+        assertEquals(generator.from(Piece.KNIGHT).getClass(), KnightGenerator.class);
+        assertEquals(generator.from(Piece.BISHOP).getClass(), BishopGenerator.class);
+        assertEquals(generator.from(Piece.ROOK).getClass(), RookGenerator.class);
+        assertEquals(generator.from(Piece.QUEEN).getClass(), QueenGenerator.class);
+        assertEquals(generator.from(Piece.KING).getClass(), KingGenerator.class);
     }
 
 }

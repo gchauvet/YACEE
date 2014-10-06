@@ -18,7 +18,7 @@ package com.zatarox.chess.openchess.models.moves;
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.materials.Square.Rank;
 
-public class ChargeMove extends BasicMove {
+class ChargeMove extends BasicMove {
 
     public ChargeMove(Square from, Square to) {
         super(from, to);

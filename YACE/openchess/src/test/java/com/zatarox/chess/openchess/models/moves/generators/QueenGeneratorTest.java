@@ -18,9 +18,8 @@ package com.zatarox.chess.openchess.models.moves.generators;
 import com.zatarox.chess.openchess.models.moves.generators.QueenGenerator;
 import com.zatarox.chess.openchess.models.moves.generators.Generator;
 import com.zatarox.chess.openchess.models.materials.*;
-import com.zatarox.chess.openchess.models.moves.BasicMove;
-import com.zatarox.chess.openchess.models.moves.CaptureMove;
 import com.zatarox.chess.openchess.models.moves.Move;
+import com.zatarox.chess.openchess.models.moves.MovesFactorySingleton;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
 import java.util.Queue;
@@ -47,8 +46,8 @@ public class QueenGeneratorTest {
         final Queue<Move> attacks = instance.attacks(board, Square.D4);
         assertThat(attacks.size(), is(2));
         assertThat(attacks, hasItems(
-                (Move) new CaptureMove(Square.D4, Square.G7, Piece.ROOK),
-                new CaptureMove(Square.D4, Square.D5, Piece.PAWN)
+                MovesFactorySingleton.getInstance().createCapture(Square.D4, Square.G7, Piece.ROOK),
+                MovesFactorySingleton.getInstance().createCapture(Square.D4, Square.D5, Piece.PAWN)
         ));
     }
 
@@ -65,21 +64,21 @@ public class QueenGeneratorTest {
         final Queue<Move> fills = instance.fills(board, Square.D4);
         assertThat(fills.size(), is(15));
         assertThat(fills, hasItems(
-                (Move) new BasicMove(Square.D4, Square.C4),
-                new BasicMove(Square.D4, Square.E4),
-                new BasicMove(Square.D4, Square.F4),
-                new BasicMove(Square.D4, Square.G4),
-                new BasicMove(Square.D4, Square.D3),
-                new BasicMove(Square.D4, Square.D2),
-                new BasicMove(Square.D4, Square.D1),
-                new BasicMove(Square.D4, Square.C3),
-                new BasicMove(Square.D4, Square.B2),
-                new BasicMove(Square.D4, Square.A1),
-                new BasicMove(Square.D4, Square.E3),
-                new BasicMove(Square.D4, Square.F2),
-                new BasicMove(Square.D4, Square.G1),
-                new BasicMove(Square.D4, Square.E5),
-                new BasicMove(Square.D4, Square.F6)
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.C4),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.E4),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.F4),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.G4),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.D3),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.D2),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.D1),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.C3),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.B2),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.A1),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.E3),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.F2),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.G1),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.E5),
+                MovesFactorySingleton.getInstance().createNormal(Square.D4, Square.F6)
         ));
     }
 
@@ -89,11 +88,11 @@ public class QueenGeneratorTest {
         final Queue<Move> fills = instance.fills(board, Square.G8);
         assertThat(fills.size(), is(5));
         assertThat(fills, hasItems(
-                (Move) new BasicMove(Square.G8, Square.H8),
-                new BasicMove(Square.G8, Square.C8),
-                new BasicMove(Square.G8, Square.D8),
-                new BasicMove(Square.G8, Square.E8),
-                new BasicMove(Square.G8, Square.F8)
+                MovesFactorySingleton.getInstance().createNormal(Square.G8, Square.H8),
+                MovesFactorySingleton.getInstance().createNormal(Square.G8, Square.C8),
+                MovesFactorySingleton.getInstance().createNormal(Square.G8, Square.D8),
+                MovesFactorySingleton.getInstance().createNormal(Square.G8, Square.E8),
+                MovesFactorySingleton.getInstance().createNormal(Square.G8, Square.F8)
         ));
     }
 

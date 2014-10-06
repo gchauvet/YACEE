@@ -28,7 +28,7 @@ public class GeneratorsFactorySingleton {
     private GeneratorsFactorySingleton() {
     }
 
-    public Generator build(Piece piece) {
+    public Generator from(Piece piece) {
         if (!generators.containsKey(piece)) {
             Generator result;
             switch (piece) {

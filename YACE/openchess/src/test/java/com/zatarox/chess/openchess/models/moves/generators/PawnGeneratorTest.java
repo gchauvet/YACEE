@@ -15,12 +15,9 @@
  */
 package com.zatarox.chess.openchess.models.moves.generators;
 
-import com.zatarox.chess.openchess.models.moves.generators.PawnGenerator;
-import com.zatarox.chess.openchess.models.moves.generators.Generator;
 import com.zatarox.chess.openchess.models.materials.*;
-import com.zatarox.chess.openchess.models.moves.BasicMove;
-import com.zatarox.chess.openchess.models.moves.EnPassantMove;
 import com.zatarox.chess.openchess.models.moves.Move;
+import com.zatarox.chess.openchess.models.moves.MovesFactorySingleton;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
 import java.util.Queue;
@@ -41,23 +38,23 @@ public class PawnGeneratorTest {
         notation = new ForsythEdwardsNotation("8/6bb/8/8/R1pP2k1/4P3/P7/K7 b - d3 0 1");
         instance = new PawnGenerator();
     }
-   
+
     @Test
     public void fillsPawnE4() {
         final ChessBoard board = notation.create();
         final Queue<Move> fills = instance.fills(board, Square.E3);
         assertThat(fills.size(), is(1));
-        assertThat(fills, hasItems((Move) new BasicMove(Square.E3, Square.E4)));
+        assertThat(fills, hasItems(MovesFactorySingleton.getInstance().createNormal(Square.E3, Square.E4)));
     }
-    
+
     @Test
     @Ignore
     public void fillsPawnC4() {
         final ChessBoard board = notation.create();
         final Queue<Move> fills = instance.fills(board, Square.C4);
         assertThat(fills.size(), is(2));
-        assertThat(fills, hasItems((Move) new BasicMove(Square.C4, Square.C3),
-                new EnPassantMove(Square.C4, board.getSide(BoardSide.BLACK).getEnpassant())
+        assertThat(fills, hasItems(MovesFactorySingleton.getInstance().createNormal(Square.C4, Square.C3),
+                MovesFactorySingleton.getInstance().createEnpassant(Square.C4, board.getSide(BoardSide.BLACK).getEnpassant())
         ));
     }
 

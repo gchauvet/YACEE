@@ -36,7 +36,7 @@ public class GeneratorFacade {
 
         boolean result = false;
         for (Piece p : Piece.values()) {
-            if (!GeneratorsFactorySingleton.getInstance().build(Piece.ROOK).attacks(board, index).isEmpty()) {
+            if (!GeneratorsFactorySingleton.getInstance().from(Piece.ROOK).attacks(board, index).isEmpty()) {
                 result = true;
                 break;
             }

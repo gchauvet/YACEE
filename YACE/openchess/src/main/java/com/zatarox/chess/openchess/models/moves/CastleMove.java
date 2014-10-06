@@ -18,7 +18,7 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 
-public final class CastleMove extends AbstractMove {
+final class CastleMove extends AbstractMove {
 
     private final Castle castle;
     

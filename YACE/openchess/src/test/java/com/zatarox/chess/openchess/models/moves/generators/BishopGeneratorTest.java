@@ -16,9 +16,8 @@
 package com.zatarox.chess.openchess.models.moves.generators;
 
 import com.zatarox.chess.openchess.models.materials.*;
-import com.zatarox.chess.openchess.models.moves.BasicMove;
-import com.zatarox.chess.openchess.models.moves.CaptureMove;
 import com.zatarox.chess.openchess.models.moves.Move;
+import com.zatarox.chess.openchess.models.moves.MovesFactorySingleton;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
 import java.util.Queue;
@@ -44,7 +43,7 @@ public class BishopGeneratorTest {
         final ChessBoard board = notation.create();
         final Queue<Move> attacks = instance.attacks(board, Square.G2);
         assertThat(attacks.size(), is(1));
-        assertThat(attacks, hasItems((Move) new CaptureMove(Square.G2, Square.E4, Piece.KNIGHT)));
+        assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.G2, Square.E4, Piece.KNIGHT)));
     }
 
     @Test
@@ -60,13 +59,13 @@ public class BishopGeneratorTest {
         final Queue<Move> fills = instance.fills(board, Square.F2);
         assertThat(fills.size(), is(7));
         assertThat(fills, hasItems(
-                (Move) new BasicMove(Square.F2, Square.G1),
-                new BasicMove(Square.F2, Square.E1),
-                new BasicMove(Square.F2, Square.E3),
-                new BasicMove(Square.F2, Square.D4),
-                new BasicMove(Square.F2, Square.C5),
-                new BasicMove(Square.F2, Square.B6),
-                new BasicMove(Square.F2, Square.A7)
+                MovesFactorySingleton.getInstance().createNormal(Square.F2, Square.G1),
+                MovesFactorySingleton.getInstance().createNormal(Square.F2, Square.E1),
+                MovesFactorySingleton.getInstance().createNormal(Square.F2, Square.E3),
+                MovesFactorySingleton.getInstance().createNormal(Square.F2, Square.D4),
+                MovesFactorySingleton.getInstance().createNormal(Square.F2, Square.C5),
+                MovesFactorySingleton.getInstance().createNormal(Square.F2, Square.B6),
+                MovesFactorySingleton.getInstance().createNormal(Square.F2, Square.A7)
         ));
     }
 
@@ -76,10 +75,10 @@ public class BishopGeneratorTest {
         final Queue<Move> fills = instance.fills(board, Square.G2);
         assertThat(fills.size(), is(4));
         assertThat(fills, hasItems(
-                (Move) new BasicMove(Square.G2, Square.H1),
-                new BasicMove(Square.G2, Square.F1),
-                new BasicMove(Square.G2, Square.F3),
-                new BasicMove(Square.G2, Square.H3)
+                MovesFactorySingleton.getInstance().createNormal(Square.G2, Square.H1),
+                MovesFactorySingleton.getInstance().createNormal(Square.G2, Square.F1),
+                MovesFactorySingleton.getInstance().createNormal(Square.G2, Square.F3),
+                MovesFactorySingleton.getInstance().createNormal(Square.G2, Square.H3)
         ));
     }
 

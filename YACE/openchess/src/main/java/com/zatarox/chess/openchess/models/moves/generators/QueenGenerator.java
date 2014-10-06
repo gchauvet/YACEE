@@ -24,8 +24,8 @@ final class QueenGenerator implements Generator {
 
     @Override
     public Queue<Move> attacks(ChessBoard board, Square square) {
-        final Generator rooker = GeneratorsFactorySingleton.getInstance().build(Piece.ROOK);
-        final Generator bishoper = GeneratorsFactorySingleton.getInstance().build(Piece.BISHOP);
+        final Generator rooker = GeneratorsFactorySingleton.getInstance().from(Piece.ROOK);
+        final Generator bishoper = GeneratorsFactorySingleton.getInstance().from(Piece.BISHOP);
         final Queue<Move> result = rooker.attacks(board, square);
         result.addAll(bishoper.attacks(board, square));
         return result;
@@ -33,8 +33,8 @@ final class QueenGenerator implements Generator {
 
     @Override
     public Queue<Move> fills(ChessBoard board, Square square) {
-        final Generator rooker = GeneratorsFactorySingleton.getInstance().build(Piece.ROOK);
-        final Generator bishoper = GeneratorsFactorySingleton.getInstance().build(Piece.BISHOP);
+        final Generator rooker = GeneratorsFactorySingleton.getInstance().from(Piece.ROOK);
+        final Generator bishoper = GeneratorsFactorySingleton.getInstance().from(Piece.BISHOP);
         final Queue<Move> result = rooker.fills(board, square);
         result.addAll(bishoper.fills(board, square));
         return result;

@@ -17,7 +17,7 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 
-public final class PromotionMove extends AbstractMove {
+final class PromotionMove extends AbstractMove {
 
     private final Piece promotion;
     private Piece captured = null;

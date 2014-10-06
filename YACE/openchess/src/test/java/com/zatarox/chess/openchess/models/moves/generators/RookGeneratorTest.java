@@ -15,12 +15,9 @@
  */
 package com.zatarox.chess.openchess.models.moves.generators;
 
-import com.zatarox.chess.openchess.models.moves.generators.RookGenerator;
-import com.zatarox.chess.openchess.models.moves.generators.Generator;
 import com.zatarox.chess.openchess.models.materials.*;
-import com.zatarox.chess.openchess.models.moves.BasicMove;
-import com.zatarox.chess.openchess.models.moves.CaptureMove;
 import com.zatarox.chess.openchess.models.moves.Move;
+import com.zatarox.chess.openchess.models.moves.MovesFactorySingleton;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
 import java.util.Queue;
@@ -46,7 +43,7 @@ public class RookGeneratorTest {
         final ChessBoard board = notation.create();
         final Queue<Move> attacks = instance.attacks(board, Square.D3);
         assertThat(attacks.size(), is(1));
-        assertThat(attacks, hasItems((Move) new CaptureMove(Square.D3, Square.D7, Piece.PAWN)));
+        assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.D3, Square.D7, Piece.PAWN)));
     }
 
     @Test
@@ -55,12 +52,12 @@ public class RookGeneratorTest {
         final Queue<Move> fills = instance.fills(board, Square.D3);
         assertThat(fills.size(), is(6));
         assertThat(fills, hasItems(
-                (Move) new BasicMove(Square.D3, Square.D1),
-                new BasicMove(Square.D3, Square.D2),
-                new BasicMove(Square.D3, Square.E3),
-                new BasicMove(Square.D3, Square.D4),
-                new BasicMove(Square.D3, Square.D5),
-                new BasicMove(Square.D3, Square.D6)
+                MovesFactorySingleton.getInstance().createNormal(Square.D3, Square.D1),
+                MovesFactorySingleton.getInstance().createNormal(Square.D3, Square.D2),
+                MovesFactorySingleton.getInstance().createNormal(Square.D3, Square.E3),
+                MovesFactorySingleton.getInstance().createNormal(Square.D3, Square.D4),
+                MovesFactorySingleton.getInstance().createNormal(Square.D3, Square.D5),
+                MovesFactorySingleton.getInstance().createNormal(Square.D3, Square.D6)
         ));
     }
 

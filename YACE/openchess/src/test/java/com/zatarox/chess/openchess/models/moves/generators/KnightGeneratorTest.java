@@ -18,9 +18,8 @@ package com.zatarox.chess.openchess.models.moves.generators;
 import com.zatarox.chess.openchess.models.moves.generators.Generator;
 import com.zatarox.chess.openchess.models.moves.generators.KnightGenerator;
 import com.zatarox.chess.openchess.models.materials.*;
-import com.zatarox.chess.openchess.models.moves.BasicMove;
-import com.zatarox.chess.openchess.models.moves.CaptureMove;
 import com.zatarox.chess.openchess.models.moves.Move;
+import com.zatarox.chess.openchess.models.moves.MovesFactorySingleton;
 import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
 import java.util.Queue;
@@ -46,7 +45,7 @@ public class KnightGeneratorTest {
         final ChessBoard board = notation.create();
         final Queue<Move> attacks = instance.attacks(board, Square.G6);
         assertThat(attacks.size(), is(1));
-        assertThat(attacks, hasItems((Move) new CaptureMove(Square.G6, Square.F4, Piece.PAWN)));
+        assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.G6, Square.F4, Piece.PAWN)));
     }
 
     @Test
@@ -55,11 +54,11 @@ public class KnightGeneratorTest {
         final Queue<Move> fills = instance.fills(board, Square.G6);
         assertThat(fills.size(), is(5));
         assertThat(fills, hasItems(
-                (Move) new BasicMove(Square.G6, Square.F8),
-                new BasicMove(Square.G6, Square.H8),
-                new BasicMove(Square.G6, Square.E7),
-                new BasicMove(Square.G6, Square.E5),
-                new BasicMove(Square.G6, Square.H4)
+                MovesFactorySingleton.getInstance().createNormal(Square.G6, Square.F8),
+                MovesFactorySingleton.getInstance().createNormal(Square.G6, Square.H8),
+                MovesFactorySingleton.getInstance().createNormal(Square.G6, Square.E7),
+                MovesFactorySingleton.getInstance().createNormal(Square.G6, Square.E5),
+                MovesFactorySingleton.getInstance().createNormal(Square.G6, Square.H4)
         ));
     }
 

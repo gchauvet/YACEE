@@ -17,7 +17,7 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 
-public final class EnPassantMove extends BasicMove {
+final class EnPassantMove extends BasicMove {
 
     private Square enpassant = null;
             
