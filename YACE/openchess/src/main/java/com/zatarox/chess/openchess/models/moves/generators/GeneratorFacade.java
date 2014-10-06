@@ -27,15 +27,15 @@ public final class GeneratorFacade implements Generator {
     /**
      * Discover attacks to squares using magics: cheap version
      *
-     * @param board
-     * @param index
-     * @param color
+     * @param board The chessboard
+     * @param index Square to check
+     * @param flank of attackers
      * @return
      */
-    public boolean isSquareAttacked(ChessBoard board, Square index, BoardSide color) {
-        final BitBoard others = board.getSide(color).getSnapshot();
+    public boolean isSquareAttacked(ChessBoard board, Square index, BoardSide flank) {
+        final BitBoard others = board.getSide(flank).getSnapshot();
         final BitBoard all = new BitBoard(others);
-        all.merge(board.getSide(color.flip()).getSnapshot());
+        all.merge(board.getSide(flank.flip()).getSnapshot());
 
         boolean result = false;
         for (Piece p : Piece.values()) {

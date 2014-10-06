@@ -24,6 +24,7 @@ public interface Move {
     /**
      * @param board Chess where move will be played
      * @throws IllegalMoveException
+     * @throws com.zatarox.chess.openchess.models.moves.exceptions.SelfMateMoveException
      */
     void play(ChessBoard board) throws IllegalMoveException, SelfMateMoveException;
 

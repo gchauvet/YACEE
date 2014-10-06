@@ -38,8 +38,7 @@ import com.zatarox.chess.openchess.models.materials.*;
         if (stone == null) {
             throw new IllegalMoveException("Piece not found");
         }
-        final BoardSide color = board.getStone(getFrom()).getSide();
-        final BitBoard bitboard = board.getSide(color).get(stone.getPiece());
+        final BitBoard bitboard = board.getSide(stone.getSide()).get(stone.getPiece());
         bitboard.unset(getTo());
         bitboard.set(getFrom());
     }

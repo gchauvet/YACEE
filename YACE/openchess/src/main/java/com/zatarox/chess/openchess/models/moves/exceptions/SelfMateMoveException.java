@@ -20,16 +20,7 @@ package com.zatarox.chess.openchess.models.moves.exceptions;
  */
 public final class SelfMateMoveException extends Exception {
 
-    public SelfMateMoveException(Throwable thrwbl) {
-        super(thrwbl);
-    }
-
-    public SelfMateMoveException(String string, Throwable thrwbl) {
-        super(string, thrwbl);
-    }
-
-    public SelfMateMoveException(String string) {
-        super(string);
+    public SelfMateMoveException() {
     }
 
 }
