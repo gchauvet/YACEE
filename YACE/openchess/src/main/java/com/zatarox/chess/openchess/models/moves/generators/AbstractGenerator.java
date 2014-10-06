@@ -41,34 +41,13 @@ public abstract class AbstractGenerator implements Generator {
 
     abstract protected long squareAttacked(long square, int shift, long border);
 
-    final protected int magicTransform(long b, long magic, byte bits) {
-        return (int) ((b * magic) >>> (64 - bits));
-    }
-
-    /**
-     * Fills pieces from a mask. Neccesary for magic generation variable bits is
-     * the mask bytes number index goes from 0 to 2^bits
-     */
-    final protected long generatePieces(int index, int bits, long mask) {
-        int i;
-        long lsb;
-        long result = 0L;
-        for (i = 0; i < bits; i++) {
-            lsb = mask & (-mask);
-            mask ^= lsb; // Deactivates lsb bit of the mask to get next bit next time
-            if ((index & (1 << i)) != 0) {
-                result |= lsb; // if bit is set to 1
-            }
-        }
-        return result;
-    }
-
     @Override
     public Queue<Move> attacks(ChessBoard board, Square square) {
         // Can't be final, for pawns generation...
-        final BitBoard all = board.getSnapshot(BoardSide.WHITE);
-        all.merge(board.getSnapshot(BoardSide.BLACK));
-        final BitBoard attacks = new BitBoard(coverage(square, all, board.getTurn()) & board.getSnapshot(board.getStone(square).getSide().flip()).unwrap());
+        final BitBoard all = board.getSide(BoardSide.WHITE).getSnapshot();
+        all.merge(board.getSide(BoardSide.BLACK).getSnapshot());
+        final Stone stone = board.getStone(square);
+        final BitBoard attacks = new BitBoard(coverage(square, all, board.getTurn()) & board.getSide(stone.getSide().flip()).getSnapshot().unwrap());
         final Queue<Move> result = new PriorityQueue<>();
         for (Square to : attacks) {
             result.add(MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to).getPiece()));
@@ -79,8 +58,8 @@ public abstract class AbstractGenerator implements Generator {
     @Override
     public Queue<Move> fills(ChessBoard board, Square square) {
         // Can't be final, for pawns generation...
-        final BitBoard all = board.getSnapshot(BoardSide.WHITE);
-        all.merge(board.getSnapshot(BoardSide.BLACK));
+        final BitBoard all = board.getSide(BoardSide.WHITE).getSnapshot();
+        all.merge(board.getSide(BoardSide.BLACK).getSnapshot());
         final BitBoard attacks = new BitBoard(coverage(square, all, board.getTurn()) & ~all.unwrap());
         final Queue<Move> result = new PriorityQueue<>();
         for (Square to : attacks) {
@@ -99,11 +78,18 @@ public abstract class AbstractGenerator implements Generator {
     }
 
     @Override
-    public final Queue<Move> alls(ChessBoard board) {
+    public final Queue<Move> fills(ChessBoard board) {
         final Queue<Move> result = new PriorityQueue<>();
         for (Square index : board.getSide(board.getTurn()).get(type)) {
             result.addAll(fills(board, index));
         }
+        return result;
+    }
+
+    @Override
+    public final Queue<Move> alls(ChessBoard board) {
+        final Queue<Move> result = attacks(board);
+        result.addAll(fills(board));
         return result;
     }
 
@@ -123,7 +109,7 @@ public abstract class AbstractGenerator implements Generator {
      * @return
      */
     abstract protected long coverage(Square index, BitBoard all, BoardSide color);
-    
+
     /**
      * Call it from final constructor for magic bitboard initialization.
      */
@@ -136,7 +122,7 @@ public abstract class AbstractGenerator implements Generator {
             i++;
         }
     }
-    
+
     abstract protected void populate(short index, long square);
 
 }

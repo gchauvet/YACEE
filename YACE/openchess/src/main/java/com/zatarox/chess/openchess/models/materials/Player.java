@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.zatarox.chess.openchess.models.materials;
 
 import java.io.Serializable;
 import java.util.*;
 
-public class Player implements Serializable {
+public class Player implements Serializable, Iterable<Square> {
+
     private final Map<Piece, BitBoard> pieces = new EnumMap(Piece.class);
     private final Set<Castle> castles = EnumSet.noneOf(Castle.class);
     private Square enpassant;
@@ -42,7 +42,7 @@ public class Player implements Serializable {
     public Set<Castle> getCastles() {
         return castles;
     }
-    
+
     public boolean isEnpassant() {
         return enpassant != null;
     }
@@ -54,5 +54,18 @@ public class Player implements Serializable {
     public void setEnpassant(Square enpassant) {
         this.enpassant = enpassant;
     }
+
+    public BitBoard getSnapshot() {
+        final BitBoard result = new BitBoard();
+        for (Piece piece : Piece.values()) {
+            result.merge(get(piece));
+        }
+        return result;
+    }
     
+    @Override
+    public Iterator<Square> iterator() {
+        return getSnapshot().iterator();
+    }
+
 }

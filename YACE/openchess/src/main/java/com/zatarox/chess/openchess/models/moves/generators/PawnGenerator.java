@@ -33,8 +33,8 @@ final class PawnGenerator extends AbstractPushGenerator {
 
     @Override
     public Queue<Move> fills(ChessBoard board, Square square) {
-        final BitBoard all = board.getSnapshot(BoardSide.WHITE);
-        all.merge(board.getSnapshot(BoardSide.BLACK));
+        final BitBoard all = board.getSide(BoardSide.WHITE).getSnapshot();
+        all.merge(board.getSide(BoardSide.BLACK).getSnapshot());
         final BoardSide color = board.getStone(square).getSide();
         long mask = color == BoardSide.WHITE
                 ? squareAttacked(1L << square.ordinal(), +8, b_u)
@@ -59,7 +59,20 @@ final class PawnGenerator extends AbstractPushGenerator {
 
     @Override
     public Queue<Move> attacks(ChessBoard board, Square square) {
-        final Queue<Move> result = super.attacks(board, square);
+        final BitBoard all = board.getSide(BoardSide.WHITE).getSnapshot();
+        all.merge(board.getSide(BoardSide.BLACK).getSnapshot());
+        final BitBoard attacks = new BitBoard(coverage(square, all, board.getTurn()) & board.getSide(board.getStone(square).getSide().flip()).getSnapshot().unwrap());
+        final Queue<Move> result = new PriorityQueue<>();
+        for (Square to : attacks) {
+            if (to.getRankIndex() == Square.Rank._1 && board.getStone(square).getSide() == BoardSide.BLACK
+                    || to.getRankIndex() == Square.Rank._8 && board.getStone(square).getSide() == BoardSide.WHITE) {
+                for (Piece piece : new Piece[]{Piece.BISHOP, Piece.KNIGHT, Piece.QUEEN, Piece.ROOK}) {
+                    result.add(MovesFactorySingleton.getInstance().createPromotion(square, to, piece));
+                }
+            } else {
+                result.add(MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to).getPiece()));
+            }
+        }
         final BoardSide attacker = board.getStone(square).getSide();
         if (board.getSide(attacker).isEnpassant()) {
             result.add(MovesFactorySingleton.getInstance().createEnpassant(square, board.getSide(attacker).getEnpassant()));

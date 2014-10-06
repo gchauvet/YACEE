@@ -74,11 +74,11 @@ public final class ChessBoardTest {
         instance.setPiece(Square.H4, new Stone(Piece.ROOK, BoardSide.BLACK));
         instance.setPiece(Square.C7, new Stone(Piece.QUEEN, BoardSide.BLACK));
         instance.setPiece(Square.G1, new Stone(Piece.BISHOP, BoardSide.BLACK));
-        final BitBoard white = instance.getSnapshot(BoardSide.WHITE);
+        final BitBoard white = instance.getSide(BoardSide.WHITE).getSnapshot();
         assertThat(white.getSize(), is(2));
         assertTrue(white.isOccuped(Square.A1));
         assertTrue(white.isOccuped(Square.A2));
-        final BitBoard black = instance.getSnapshot(BoardSide.BLACK);
+        final BitBoard black = instance.getSide(BoardSide.BLACK).getSnapshot();
         assertThat(black.getSize(), is(3));
         assertTrue(black.isOccuped(Square.H4));
         assertTrue(black.isOccuped(Square.C7));

@@ -34,7 +34,7 @@ public class PawnGeneratorTest {
 
     @Before
     public void setUp() {
-        notation = new ForsythEdwardsNotation("8/6bb/8/8/R1pP2k1/4P3/P7/K7 b - d3 0 1");
+        notation = new ForsythEdwardsNotation("8/6bb/8/R7/2pP2k1/4P3/P7/K7 b - d3 0 1");
         instance = GeneratorsFactorySingleton.getInstance().from(Piece.PAWN);
     }
 
@@ -53,13 +53,23 @@ public class PawnGeneratorTest {
         assertThat(fills.size(), is(1));
         assertThat(fills, hasItems(MovesFactorySingleton.getInstance().createNormal(Square.C4, Square.C3)));
     }
-    
+
     @Test
     public void attacksPawnC4() {
         final ChessBoard board = notation.create();
         final Queue<Move> fills = instance.attacks(board, Square.C4);
         assertThat(fills.size(), is(1));
         assertThat(fills, hasItems(MovesFactorySingleton.getInstance().createEnpassant(Square.C4, Square.D3)));
+    }
+
+    @Test
+    public void fillsPawnA2() {
+        final ChessBoard board = notation.create();
+        final Queue<Move> fills = instance.fills(board, Square.A2);
+        assertThat(fills.size(), is(2));
+        assertThat(fills, hasItems(
+                MovesFactorySingleton.getInstance().createNormal(Square.A2, Square.A3),
+                MovesFactorySingleton.getInstance().createCharge(Square.A2, Square.A4)));
     }
 
 }

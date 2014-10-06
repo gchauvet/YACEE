@@ -16,7 +16,7 @@
 package com.zatarox.chess.openchess.models.moves;
 
 /**
- * Exception for illegal move on chessboard
+ * Exception for illegal move on chessboard (auto-mate for example)
  */
 public final class IllegalMoveException extends Exception {
 

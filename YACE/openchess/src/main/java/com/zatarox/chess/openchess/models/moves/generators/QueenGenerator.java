@@ -51,6 +51,13 @@ final class QueenGenerator implements Generator {
 
     @Override
     public final Queue<Move> alls(ChessBoard board) {
+        final Queue<Move> result = attacks(board);
+        result.addAll(fills(board));
+        return result;
+    }
+
+    @Override
+    public Queue<Move> fills(ChessBoard board) {
         final Queue<Move> result = new PriorityQueue<>();
         for (Square index : board.getSide(board.getTurn()).get(Piece.QUEEN)) {
             result.addAll(fills(board, index));

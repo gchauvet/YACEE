@@ -29,22 +29,24 @@ final class PromotionMove extends AbstractMove {
 
     @Override
     protected void doPlay(ChessBoard board) throws IllegalMoveException {
-        board.getSide(board.getTurn()).get(Piece.PAWN).unset(getFrom());
+        final BoardSide color = board.getStone(getFrom()).getSide();
+        board.getSide(color.flip()).get(Piece.PAWN).unset(getFrom());
         if (board.isOccuped(getTo())) {
             captured = board.getStone(getTo()).getPiece();
-            board.getSide(board.getTurn()).get(captured).unset(getTo());
+            board.getSide(color.flip()).get(captured).unset(getTo());
         }
-        board.getSide(board.getTurn()).get(promotion).set(getTo());
+        board.getSide(color).get(promotion).set(getTo());
     }
 
     @Override
     protected void doUnplay(ChessBoard board) throws IllegalMoveException {
-        board.getSide(board.getTurn()).get(Piece.PAWN).set(getFrom());
+        final BoardSide color = board.getStone(getTo()).getSide();
+        board.getSide(color).get(Piece.PAWN).set(getFrom());
         if (captured != null) {
-            board.getSide(board.getTurn()).get(captured).unset(getTo());
+            board.getSide(color.flip()).get(captured).unset(getTo());
             captured = null;
         }
-        board.getSide(board.getTurn()).get(promotion).unset(getTo());
+        board.getSide(color).get(promotion).unset(getTo());
     }
 
 }

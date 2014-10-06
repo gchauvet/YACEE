@@ -16,8 +16,11 @@
 package com.zatarox.chess.openchess.models.moves.generators;
 
 import com.zatarox.chess.openchess.models.materials.*;
+import com.zatarox.chess.openchess.models.moves.Move;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
-public class GeneratorFacade {
+public final class GeneratorFacade implements Generator {
 
     private static final GeneratorFacade INSTANCE = new GeneratorFacade();
 
@@ -30,20 +33,63 @@ public class GeneratorFacade {
      * @return
      */
     public boolean isSquareAttacked(ChessBoard board, Square index, BoardSide color) {
-        final BitBoard others = board.getSnapshot(color);
+        final BitBoard others = board.getSide(color).getSnapshot();
         final BitBoard all = new BitBoard(others);
-        all.merge(board.getSnapshot(color.flip()));
+        all.merge(board.getSide(color.flip()).getSnapshot());
 
         boolean result = false;
         for (Piece p : Piece.values()) {
-            if (!GeneratorsFactorySingleton.getInstance().from(Piece.ROOK).attacks(board, index).isEmpty()) {
+            if (!GeneratorsFactorySingleton.getInstance().from(p).attacks(board, index).isEmpty()) {
                 result = true;
                 break;
             }
         }
         return result;
     }
-    
+
+    @Override
+    public Queue<Move> attacks(ChessBoard board) {
+        final Queue<Move> result = new PriorityQueue<>();
+        for (Square square : board.getSide(board.getTurn())) {
+            result.addAll(attacks(board, square));
+        }
+        return result;
+    }
+
+    @Override
+    public Queue<Move> attacks(ChessBoard board, Square square) {
+        final Stone stone = board.getStone(square);
+        return GeneratorsFactorySingleton.getInstance().from(stone.getPiece()).attacks(board, square);
+    }
+
+    @Override
+    public Queue<Move> fills(ChessBoard board, Square square) {
+        final Stone stone = board.getStone(square);
+        return GeneratorsFactorySingleton.getInstance().from(stone.getPiece()).fills(board, square);
+    }
+
+    @Override
+    public Queue<Move> fills(ChessBoard board) {
+        final Queue<Move> result = new PriorityQueue<>();
+        for (Square square : board.getSide(board.getTurn())) {
+            result.addAll(fills(board, square));
+        }
+        return result;
+    }
+
+    @Override
+    public Queue<Move> alls(ChessBoard board) {
+        final Queue<Move> result = attacks(board);
+        result.addAll(fills(board));
+        return result;
+    }
+
+    @Override
+    public Queue<Move> alls(ChessBoard board, Square square) {
+        final Stone stone = board.getStone(square);
+        return GeneratorsFactorySingleton.getInstance().from(stone.getPiece()).alls(board, square);
+    }
+
     public static GeneratorFacade getInstance() {
         return INSTANCE;
     }

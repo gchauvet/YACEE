@@ -22,7 +22,7 @@ abstract class AbstractSliderGenerator extends AbstractGenerator {
     public AbstractSliderGenerator(Piece type) {
         super(type);
     }
-    
+
     @Override
     final protected long squareAttacked(long square, int shift, long border) {
         long ret = 0;
@@ -51,7 +51,7 @@ abstract class AbstractSliderGenerator extends AbstractGenerator {
         }
         return ret;
     }
-    
+
     /**
      * Attacks for sliding pieces
      */
@@ -71,5 +71,27 @@ abstract class AbstractSliderGenerator extends AbstractGenerator {
         }
         return ret;
     }
-    
+
+    /**
+     * Fills pieces from a mask. Neccesary for magic generation variable bits is
+     * the mask bytes number index goes from 0 to 2^bits
+     */
+    final protected long generatePieces(int index, int bits, long mask) {
+        int i;
+        long lsb;
+        long result = 0L;
+        for (i = 0; i < bits; i++) {
+            lsb = mask & (-mask);
+            mask ^= lsb; // Deactivates lsb bit of the mask to get next bit next time
+            if ((index & (1 << i)) != 0) {
+                result |= lsb; // if bit is set to 1
+            }
+        }
+        return result;
+    }
+
+    final protected int magicTransform(long b, long magic, byte bits) {
+        return (int) ((b * magic) >>> (64 - bits));
+    }
+
 }

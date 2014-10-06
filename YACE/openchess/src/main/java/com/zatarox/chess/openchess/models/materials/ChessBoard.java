@@ -136,14 +136,6 @@ public final class ChessBoard implements Serializable {
         this.turn = turn;
     }
 
-    public BitBoard getSnapshot(BoardSide color) {
-        BitBoard result = new BitBoard();
-        for (Piece piece : Piece.values()) {
-            result.merge(getSide(color).get(piece));
-        }
-        return result;
-    }
-
     public BitBoard getSnapshot(Piece piece) {
         BitBoard result = new BitBoard(getSide(BoardSide.WHITE).get(piece));
         result.merge(getSide(BoardSide.BLACK).get(piece));

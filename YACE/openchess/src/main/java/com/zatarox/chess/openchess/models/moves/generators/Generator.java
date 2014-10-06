@@ -29,6 +29,12 @@ public interface Generator {
     Queue<Move> attacks(ChessBoard board);
     
     /**
+     * @param board
+     * @return All non-attacking moves for current player
+     */
+    Queue<Move> fills(ChessBoard board);
+    
+    /**
      * @param board Current chessboard
      * @param square Start position
      * @return All attacking moves from this position
