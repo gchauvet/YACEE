@@ -27,6 +27,10 @@ public final class MovesFactorySingleton {
     public Move createNormal(Square from, Square to) {
         return new BasicMove(from, to);
     }
+    
+    public Move createCharge(Square from, Square to) {
+        return new ChargeMove(from, to);
+    }
 
     public Move createCapture(Square from, Square to, Piece captured) {
         return new CaptureMove(from, to, captured);

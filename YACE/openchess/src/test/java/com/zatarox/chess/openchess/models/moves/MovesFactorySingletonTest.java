@@ -18,16 +18,39 @@ package com.zatarox.chess.openchess.models.moves;
 import com.zatarox.chess.openchess.models.materials.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
 
 public final class MovesFactorySingletonTest {
 
+    private MovesFactorySingleton mover;
+
+    @Before
+    public void setUp() {
+        mover = MovesFactorySingleton.getInstance();
+    }
+
     @Test
-    public void testCreateNormal() {
-        final MovesFactorySingleton mover = MovesFactorySingleton.getInstance();
-        assertEquals(mover.createNormal(Square.A1, Square.A2).getClass(), BasicMove.class);
+    public void createNormal() {
         assertEquals(mover.createCapture(Square.A1, Square.A2, Piece.PAWN).getClass(), CaptureMove.class);
+    }
+
+    @Test
+    public void createCapture() {
+        assertEquals(mover.createNormal(Square.A1, Square.A2).getClass(), BasicMove.class);
+    }
+
+    @Test
+    public void createCastle() {
         assertEquals(mover.createCastle(Castle.SHORT, BoardSide.WHITE).getClass(), CastleMove.class);
+    }
+
+    @Test
+    public void createEnpassant() {
         assertEquals(mover.createEnpassant(Square.A1, Square.A1).getClass(), EnPassantMove.class);
+    }
+
+    @Test
+    public void createPromotion() {
         assertEquals(mover.createPromotion(Square.A1, Square.A1, Piece.PAWN).getClass(), PromotionMove.class);
     }
 

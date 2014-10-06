@@ -17,7 +17,7 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 
-final class BishopGenerator extends AbstractGenerator {
+final class BishopGenerator extends AbstractSliderGenerator {
 
     private final byte bishopShiftBits[] = {
         6, 5, 5, 5, 5, 5, 5, 6,
@@ -50,10 +50,10 @@ final class BishopGenerator extends AbstractGenerator {
     private final long[][] bishopMagic = new long[64][];
 
     private long getBishopShiftAttacks(long square, long all) {
-        return checkSquareAttackedAux(square, all, +9, b_u | b_l)
-                | checkSquareAttackedAux(square, all, +7, b_u | b_r)
-                | checkSquareAttackedAux(square, all, -7, b_d | b_l)
-                | checkSquareAttackedAux(square, all, -9, b_d | b_r);
+        return checkSquareAttacked(square, all, +9, b_u | b_l)
+                | checkSquareAttacked(square, all, +7, b_u | b_r)
+                | checkSquareAttacked(square, all, -7, b_d | b_l)
+                | checkSquareAttacked(square, all, -9, b_d | b_r);
     }
 
     public BishopGenerator() {
@@ -63,15 +63,15 @@ final class BishopGenerator extends AbstractGenerator {
 
     @Override
     protected void populate(short index, long square) {
-        bishop[index] = squareAttackedAuxSlider(square, +9, b_u | b_l)
-                | squareAttackedAuxSlider(square, +7, b_u | b_r)
-                | squareAttackedAuxSlider(square, -7, b_d | b_l)
-                | squareAttackedAuxSlider(square, -9, b_d | b_r);
+        bishop[index] = squareAttacked(square, +9, b_u | b_l)
+                | squareAttacked(square, +7, b_u | b_r)
+                | squareAttacked(square, -7, b_d | b_l)
+                | squareAttacked(square, -9, b_d | b_r);
 
-        bishopMask[index] = squareAttackedAuxSliderMask(square, +9, b_u | b_l)
-                | squareAttackedAuxSliderMask(square, +7, b_u | b_r)
-                | squareAttackedAuxSliderMask(square, -7, b_d | b_l)
-                | squareAttackedAuxSliderMask(square, -9, b_d | b_r);
+        bishopMask[index] = squareAttackedMask(square, +9, b_u | b_l)
+                | squareAttackedMask(square, +7, b_u | b_r)
+                | squareAttackedMask(square, -7, b_d | b_l)
+                | squareAttackedMask(square, -9, b_d | b_r);
 
         int bishopPositions = (1 << bishopShiftBits[index]);
         bishopMagic[index] = new long[bishopPositions];

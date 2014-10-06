@@ -17,7 +17,7 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 
-final class KnightGenerator extends AbstractGenerator {
+final class KnightGenerator extends AbstractPushGenerator {
 
     // Board borders (2 squares),for the knight
     private static final long b2_d = 0x000000000000ffffL; // down
@@ -33,14 +33,14 @@ final class KnightGenerator extends AbstractGenerator {
 
     @Override
     protected void populate(short index, long square) {
-        knight[index] = squareAttackedAux(square, +17, b2_u | b_l)
-                | squareAttackedAux(square, +15, b2_u | b_r)
-                | squareAttackedAux(square, -15, b2_d | b_l)
-                | squareAttackedAux(square, -17, b2_d | b_r)
-                | squareAttackedAux(square, +10, b_u | b2_l)
-                | squareAttackedAux(square, +6, b_u | b2_r)
-                | squareAttackedAux(square, -6, b_d | b2_l)
-                | squareAttackedAux(square, -10, b_d | b2_r);
+        knight[index] = squareAttacked(square, +17, b2_u | b_l)
+                | squareAttacked(square, +15, b2_u | b_r)
+                | squareAttacked(square, -15, b2_d | b_l)
+                | squareAttacked(square, -17, b2_d | b_r)
+                | squareAttacked(square, +10, b_u | b2_l)
+                | squareAttacked(square, +6, b_u | b2_r)
+                | squareAttacked(square, -6, b_d | b2_l)
+                | squareAttacked(square, -10, b_d | b2_r);
     }
 
     @Override

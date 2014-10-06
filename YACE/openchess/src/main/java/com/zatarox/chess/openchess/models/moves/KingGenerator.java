@@ -17,7 +17,7 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 
-final class KingGenerator extends AbstractGenerator {
+final class KingGenerator extends AbstractPushGenerator {
 
     private final long[] king = new long[64];
 
@@ -28,14 +28,14 @@ final class KingGenerator extends AbstractGenerator {
 
     @Override
     protected void populate(short index, long square) {
-        king[index] = squareAttackedAux(square, +8, b_u)
-                | squareAttackedAux(square, -8, b_d)
-                | squareAttackedAux(square, -1, b_r)
-                | squareAttackedAux(square, +1, b_l)
-                | squareAttackedAux(square, +9, b_u | b_l)
-                | squareAttackedAux(square, +7, b_u | b_r)
-                | squareAttackedAux(square, -7, b_d | b_l)
-                | squareAttackedAux(square, -9, b_d | b_r);
+        king[index] = squareAttacked(square, +8, b_u)
+                | squareAttacked(square, -8, b_d)
+                | squareAttacked(square, -1, b_r)
+                | squareAttacked(square, +1, b_l)
+                | squareAttacked(square, +9, b_u | b_l)
+                | squareAttacked(square, +7, b_u | b_r)
+                | squareAttacked(square, -7, b_d | b_l)
+                | squareAttacked(square, -9, b_d | b_r);
     }
 
     @Override

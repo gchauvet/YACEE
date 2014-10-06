@@ -17,13 +17,7 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.materials.*;
 
-final class RookGenerator extends AbstractGenerator {
-
-    private static final long r2_d = 0x000000000000ff00L; // rank 2 down
-    private static final long r2_u = 0x00ff000000000000L; // up
-
-    private static final long r3_d = 0x0000000000ff0000L; // rank 3 down
-    private static final long r3_u = 0x0000ff0000000000L; // up
+final class RookGenerator extends AbstractSliderGenerator {
 
     // Magic numbers generated with MagicNumbersGen
     private final long rookMagicNumber[] = {
@@ -60,10 +54,10 @@ final class RookGenerator extends AbstractGenerator {
      * generation
      */
     private long getRookShiftAttacks(long square, long all) {
-        return checkSquareAttackedAux(square, all, +8, b_u)
-                | checkSquareAttackedAux(square, all, -8, b_d)
-                | checkSquareAttackedAux(square, all, -1, b_r)
-                | checkSquareAttackedAux(square, all, +1, b_l);
+        return checkSquareAttacked(square, all, +8, b_u)
+                | checkSquareAttacked(square, all, -8, b_d)
+                | checkSquareAttacked(square, all, -1, b_r)
+                | checkSquareAttacked(square, all, +1, b_l);
     }
 
     public RookGenerator() {
@@ -73,15 +67,15 @@ final class RookGenerator extends AbstractGenerator {
 
     @Override
     protected void populate(short index, long square) {
-        rook[index] = squareAttackedAuxSlider(square, +8, b_u)
-                | squareAttackedAuxSlider(square, -8, b_d)
-                | squareAttackedAuxSlider(square, -1, b_r)
-                | squareAttackedAuxSlider(square, +1, b_l);
+        rook[index] = squareAttacked(square, +8, b_u)
+                | squareAttacked(square, -8, b_d)
+                | squareAttacked(square, -1, b_r)
+                | squareAttacked(square, +1, b_l);
 
-        rookMask[index] = squareAttackedAuxSliderMask(square, +8, b_u)
-                | squareAttackedAuxSliderMask(square, -8, b_d)
-                | squareAttackedAuxSliderMask(square, -1, b_r)
-                | squareAttackedAuxSliderMask(square, +1, b_l);
+        rookMask[index] = squareAttackedMask(square, +8, b_u)
+                | squareAttackedMask(square, -8, b_d)
+                | squareAttackedMask(square, -1, b_r)
+                | squareAttackedMask(square, +1, b_l);
         // And now generate magics			
         int rookPositions = (1 << rookShiftBits[index]);
         rookMagic[index] = new long[rookPositions];

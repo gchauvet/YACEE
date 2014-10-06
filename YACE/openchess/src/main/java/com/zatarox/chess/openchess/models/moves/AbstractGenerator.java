@@ -37,45 +37,7 @@ public abstract class AbstractGenerator implements Generator {
         this.type = type;
     }
 
-    final protected long squareAttackedAux(long square, int shift, long border) {
-        if ((square & border) == 0) {
-            if (shift > 0) {
-                square <<= shift;
-            } else {
-                square >>>= -shift;
-            }
-            return square;
-        }
-        return 0;
-    }
-
-    final protected long squareAttackedAuxSlider(long square, int shift, long border) {
-        long ret = 0;
-        while ((square & border) == 0) {
-            if (shift > 0) {
-                square <<= shift;
-            } else {
-                square >>>= -shift;
-            }
-            ret |= square;
-        }
-        return ret;
-    }
-
-    final protected long squareAttackedAuxSliderMask(long square, int shift, long border) {
-        long ret = 0;
-        while ((square & border) == 0) {
-            if (shift > 0) {
-                square <<= shift;
-            } else {
-                square >>>= -shift;
-            }
-            if ((square & border) == 0) {
-                ret |= square;
-            }
-        }
-        return ret;
-    }
+    abstract protected long squareAttacked(long square, int shift, long border);
 
     final protected int magicTransform(long b, long magic, byte bits) {
         return (int) ((b * magic) >>> (64 - bits));
@@ -97,26 +59,6 @@ public abstract class AbstractGenerator implements Generator {
             }
         }
         return result;
-    }
-
-    /**
-     * Attacks for sliding pieces
-     */
-    final protected long checkSquareAttackedAux(long square, long all, int shift, long border) {
-        long ret = 0;
-        while ((square & border) == 0) {
-            if (shift > 0) {
-                square <<= shift;
-            } else {
-                square >>>= -shift;
-            }
-            ret |= square;
-            // If we collide with other piece
-            if ((square & all) != 0) {
-                break;
-            }
-        }
-        return ret;
     }
 
     @Override
