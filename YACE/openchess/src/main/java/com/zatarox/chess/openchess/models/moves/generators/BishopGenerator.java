@@ -45,7 +45,6 @@ final class BishopGenerator extends AbstractSliderGenerator {
         0x1004100882000L, 0x41044100L, 0x840400L, 0x4208204L, 0x80000200282020cL, 0x8a001240100L, 0x2040104040080L
     };
 
-    private final long[] bishop = new long[64];
     private final long[] bishopMask = new long[64];
     private final long[][] bishopMagic = new long[64][];
 
@@ -63,16 +62,11 @@ final class BishopGenerator extends AbstractSliderGenerator {
 
     @Override
     protected void populate(short index, long square) {
-        bishop[index] = squareAttacked(square, +9, b_u | b_l)
-                | squareAttacked(square, +7, b_u | b_r)
-                | squareAttacked(square, -7, b_d | b_l)
-                | squareAttacked(square, -9, b_d | b_r);
-
         bishopMask[index] = squareAttackedMask(square, +9, b_u | b_l)
                 | squareAttackedMask(square, +7, b_u | b_r)
                 | squareAttackedMask(square, -7, b_d | b_l)
                 | squareAttackedMask(square, -9, b_d | b_r);
-
+        // And now generate magics
         int bishopPositions = (1 << bishopShiftBits[index]);
         bishopMagic[index] = new long[bishopPositions];
         for (int j = 0; j < bishopPositions; j++) {

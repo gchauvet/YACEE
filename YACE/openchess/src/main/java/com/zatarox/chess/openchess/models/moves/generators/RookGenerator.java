@@ -45,7 +45,6 @@ final class RookGenerator extends AbstractSliderGenerator {
         12, 11, 11, 11, 11, 11, 11, 12
     };
 
-    private long[] rook = new long[64];
     private long[] rookMask = new long[64];
     private long[][] rookMagic = new long[64][];
 
@@ -67,16 +66,11 @@ final class RookGenerator extends AbstractSliderGenerator {
 
     @Override
     protected void populate(short index, long square) {
-        rook[index] = squareAttacked(square, +8, b_u)
-                | squareAttacked(square, -8, b_d)
-                | squareAttacked(square, -1, b_r)
-                | squareAttacked(square, +1, b_l);
-
         rookMask[index] = squareAttackedMask(square, +8, b_u)
                 | squareAttackedMask(square, -8, b_d)
                 | squareAttackedMask(square, -1, b_r)
                 | squareAttackedMask(square, +1, b_l);
-        // And now generate magics			
+        // And now generate magics
         int rookPositions = (1 << rookShiftBits[index]);
         rookMagic[index] = new long[rookPositions];
         for (int j = 0; j < rookPositions; j++) {
@@ -88,7 +82,7 @@ final class RookGenerator extends AbstractSliderGenerator {
 
     @Override
     protected long coverage(Square index, BitBoard all, BoardSide turn) {
-        int i = magicTransform(all.unwrap() & rookMask[index.ordinal()], rookMagicNumber[index.ordinal()], rookShiftBits[index.ordinal()]);
+        final int i = magicTransform(all.unwrap() & rookMask[index.ordinal()], rookMagicNumber[index.ordinal()], rookShiftBits[index.ordinal()]);
         return rookMagic[index.ordinal()][i];
     }
 
