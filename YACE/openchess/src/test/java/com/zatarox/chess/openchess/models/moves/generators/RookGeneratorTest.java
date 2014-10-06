@@ -35,7 +35,7 @@ public class RookGeneratorTest {
     @Before
     public void setUp() {
         notation = new ForsythEdwardsNotation("r3k2r/pp1p1pbp/2n3p1/8/8/2NR1N2/PPP2PPP/5RK1 w - - 0 1");
-        instance = new RookGenerator();
+        instance = GeneratorsFactorySingleton.getInstance().from(Piece.ROOK);
     }
 
     @Test

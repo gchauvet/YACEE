@@ -15,8 +15,6 @@
  */
 package com.zatarox.chess.openchess.models.moves.generators;
 
-import com.zatarox.chess.openchess.models.moves.generators.Generator;
-import com.zatarox.chess.openchess.models.moves.generators.KnightGenerator;
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.moves.Move;
 import com.zatarox.chess.openchess.models.moves.MovesFactorySingleton;
@@ -37,7 +35,7 @@ public class KnightGeneratorTest {
     @Before
     public void setUp() {
         notation = new ForsythEdwardsNotation("8/8/2P1k1N1/6b1/5p2/p7/P3K3/8 w - - 0 1");
-        instance = new KnightGenerator();
+        instance = GeneratorsFactorySingleton.getInstance().from(Piece.KNIGHT);
     }
 
     @Test

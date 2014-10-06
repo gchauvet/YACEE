@@ -35,7 +35,7 @@ public class KingGeneratorTest {
     @Before
     public void setUp() {
         notation = new ForsythEdwardsNotation("2q2r1k/p3b2B/bp2pn1Q/8/3P4/8/PP1B1PPP/6K1 w - - 0 1");
-        instance = new KingGenerator();
+        instance = GeneratorsFactorySingleton.getInstance().from(Piece.KING);
     }
 
     @Test

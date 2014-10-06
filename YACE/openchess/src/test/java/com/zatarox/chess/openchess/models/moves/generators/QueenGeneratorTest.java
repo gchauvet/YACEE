@@ -15,8 +15,6 @@
  */
 package com.zatarox.chess.openchess.models.moves.generators;
 
-import com.zatarox.chess.openchess.models.moves.generators.QueenGenerator;
-import com.zatarox.chess.openchess.models.moves.generators.Generator;
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.moves.Move;
 import com.zatarox.chess.openchess.models.moves.MovesFactorySingleton;
@@ -37,7 +35,7 @@ public class QueenGeneratorTest {
     @Before
     public void setUp() {
         notation = new ForsythEdwardsNotation("1k4q1/1p2Rprp/p1p5/2Pp4/1P1Q3P/6P1/P5K1/8 w - - 0 1");
-        instance = new QueenGenerator();
+        instance = GeneratorsFactorySingleton.getInstance().from(Piece.QUEEN);
     }
 
     @Test

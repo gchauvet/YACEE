@@ -35,7 +35,7 @@ public class BishopGeneratorTest {
     @Before
     public void setUp() {
         notation = new ForsythEdwardsNotation("k7/8/P1N5/8/2K1n3/6p1/5bB1/8 w - - 0 1");
-        instance = new BishopGenerator();
+        instance = GeneratorsFactorySingleton.getInstance().from(Piece.BISHOP);
     }
 
     @Test

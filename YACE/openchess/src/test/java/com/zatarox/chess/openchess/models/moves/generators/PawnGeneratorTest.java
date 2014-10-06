@@ -25,7 +25,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import static org.hamcrest.CoreMatchers.*;
-import org.junit.Ignore;
 import static org.junit.matchers.JUnitMatchers.hasItems;
 
 public class PawnGeneratorTest {
@@ -36,11 +35,11 @@ public class PawnGeneratorTest {
     @Before
     public void setUp() {
         notation = new ForsythEdwardsNotation("8/6bb/8/8/R1pP2k1/4P3/P7/K7 b - d3 0 1");
-        instance = new PawnGenerator();
+        instance = GeneratorsFactorySingleton.getInstance().from(Piece.PAWN);
     }
 
     @Test
-    public void fillsPawnE4() {
+    public void fillsPawnE3() {
         final ChessBoard board = notation.create();
         final Queue<Move> fills = instance.fills(board, Square.E3);
         assertThat(fills.size(), is(1));
@@ -48,14 +47,19 @@ public class PawnGeneratorTest {
     }
 
     @Test
-    @Ignore
     public void fillsPawnC4() {
         final ChessBoard board = notation.create();
         final Queue<Move> fills = instance.fills(board, Square.C4);
-        assertThat(fills.size(), is(2));
-        assertThat(fills, hasItems(MovesFactorySingleton.getInstance().createNormal(Square.C4, Square.C3),
-                MovesFactorySingleton.getInstance().createEnpassant(Square.C4, board.getSide(BoardSide.BLACK).getEnpassant())
-        ));
+        assertThat(fills.size(), is(1));
+        assertThat(fills, hasItems(MovesFactorySingleton.getInstance().createNormal(Square.C4, Square.C3)));
+    }
+    
+    @Test
+    public void attacksPawnC4() {
+        final ChessBoard board = notation.create();
+        final Queue<Move> fills = instance.attacks(board, Square.C4);
+        assertThat(fills.size(), is(1));
+        assertThat(fills, hasItems(MovesFactorySingleton.getInstance().createEnpassant(Square.C4, Square.D3)));
     }
 
 }

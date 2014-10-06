@@ -35,14 +35,20 @@ final class PawnGenerator extends AbstractPushGenerator {
     public Queue<Move> fills(ChessBoard board, Square square) {
         final BitBoard all = board.getSnapshot(BoardSide.WHITE);
         all.merge(board.getSnapshot(BoardSide.BLACK));
-        final long mask = squareAttacked(1L << square.ordinal(), 8 * (board.getTurn() == BoardSide.WHITE ? -1 : 1), b_u);
+        final BoardSide color = board.getStone(square).getSide();
+        long mask = color == BoardSide.WHITE
+                ? squareAttacked(1L << square.ordinal(), +8, b_u)
+                : squareAttacked(1L << square.ordinal(), -8, b_d);
         final BitBoard attacks = new BitBoard(mask & ~all.unwrap());
         final Queue<Move> result = new PriorityQueue<>();
         if (!attacks.isEmpty()) {
             result.add(MovesFactorySingleton.getInstance().createNormal(square, attacks.iterator().next()));
             attacks.clear();
             if (square.getRankIndex() == Square.Rank._2 || square.getRankIndex() == Square.Rank._7) {
-                attacks.merge(new BitBoard(mask << 7));
+                mask = color == BoardSide.WHITE
+                        ? squareAttacked(1L << square.ordinal(), +16, b_u)
+                        : squareAttacked(1L << square.ordinal(), -16, b_d);
+                attacks.merge(new BitBoard(mask));
             }
             if (!attacks.isEmpty()) {
                 result.add(MovesFactorySingleton.getInstance().createCharge(square, attacks.iterator().next()));
