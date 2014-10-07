@@ -56,7 +56,6 @@ public abstract class AbstractGenerator implements Generator {
         final BitBoard all = board.getSide(BoardSide.WHITE).getSnapshot();
         all.merge(board.getSide(BoardSide.BLACK).getSnapshot());
         final Stone stone = board.getStone(square);
-        //FIXME : l'attaque est-elle menÃ© par la couleur de la piece ou par le camp opposÃ© ???
         final BitBoard attacks = new BitBoard(coverage(square, all, board.getTurn()) & board.getSide(stone.getSide().flip()).getSnapshot().unwrap());
         final Queue<Move> result = new PriorityQueue<>();
         for (Square to : attacks) {
@@ -65,6 +64,18 @@ public abstract class AbstractGenerator implements Generator {
             result.add(move);
         }
         return result;
+    }
+
+    @Override
+    public final boolean isEnPrise(ChessBoard board, Square square) {
+        final BitBoard all = board.getSide(BoardSide.WHITE).getSnapshot();
+        all.merge(board.getSide(BoardSide.BLACK).getSnapshot());
+        final Stone stone = board.getStone(square);
+        final BitBoard attacks = new BitBoard();
+        for (Square index : board.getSide(stone.getSide().flip()).get(type)) {
+            attacks.merge(new BitBoard(coverage(index, all, stone.getSide()) & board.getSide(stone.getSide()).getSnapshot().unwrap()));
+        }
+        return (attacks.unwrap() & square.toLong()) != 0;
     }
 
     @Override

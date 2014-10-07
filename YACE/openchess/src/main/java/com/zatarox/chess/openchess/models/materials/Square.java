@@ -66,5 +66,9 @@ public enum Square {
     public static Square from(File file, Rank rank) {
         return values()[8 * rank.ordinal() + file.ordinal()];
     }
+    
+    public long toLong() {
+        return 1L << this.ordinal();
+    }
 
 }

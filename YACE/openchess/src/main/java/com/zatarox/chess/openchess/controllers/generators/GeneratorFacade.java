@@ -32,14 +32,11 @@ public final class GeneratorFacade implements Generator {
      * @param flank of attackers
      * @return
      */
-    public boolean isSquareAttacked(ChessBoard board, Square index, BoardSide flank) {
-        final BitBoard others = board.getSide(flank).getSnapshot();
-        final BitBoard all = new BitBoard(others);
-        all.merge(board.getSide(flank.flip()).getSnapshot());
-
+    @Override
+    public boolean isEnPrise(ChessBoard board, Square index) {
         boolean result = false;
         for (Piece p : Piece.values()) {
-            if (!GeneratorsFactorySingleton.getInstance().from(p).attacks(board, index).isEmpty()) {
+            if (GeneratorsFactorySingleton.getInstance().from(p).isEnPrise(board, index)) {
                 result = true;
                 break;
             }

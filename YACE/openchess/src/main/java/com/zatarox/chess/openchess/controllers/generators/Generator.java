@@ -30,6 +30,13 @@ public interface Generator {
     
     /**
      * @param board
+     * @param square
+     * @return true if square is "en prise" from current player.
+     */
+    boolean isEnPrise(ChessBoard board, Square square);
+    
+    /**
+     * @param board
      * @return All non-attacking moves for current player
      */
     Queue<Move> fills(ChessBoard board);

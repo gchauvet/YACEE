@@ -29,7 +29,7 @@ public final class BitBoard implements Serializable, Iterable<Square> {
 
     public BitBoard() {
     }
-    
+
     public BitBoard(long board) {
         this.board = board;
     }
@@ -97,14 +97,14 @@ public final class BitBoard implements Serializable, Iterable<Square> {
     public void merge(BitBoard board) {
         this.board |= board.board;
     }
-    
+
     /**
      * @return Internat bitboard representation
      */
     public long unwrap() {
         return board;
     }
-    
+
     public boolean isEmpty() {
         return board == 0;
     }
@@ -133,6 +133,19 @@ public final class BitBoard implements Serializable, Iterable<Square> {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (Square.Rank r : Square.Rank.reverse()) {
+            for (Square.File f : Square.File.values()) {
+                result.append(((1L << Square.from(f, r).ordinal()) & board) != 0 ? 'X' : '.');
+                result.append(' ');
+            }
+            result.append("\n");
+        }
+        return result.toString();
     }
 
 }

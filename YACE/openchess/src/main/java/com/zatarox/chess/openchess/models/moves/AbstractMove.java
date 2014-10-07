@@ -57,7 +57,7 @@ public abstract class AbstractMove implements Serializable, Comparable<AbstractM
     protected void checkLegalMove(ChessBoard board) throws SelfMateMoveException {
         final Stone stone = board.getStone(getTo());
         final Square king = board.getSide(stone.getSide()).get(Piece.KING).iterator().next();
-        if (GeneratorFacade.getInstance().isSquareAttacked(board, king, stone.getSide().flip())) {
+        if (GeneratorFacade.getInstance().isEnPrise(board, king)) {
             throw new SelfMateMoveException();
         }
     }

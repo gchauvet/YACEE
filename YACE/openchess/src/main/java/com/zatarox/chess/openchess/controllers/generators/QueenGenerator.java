@@ -35,6 +35,13 @@ final class QueenGenerator implements Generator {
     }
 
     @Override
+    public boolean isEnPrise(ChessBoard board, Square square) {
+        final Generator rooker = GeneratorsFactorySingleton.getInstance().from(Piece.ROOK);
+        final Generator bishoper = GeneratorsFactorySingleton.getInstance().from(Piece.BISHOP);
+        return rooker.isEnPrise(board, square) && bishoper.isEnPrise(board, square);
+    }
+
+    @Override
     public Queue<Move> fills(ChessBoard board, Square square) {
         final Generator rooker = GeneratorsFactorySingleton.getInstance().from(Piece.ROOK);
         final Generator bishoper = GeneratorsFactorySingleton.getInstance().from(Piece.BISHOP);
