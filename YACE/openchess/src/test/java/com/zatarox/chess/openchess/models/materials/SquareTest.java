@@ -54,5 +54,11 @@ public class SquareTest {
        assertThat(File.D.mirror(), is(File.E));
        assertThat(File.E.mirror(), is(File.D));
     }
+    
+    @Test
+    public void testToLong() {
+        assertThat(Square.A1.toLong(), is(1L));
+        assertThat(Square.H8.toLong(), is(1L << 63));
+    }
 
 }

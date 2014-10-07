@@ -34,6 +34,7 @@ public abstract class AbstractMove implements Serializable, Comparable<AbstractM
     protected AbstractMove(Square from, Square to) {
         assert from != null;
         assert to != null;
+        assert from != to;
         this.from = from;
         this.to = to;
     }

@@ -46,12 +46,12 @@ public final class MovesFactorySingletonTest {
 
     @Test
     public void createEnpassant() {
-        assertEquals(mover.createEnpassant(Square.A1, Square.A1).getClass(), EnPassantMove.class);
+        assertEquals(mover.createEnpassant(Square.A1, Square.A2).getClass(), EnPassantMove.class);
     }
 
     @Test
     public void createPromotion() {
-        assertEquals(mover.createPromotion(Square.A1, Square.A1, Piece.PAWN).getClass(), PromotionMove.class);
+        assertEquals(mover.createPromotion(Square.A1, Square.A2, Piece.PAWN).getClass(), PromotionMove.class);
     }
 
 }

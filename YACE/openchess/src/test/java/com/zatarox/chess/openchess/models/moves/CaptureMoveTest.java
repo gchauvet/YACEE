@@ -22,28 +22,26 @@ import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
-public class BasicMoveTest {
+public class CaptureMoveTest {
 
     private ChessBoard board;
 
     @Before
     public void setUp() {
-        final Notation notation = new ForsythEdwardsNotation("k7/8/P1N5/8/2K1n3/6p1/5bB1/8 w - - 0 1");
+        final Notation notation = new ForsythEdwardsNotation("4k3/1p4pp/2p5/8/q3r2Q/3p3P/1P4PK/4R3 b - - 0 1");
         board = notation.create();
     }
 
     @Test(expected = AssertionError.class)
     public void moveWithNull() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createNormal(null, null);
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.A1, Square.A2, null);
         move.play(board);
     }
 
     @Test(expected = IllegalMoveException.class)
     public void noPieceToMove() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createNormal(Square.H7, Square.H4);
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.A2, Square.B3, Piece.PAWN);
         move.play(board);
     }
 
@@ -53,34 +51,27 @@ public class BasicMoveTest {
         move.play(board);
     }
 
-    @Test
-    public void playBishop() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createNormal(Square.F2, Square.A7);
-        move.play(board);
-        assertThat(board.getStone(Square.A7), equalTo(new Stone(Piece.BISHOP, BoardSide.BLACK)));
-        assertFalse(board.isOccuped(Square.F2));
-        move.unplay(board);
-        assertTrue(board.isOccuped(Square.F2));
-        assertThat(board.getStone(Square.F2), equalTo(new Stone(Piece.BISHOP, BoardSide.BLACK)));
-    }
-
     @Test(expected = SelfMateMoveException.class)
-    public void playIllegalKing() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createNormal(Square.C4, Square.C5);
+    public void playPinnedRookE4() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.E4, Square.H4, Piece.QUEEN);
         move.play(board);
     }
 
     @Test(expected = IllegalMoveException.class)
-    public void replayMove() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createNormal(Square.C4, Square.B3);
-        move.play(board);
+    public void playUnvalidCaptureRookE4() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.E4, Square.A4, Piece.QUEEN);
         move.play(board);
     }
 
     @Test(expected = IllegalMoveException.class)
-    public void unplayedNotPlayedMove() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createNormal(Square.C4, Square.C5);
-        move.unplay(board);
+    public void playNoCaptureQueenH4() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.G4, Piece.PAWN);
+        move.play(board);
     }
 
+    @Test(expected = IllegalMoveException.class)
+    public void playNoPieceCapturer() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.B4, Square.B2, Piece.PAWN);
+        move.play(board);
+    }
 }

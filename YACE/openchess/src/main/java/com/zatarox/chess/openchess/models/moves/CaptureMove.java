@@ -19,41 +19,47 @@ import com.zatarox.chess.openchess.models.moves.exceptions.IllegalMoveException;
 import com.zatarox.chess.openchess.models.materials.*;
 
 public final class CaptureMove extends BasicMove {
-
+    
     private final Piece captured;
-
+    
     public CaptureMove(Square from, Square to, Piece captured) {
         super(from, to);
         assert captured != null;
         this.captured = captured;
     }
-
+    
     public Piece getCaptured() {
         return captured;
     }
-
+    
     @Override
     protected void doPlay(ChessBoard board) throws IllegalMoveException {
+        if (!board.isOccuped(getTo()) || !board.isOccuped(getFrom())) {
+            throw new IllegalMoveException("No piece to capture");
+        }
+        if (board.getStone(getTo()).getSide() == board.getStone(getFrom()).getSide()) {
+            throw new IllegalMoveException("Can't capture friend piece");
+        }
         board.getSide(board.getTurn().flip()).get(captured).unset(getTo());
         super.doPlay(board);
     }
-
+    
     @Override
     protected void doUnplay(ChessBoard board) throws IllegalMoveException {
         super.doUnplay(board);
         board.getSide(board.getTurn().flip()).get(captured).set(getTo());
     }
-
+    
     @Override
     public boolean equals(Object o) {
         boolean result = super.equals((BasicMove) o);
-        if(o instanceof CaptureMove) {
+        if (o instanceof CaptureMove) {
             CaptureMove other = (CaptureMove) o;
             result &= other.captured == captured;
         }
         return result;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 7 * 67 + captured.hashCode();
