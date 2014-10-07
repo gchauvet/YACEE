@@ -22,7 +22,7 @@ import com.zatarox.chess.openchess.models.materials.Piece;
 import com.zatarox.chess.openchess.models.materials.Square;
 import com.zatarox.chess.openchess.models.materials.Stone;
 import com.zatarox.chess.openchess.models.moves.exceptions.SelfMateMoveException;
-import com.zatarox.chess.openchess.models.moves.generators.GeneratorFacade;
+import com.zatarox.chess.openchess.controllers.generators.GeneratorFacade;
 import java.io.Serializable;
 
 public abstract class AbstractMove implements Serializable, Comparable<AbstractMove>, Move, MoveVisitable {
