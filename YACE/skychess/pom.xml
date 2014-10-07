@@ -80,10 +80,35 @@
             <artifactId>chesspresso-lib</artifactId>
             <version>0.9.2</version>
         </dependency>
+        <!--
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.7</version>
+            <groupId>com.googlecode</groupId>
+            <artifactId>openkad</artifactId>
+            <version>r60</version>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>openejb-core</artifactId>
+            <version>4.6.0.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.openejb</groupId>
+                    <artifactId>openejb-jpa-integration</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.openejb.patch</groupId>
+                    <artifactId>openjpa</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.geronimo.javamail</groupId>
+                    <artifactId>geronimo-javamail_1.4_mail</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hsqldb</groupId>
+                    <artifactId>hsqldb</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <properties>

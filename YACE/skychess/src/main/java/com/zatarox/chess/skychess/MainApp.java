@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Guillaume Chauvet.
+ * Copyright 2014 Guillaume CHAUVET.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,23 +23,25 @@ import com.fluxchess.jcpi.models.GenericMove;
 import com.fluxchess.jcpi.models.IllegalNotationException;
 import com.zatarox.chess.skychess.engine.Board;
 import com.zatarox.chess.skychess.engine.Board.Side;
-import com.zatarox.chess.skychess.engine.Engine;
+import com.zatarox.chess.skychess.engine.ChessEngine;
 import com.zatarox.chess.skychess.tables.RepetitionTable;
 import com.zatarox.chess.skychess.tables.TranspositionTable;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import javax.annotation.ManagedBean;
+import javax.ejb.EJB;
+import javax.ejb.embeddable.EJBContainer;
+import javax.naming.NamingException;
 
 /**
  * This is the main class of SkyChess which is used to connect to a client chessboard program througth UCI protocol.
  */
+@ManagedBean
 public class MainApp extends AbstractEngine {
 
+    private EJBContainer container;
     private Board game = new Board();
-    private Engine engine = new Engine(game);
-    private final ExecutorService executor = Executors.newFixedThreadPool(1);
+    @EJB
+    private ChessEngine engine;
 
     public static void main(String args[]) throws IOException {
         MainApp main = new MainApp();
@@ -48,14 +50,25 @@ public class MainApp extends AbstractEngine {
 
     @Override
     protected void quit() {
-        executor.shutdown();
+        if (container != null) {
+            container.close();
+        }
     }
 
     @Override
     public void receive(EngineInitializeRequestCommand command) {
-        ProtocolInitializeAnswerCommand request = new ProtocolInitializeAnswerCommand("SkyChess", "Guillaume Chauvet");
-        //request.addOption(new SpinnerOption(Settings.OPTION_HASH, Settings.DEFAULT_HASH_SIZE, 1, 512));
-        getProtocol().send(request);
+        try {
+            if (container == null) {
+                container = EJBContainer.createEJBContainer();
+                container.getContext().bind("inject", this);
+                engine.setBoard(game);
+            }
+            ProtocolInitializeAnswerCommand request = new ProtocolInitializeAnswerCommand("SkyChess", "Guillaume Chauvet");
+            //request.addOption(new SpinnerOption(Settings.OPTION_HASH, Settings.DEFAULT_HASH_SIZE, 1, 512));
+            getProtocol().send(request);
+        } catch (NamingException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -126,11 +139,11 @@ public class MainApp extends AbstractEngine {
             engine.setMoveTime(movetime);
             engine.setPonder(ponder);
 
-            Future<Short> best = executor.submit(engine);
-            game.play(best.get()); // Make best move on the board
+            Short best = engine.call();
+            game.play(best); // Make best move on the board
             RepetitionTable.getInstance().recordRep(game);
-            getProtocol().send(new ProtocolBestMoveCommand(new GenericMove(Move.getString(best.get())), null));
-        } catch (IllegalNotationException | InterruptedException | ExecutionException e) {
+            getProtocol().send(new ProtocolBestMoveCommand(new GenericMove(Move.getString(best)), null));
+        } catch (IllegalNotationException e) {
             Notification.getInstance().getLogger().error("Error while searching", e);
         }
     }
