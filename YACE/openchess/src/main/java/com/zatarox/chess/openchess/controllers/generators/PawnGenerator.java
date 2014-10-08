@@ -91,6 +91,23 @@ final class PawnGenerator extends AbstractPushGenerator {
         return result;
     }
 
+    /**
+     * Check if a "en passant" move is present because this is a prise.
+     */
+    @Override
+    public boolean isEnPrise(ChessBoard board, Square square) throws IllegalArgumentException {
+        boolean result = super.isEnPrise(board, square);
+        if(!result) {
+            final BoardSide side = board.getStone(square).getSide().flip();
+            if(board.getSide(side).isEnpassant()) {
+                final BitBoard pawns = new BitBoard(board.getSide(side).get(Piece.PAWN));
+                pawns.merge(new BitBoard(board.getSide(side).getEnpassant().toLong()));
+                result = coverage(square, pawns, side) != 0;
+            }
+        }
+        return result;
+    }
+
     @Override
     protected void populate(short index, long square) {
         pawnUpwards[index] = squareAttacked(square, 7, b_u | b_r)

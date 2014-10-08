@@ -71,8 +71,11 @@ public abstract class AbstractGenerator implements Generator {
         return result;
     }
 
+    /**
+     * Can't be final, for pawns generation...
+     */
     @Override
-    public final boolean isEnPrise(ChessBoard board, Square square) throws IllegalArgumentException {
+    public boolean isEnPrise(ChessBoard board, Square square) throws IllegalArgumentException {
         if (!board.isOccuped(square)) {
             throw new IllegalArgumentException("No piece to check");
         }
