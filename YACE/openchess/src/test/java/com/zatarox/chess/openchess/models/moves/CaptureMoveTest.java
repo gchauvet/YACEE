@@ -22,6 +22,8 @@ import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
 import com.zatarox.chess.openchess.models.notations.Notation;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 public class CaptureMoveTest {
 
@@ -55,6 +57,18 @@ public class CaptureMoveTest {
     public void playPinnedRookE4() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createCapture(Square.E4, Square.H4, Piece.QUEEN);
         move.play(board);
+    }
+
+    @Test
+    public void unplayPinnedRookE4() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.E4, Square.H4, Piece.QUEEN);
+        try {
+            move.play(board);
+        } catch (SelfMateMoveException ex) {
+            move.unplay(board);
+        }
+        assertThat(board.getStone(Square.E4), equalTo(new Stone(Piece.ROOK, BoardSide.BLACK)));
+        assertThat(board.getStone(Square.H4), equalTo(new Stone(Piece.QUEEN, BoardSide.WHITE)));
     }
 
     @Test(expected = IllegalMoveException.class)

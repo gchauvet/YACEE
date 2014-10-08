@@ -31,7 +31,7 @@ public class BasicMoveTest {
 
     @Before
     public void setUp() {
-        final Notation notation = new ForsythEdwardsNotation("k7/8/P1N5/8/2K1n3/6p1/5bB1/8 w - - 0 1");
+        final Notation notation = new ForsythEdwardsNotation("k1r5/8/P1N5/8/2K1n3/6p1/5bB1/8 w - - 0 1");
         board = notation.create();
     }
 
@@ -50,6 +50,12 @@ public class BasicMoveTest {
     @Test(expected = AssertionError.class)
     public void noMove() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createNormal(Square.H7, Square.H7);
+        move.play(board);
+    }
+
+    @Test(expected = SelfMateMoveException.class)
+    public void pinnedPiece() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createNormal(Square.C6, Square.E5);
         move.play(board);
     }
 
