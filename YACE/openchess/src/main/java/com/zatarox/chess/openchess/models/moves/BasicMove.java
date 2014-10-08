@@ -51,4 +51,9 @@ public class BasicMove extends AbstractMove {
         visitor.visit(this);
     }
 
+    @Override
+    public String toString() {
+        return getFrom() + "-" + getTo();
+    }
+
 }
