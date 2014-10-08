@@ -51,7 +51,10 @@ public abstract class AbstractGenerator implements Generator {
     abstract protected long squareAttacked(long square, int shift, long border);
 
     @Override
-    public Queue<Move> attacks(ChessBoard board, Square square) {
+    public Queue<Move> attacks(ChessBoard board, Square square) throws IllegalArgumentException {
+        if (!board.isOccuped(square)) {
+            throw new IllegalArgumentException("No attacker piece");
+        }
         // Can't be final, for pawns generation...
         final BitBoard all = board.getSide(BoardSide.WHITE).getSnapshot();
         all.merge(board.getSide(BoardSide.BLACK).getSnapshot());
@@ -67,7 +70,10 @@ public abstract class AbstractGenerator implements Generator {
     }
 
     @Override
-    public final boolean isEnPrise(ChessBoard board, Square square) {
+    public final boolean isEnPrise(ChessBoard board, Square square) throws IllegalArgumentException {
+        if (!board.isOccuped(square)) {
+            throw new IllegalArgumentException("No piece to check");
+        }
         final BitBoard all = board.getSide(BoardSide.WHITE).getSnapshot();
         all.merge(board.getSide(BoardSide.BLACK).getSnapshot());
         final Stone stone = board.getStone(square);

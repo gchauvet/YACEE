@@ -32,8 +32,9 @@ public interface Generator {
      * @param board
      * @param square
      * @return true if square is "en prise" from current player.
+     * @throws IllegalArgumentException
      */
-    boolean isEnPrise(ChessBoard board, Square square);
+    boolean isEnPrise(ChessBoard board, Square square) throws IllegalArgumentException;
     
     /**
      * @param board
@@ -45,8 +46,9 @@ public interface Generator {
      * @param board Current chessboard
      * @param square Start position
      * @return All attacking moves from this position
+     * @throws IllegalArgumentException
      */
-    Queue<Move> attacks(ChessBoard board, Square square);
+    Queue<Move> attacks(ChessBoard board, Square square) throws IllegalArgumentException;
     
     /**
      * @param board Current chessboard

@@ -18,17 +18,44 @@ package com.zatarox.chess.openchess.controllers.generators;
 import com.zatarox.chess.openchess.models.materials.Piece;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
 
 public final class GeneratorsFactorySingletonTest {
 
+    private GeneratorsFactorySingleton generator;
+
+    @Before
+    public void setUp() {
+        generator = GeneratorsFactorySingleton.getInstance();
+    }
+
     @Test
-    public void testBuild() {
-        final GeneratorsFactorySingleton generator = GeneratorsFactorySingleton.getInstance();
+    public void createPawnGenerator() {
         assertEquals(generator.from(Piece.PAWN).getClass(), PawnGenerator.class);
+    }
+
+    @Test
+    public void createKnigthGenerator() {
         assertEquals(generator.from(Piece.KNIGHT).getClass(), KnightGenerator.class);
+    }
+
+    @Test
+    public void createBishopGenerator() {
         assertEquals(generator.from(Piece.BISHOP).getClass(), BishopGenerator.class);
+    }
+
+    @Test
+    public void createRookGenerator() {
         assertEquals(generator.from(Piece.ROOK).getClass(), RookGenerator.class);
+    }
+
+    @Test
+    public void createQueenGenerator() {
         assertEquals(generator.from(Piece.QUEEN).getClass(), QueenGenerator.class);
+    }
+
+    @Test
+    public void createKingGenerator() {
         assertEquals(generator.from(Piece.KING).getClass(), KingGenerator.class);
     }
 

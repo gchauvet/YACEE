@@ -29,33 +29,51 @@ import static org.junit.matchers.JUnitMatchers.hasItems;
 
 public class BishopGeneratorTest {
 
-    private Notation notation;
     private Generator instance;
+    private ChessBoard board;
 
     @Before
     public void setUp() {
-        notation = new ForsythEdwardsNotation("k7/8/P1N5/8/2K1n3/6p1/5bB1/8 w - - 0 1");
+        final Notation notation = new ForsythEdwardsNotation("k7/8/P1N5/8/2K1n3/6p1/5bB1/8 w - - 0 1");
         instance = GeneratorsFactorySingleton.getInstance().from(Piece.BISHOP);
+        board = notation.create();
     }
 
     @Test
     public void attacksBishopG2() {
-        final ChessBoard board = notation.create();
         final Queue<Move> attacks = instance.attacks(board, Square.G2);
         assertThat(attacks.size(), is(1));
         assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.G2, Square.E4, Piece.KNIGHT)));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void attackFromEmptySquare() {
+        assertTrue(instance.attacks(board, Square.F3).isEmpty());
+    }
+
+    @Test
+    public void enPriseNe4ByBg2() {
+        assertTrue(instance.isEnPrise(board, Square.E4));
+    }
+
+    @Test
+    public void notEnPriseKa8ByBg2() {
+        assertFalse(instance.isEnPrise(board, Square.A8));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void squareEnPriseb6ByBf2() {
+        assertTrue(instance.isEnPrise(board, Square.B6));
+    }
+
     @Test
     public void attacksBishopF2() {
-        final ChessBoard board = notation.create();
         final Queue<Move> attacks = instance.attacks(board, Square.F2);
         assertTrue(attacks.isEmpty());
     }
 
     @Test
     public void fillBishopF2() {
-        final ChessBoard board = notation.create();
         final Queue<Move> fills = instance.fills(board, Square.F2);
         assertThat(fills.size(), is(7));
         assertThat(fills, hasItems(
@@ -71,7 +89,6 @@ public class BishopGeneratorTest {
 
     @Test
     public void fillBishopG2() {
-        final ChessBoard board = notation.create();
         final Queue<Move> fills = instance.fills(board, Square.G2);
         assertThat(fills.size(), is(4));
         assertThat(fills, hasItems(
