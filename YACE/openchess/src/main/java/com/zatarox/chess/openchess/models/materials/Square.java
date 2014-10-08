@@ -33,6 +33,11 @@ public enum Square {
     //
     A8, B8, C8, D8, E8, F8, G8, H8;
 
+    private static final Square[] longWhite = new Square[]{A1, B1, C1, D1, E1};
+    private static final Square[] shortWhite = new Square[]{E1, F1, G1, H1};
+    private static final Square[] longBlack = new Square[]{A8, B8, C8, D8, E8};
+    private static final Square[] shortBlack = new Square[]{E8, F8, G8, H8};
+
     public enum File {
 
         A, B, C, D, E, F, G, H;
@@ -66,7 +71,22 @@ public enum Square {
     public static Square from(File file, Rank rank) {
         return values()[8 * rank.ordinal() + file.ordinal()];
     }
-    
+
+    public static Square[] getCastling(Castle castle, BoardSide side) {
+        Square[] result = null;
+        switch (castle) {
+            case SHORT:
+                result = side == BoardSide.WHITE ? shortWhite : shortBlack;
+                break;
+            case LONG:
+                result = side == BoardSide.WHITE ? longWhite : longBlack;
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        return result;
+    }
+
     public long toLong() {
         return 1L << this.ordinal();
     }

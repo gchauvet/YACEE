@@ -46,19 +46,31 @@ public class SquareTest {
         assertThat(Square.H1, is(Square.from(File.H, Rank._1)));
         assertThat(Square.H8, is(Square.from(File.H, Rank._8)));
     }
-    
+
     @Test
     public void testFileMirroring() {
-       assertThat(File.A.mirror(), is(File.H));
-       assertThat(File.H.mirror(), is(File.A));
-       assertThat(File.D.mirror(), is(File.E));
-       assertThat(File.E.mirror(), is(File.D));
+        assertThat(File.A.mirror(), is(File.H));
+        assertThat(File.H.mirror(), is(File.A));
+        assertThat(File.D.mirror(), is(File.E));
+        assertThat(File.E.mirror(), is(File.D));
     }
-    
+
     @Test
     public void testToLong() {
         assertThat(Square.A1.toLong(), is(1L));
         assertThat(Square.H8.toLong(), is(1L << 63));
+    }
+
+    @Test
+    public void longCastle() {
+        assertThat(Square.getCastling(Castle.LONG, BoardSide.WHITE), equalTo(new Square[]{Square.A1, Square.B1, Square.C1, Square.D1, Square.E1}));
+        assertThat(Square.getCastling(Castle.LONG, BoardSide.BLACK), equalTo(new Square[]{Square.A8, Square.B8, Square.C8, Square.D8, Square.E8}));
+    }
+    
+    @Test
+    public void shortCastle() {
+        assertThat(Square.getCastling(Castle.SHORT, BoardSide.WHITE), equalTo(new Square[]{Square.E1, Square.F1, Square.G1, Square.H1}));
+        assertThat(Square.getCastling(Castle.SHORT, BoardSide.BLACK), equalTo(new Square[]{Square.E8, Square.F8, Square.G8, Square.H8}));
     }
 
 }
