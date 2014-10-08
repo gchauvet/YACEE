@@ -29,9 +29,9 @@ public interface Generator {
     Queue<Move> attacks(ChessBoard board);
     
     /**
-     * @param board
-     * @param square
-     * @return true if square is "en prise" from current player.
+     * @param board The chessboard
+     * @param square Square containing stone to check
+     * @return true if square is "en prise" from color of opposite stone.
      * @throws IllegalArgumentException
      */
     boolean isEnPrise(ChessBoard board, Square square) throws IllegalArgumentException;

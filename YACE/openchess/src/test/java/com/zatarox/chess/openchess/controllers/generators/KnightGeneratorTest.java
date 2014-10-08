@@ -29,26 +29,40 @@ import static org.junit.matchers.JUnitMatchers.hasItems;
 
 public class KnightGeneratorTest {
 
-    private Notation notation;
     private Generator instance;
+    private ChessBoard board;
 
     @Before
     public void setUp() {
-        notation = new ForsythEdwardsNotation("8/8/2P1k1N1/6b1/5p2/p7/P3K3/8 w - - 0 1");
+        final Notation notation = new ForsythEdwardsNotation("8/8/2P1k1N1/6b1/5p2/p7/P3K3/8 w - - 0 1");
         instance = GeneratorsFactorySingleton.getInstance().from(Piece.KNIGHT);
+        board = notation.create();
     }
 
     @Test
     public void attacks() {
-        final ChessBoard board = notation.create();
         final Queue<Move> attacks = instance.attacks(board, Square.G6);
         assertThat(attacks.size(), is(1));
         assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.G6, Square.F4, Piece.PAWN)));
     }
 
     @Test
+    public void enPriseNg6pf4() {
+        assertTrue(instance.isEnPrise(board, Square.F4));
+    }
+    
+    @Test
+    public void enPriseNg6bg5() {
+        assertFalse(instance.isEnPrise(board, Square.G5));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void noPieceEnPriseNg6h4() {
+        assertTrue(instance.isEnPrise(board, Square.H4));
+    }
+
+    @Test
     public void fills() {
-        final ChessBoard board = notation.create();
         final Queue<Move> fills = instance.fills(board, Square.G6);
         assertThat(fills.size(), is(5));
         assertThat(fills, hasItems(

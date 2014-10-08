@@ -50,12 +50,14 @@ public abstract class AbstractGenerator implements Generator {
 
     abstract protected long squareAttacked(long square, int shift, long border);
 
+    /**
+     * Can't be final, for pawns generation...
+     */
     @Override
     public Queue<Move> attacks(ChessBoard board, Square square) throws IllegalArgumentException {
         if (!board.isOccuped(square)) {
             throw new IllegalArgumentException("No attacker piece");
         }
-        // Can't be final, for pawns generation...
         final BitBoard all = board.getSide(BoardSide.WHITE).getSnapshot();
         all.merge(board.getSide(BoardSide.BLACK).getSnapshot());
         final Stone stone = board.getStone(square);
@@ -84,9 +86,11 @@ public abstract class AbstractGenerator implements Generator {
         return (attacks.unwrap() & square.toLong()) != 0;
     }
 
+    /**
+     * Can't be final, for pawns generation...
+     */
     @Override
     public Queue<Move> fills(ChessBoard board, Square square) {
-        // Can't be final, for pawns generation...
         final BitBoard all = board.getSide(BoardSide.WHITE).getSnapshot();
         all.merge(board.getSide(BoardSide.BLACK).getSnapshot());
         final BitBoard attacks = new BitBoard(coverage(square, all, board.getTurn()) & ~all.unwrap());
@@ -139,7 +143,7 @@ public abstract class AbstractGenerator implements Generator {
      * @param color
      * @return
      */
-    abstract protected long coverage(Square index, BitBoard all, BoardSide color);
+    abstract long coverage(Square index, BitBoard all, BoardSide color);
 
     /**
      * Call it from final constructor for magic bitboard initialization.

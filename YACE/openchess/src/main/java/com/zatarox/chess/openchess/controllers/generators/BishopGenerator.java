@@ -77,7 +77,7 @@ final class BishopGenerator extends AbstractSliderGenerator {
     }
 
     @Override
-    protected long coverage(Square index, BitBoard all, BoardSide turn) {
+    long coverage(Square index, BitBoard all, BoardSide turn) {
         int i = magicTransform(all.unwrap() & bishopMask[index.ordinal()], bishopMagicNumber[index.ordinal()], bishopShiftBits[index.ordinal()]);
         return bishopMagic[index.ordinal()][i];
     }

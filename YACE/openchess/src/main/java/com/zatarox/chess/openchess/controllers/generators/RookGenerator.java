@@ -81,7 +81,7 @@ final class RookGenerator extends AbstractSliderGenerator {
     }
 
     @Override
-    protected long coverage(Square index, BitBoard all, BoardSide turn) {
+    long coverage(Square index, BitBoard all, BoardSide turn) {
         final int i = magicTransform(all.unwrap() & rookMask[index.ordinal()], rookMagicNumber[index.ordinal()], rookShiftBits[index.ordinal()]);
         return rookMagic[index.ordinal()][i];
     }

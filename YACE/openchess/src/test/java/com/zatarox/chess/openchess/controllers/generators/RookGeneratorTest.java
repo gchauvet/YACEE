@@ -29,26 +29,45 @@ import static org.junit.matchers.JUnitMatchers.hasItems;
 
 public class RookGeneratorTest {
 
-    private Notation notation;
     private Generator instance;
+    private ChessBoard board;
 
     @Before
     public void setUp() {
-        notation = new ForsythEdwardsNotation("r3k2r/pp1p1pbp/2n3p1/8/8/2NR1N2/PPP2PPP/5RK1 w - - 0 1");
+        final Notation notation = new ForsythEdwardsNotation("r3k2r/pp1p1pbp/2n3p1/8/8/2NR1N2/PPP2PPP/5RK1 w - - 0 1");
         instance = GeneratorsFactorySingleton.getInstance().from(Piece.ROOK);
+        board = notation.create();
     }
 
     @Test
     public void attacks() {
-        final ChessBoard board = notation.create();
         final Queue<Move> attacks = instance.attacks(board, Square.D3);
         assertThat(attacks.size(), is(1));
         assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.D3, Square.D7, Piece.PAWN)));
     }
 
     @Test
+    public void enPriseRd3pd7() {
+        assertTrue(instance.isEnPrise(board, Square.D7));
+    }
+
+    @Test
+    public void enPriseRd3nc6() {
+        assertFalse(instance.isEnPrise(board, Square.C6));
+    }
+    
+    @Test
+    public void enPriseRd3Nf3() {
+        assertFalse(instance.isEnPrise(board, Square.F3));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void notEnPriseRd3d5() {
+        assertTrue(instance.isEnPrise(board, Square.D5));
+    }
+
+    @Test
     public void fills() {
-        final ChessBoard board = notation.create();
         final Queue<Move> fills = instance.fills(board, Square.D3);
         assertThat(fills.size(), is(6));
         assertThat(fills, hasItems(

@@ -29,31 +29,50 @@ import static org.junit.matchers.JUnitMatchers.hasItems;
 
 public class KingGeneratorTest {
 
-    private Notation notation;
     private Generator instance;
+    private ChessBoard board;
 
     @Before
     public void setUp() {
-        notation = new ForsythEdwardsNotation("2q2r1k/p3b2B/bp2pn1Q/8/3P4/8/PP1B1PPP/6K1 w - - 0 1");
+        final Notation notation = new ForsythEdwardsNotation("2q2r1k/p3b2B/bp2pn1Q/8/3P4/8/PP1B1PPP/6K1 w - - 0 1");
         instance = GeneratorsFactorySingleton.getInstance().from(Piece.KING);
+        board = notation.create();
     }
 
     @Test
     public void attacks() {
-        final ChessBoard board = notation.create();
         final Queue<Move> attacks = instance.attacks(board, Square.H8);
         assertThat(attacks.size(), is(1));
         assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.H8, Square.H7, Piece.BISHOP)));
     }
-    
+
+    @Test(expected = IllegalArgumentException.class)
+    public void attackFromEmptySquare() {
+        assertTrue(instance.attacks(board, Square.G7).isEmpty());
+    }
+
+    @Test
+    public void enPrisekh8Bh7() {
+        assertTrue(instance.isEnPrise(board, Square.H7));
+    }
+
+    @Test
+    public void enPrisekh8Qh6() {
+        assertFalse(instance.isEnPrise(board, Square.H6));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void enPrisekh8g8() {
+        assertTrue(instance.isEnPrise(board, Square.G8));
+    }
+
     @Test
     public void fills() {
-        final ChessBoard board = notation.create();
         final Queue<Move> fills = instance.fills(board, Square.H8);
         assertThat(fills.size(), is(2));
         assertThat(fills, hasItems(
-            MovesFactorySingleton.getInstance().createNormal(Square.H8, Square.G8),
-            MovesFactorySingleton.getInstance().createNormal(Square.H8, Square.G7)
+                MovesFactorySingleton.getInstance().createNormal(Square.H8, Square.G8),
+                MovesFactorySingleton.getInstance().createNormal(Square.H8, Square.G7)
         ));
     }
 

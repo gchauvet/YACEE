@@ -29,18 +29,18 @@ import static org.junit.matchers.JUnitMatchers.hasItems;
 
 public class QueenGeneratorTest {
 
-    private Notation notation;
     private Generator instance;
+    private ChessBoard board;
 
     @Before
     public void setUp() {
-        notation = new ForsythEdwardsNotation("1k4q1/1p2Rprp/p1p5/2Pp4/1P1Q3P/6P1/P5K1/8 w - - 0 1");
+        final Notation notation = new ForsythEdwardsNotation("1k4q1/1p2Rprp/p1p5/2Pp4/1P1Q3P/6P1/P5K1/8 w - - 0 1");
         instance = GeneratorsFactorySingleton.getInstance().from(Piece.QUEEN);
+        board = notation.create();
     }
 
     @Test
     public void attacksQueenD4() {
-        final ChessBoard board = notation.create();
         final Queue<Move> attacks = instance.attacks(board, Square.D4);
         assertThat(attacks.size(), is(2));
         assertThat(attacks, hasItems(
@@ -50,15 +50,23 @@ public class QueenGeneratorTest {
     }
 
     @Test
+    public void enPriseQd4Rg7() {
+        assertTrue(instance.isEnPrise(board, Square.G7));
+    }
+    
+    @Test
+    public void enPriseQd4pf7() {
+        assertFalse(instance.isEnPrise(board, Square.F7));
+    }
+
+    @Test
     public void attacksQueenG8() {
-        final ChessBoard board = notation.create();
         final Queue<Move> attacks = instance.attacks(board, Square.G8);
         assertTrue(attacks.isEmpty());
     }
 
     @Test
     public void fillQueenD4() {
-        final ChessBoard board = notation.create();
         final Queue<Move> fills = instance.fills(board, Square.D4);
         assertThat(fills.size(), is(15));
         assertThat(fills, hasItems(
@@ -82,7 +90,6 @@ public class QueenGeneratorTest {
 
     @Test
     public void fillQueenG8() {
-        final ChessBoard board = notation.create();
         final Queue<Move> fills = instance.fills(board, Square.G8);
         assertThat(fills.size(), is(5));
         assertThat(fills, hasItems(
