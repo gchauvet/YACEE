@@ -43,7 +43,7 @@ public class KingGeneratorTest {
     public void attacks() {
         final Queue<Move> attacks = instance.attacks(board, Square.H8);
         assertThat(attacks.size(), is(1));
-        assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.H8, Square.H7, Piece.BISHOP)));
+        assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.H8, Square.H7, new Stone(Piece.BISHOP, BoardSide.WHITE))));
     }
 
     @Test(expected = IllegalArgumentException.class)

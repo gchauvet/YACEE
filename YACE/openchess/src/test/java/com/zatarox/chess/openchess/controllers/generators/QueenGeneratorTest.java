@@ -44,8 +44,8 @@ public class QueenGeneratorTest {
         final Queue<Move> attacks = instance.attacks(board, Square.D4);
         assertThat(attacks.size(), is(2));
         assertThat(attacks, hasItems(
-                MovesFactorySingleton.getInstance().createCapture(Square.D4, Square.G7, Piece.ROOK),
-                MovesFactorySingleton.getInstance().createCapture(Square.D4, Square.D5, Piece.PAWN)
+                MovesFactorySingleton.getInstance().createCapture(Square.D4, Square.G7, new Stone(Piece.ROOK, BoardSide.BLACK)),
+                MovesFactorySingleton.getInstance().createCapture(Square.D4, Square.D5, new Stone(Piece.PAWN, BoardSide.BLACK))
         ));
     }
 

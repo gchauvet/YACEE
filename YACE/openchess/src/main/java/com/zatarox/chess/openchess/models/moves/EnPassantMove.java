@@ -30,15 +30,14 @@ public final class EnPassantMove extends BasicMove {
     protected void doPlay(ChessBoard board) throws IllegalMoveException {
         super.doPlay(board);
         enpassant = board.getSide(board.getTurn()).getEnpassant();
-        board.getSide(board.getTurn().flip()).get(Piece.PAWN).unset(enpassant);
+        board.unsetPiece(Square.from(enpassant.getFileIndex(), getFrom().getRankIndex()));
         board.getSide(board.getTurn()).setEnpassant(null);
     }
 
     @Override
     protected void doUnplay(ChessBoard board) throws IllegalMoveException {
         super.doUnplay(board);
-        final Square remove = Square.from(getTo().getFileIndex(), getFrom().getRankIndex());
-        board.getSide(board.getTurn().flip()).get(Piece.PAWN).set(remove);
+        board.setPiece(Square.from(getTo().getFileIndex(), getFrom().getRankIndex()), new Stone(Piece.PAWN, board.getTurn().flip()));
         board.getSide(board.getTurn().flip()).setEnpassant(enpassant);
         enpassant = null;
     }

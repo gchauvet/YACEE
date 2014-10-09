@@ -64,7 +64,7 @@ public abstract class AbstractGenerator implements Generator {
         final BitBoard attacks = new BitBoard(coverage(square, all, board.getTurn()) & board.getSide(stone.getSide().flip()).getSnapshot().unwrap());
         final Queue<Move> result = new PriorityQueue<>();
         for (Square to : attacks) {
-            final Move move = MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to).getPiece());
+            final Move move = MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to));
             getPonder().compute(board, (MoveVisitable) move);
             result.add(move);
         }

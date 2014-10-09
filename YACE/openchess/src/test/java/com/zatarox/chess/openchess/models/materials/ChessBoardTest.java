@@ -19,12 +19,19 @@ import com.zatarox.chess.openchess.models.moves.exceptions.IllegalMoveException;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import org.junit.Before;
 
 public final class ChessBoardTest {
 
+    private ChessBoard instance;
+    
+    @Before
+    public void setUp() {
+        instance = new ChessBoard();
+    }
+    
     @Test
     public void testClear() {
-        ChessBoard instance = new ChessBoard();
         int count = 0;
         for (BoardSide trait : BoardSide.values()) {
             for (Piece piece : Piece.values()) {
@@ -32,6 +39,7 @@ public final class ChessBoardTest {
             }
         }
         assertThat(count, is(0));
+        assertThat(instance.getHashing().hashCode64(), is(0L));
     }
 
     @Test
@@ -39,8 +47,9 @@ public final class ChessBoardTest {
         BoardSide color = BoardSide.WHITE;
         Piece piece = Piece.ROOK;
         Square square = Square.C7;
-        ChessBoard instance = new ChessBoard();
+        assertThat(instance.getHashing().hashCode64(), is(0L));
         instance.setPiece(square, new Stone(piece, color));
+        assertThat(instance.getHashing().hashCode64(), is(not(0L)));
         assertTrue(instance.getSide(color).get(piece).isOccuped(square));
         assertThat(instance.getStone(square).getSide(), is(BoardSide.WHITE));
     }
@@ -48,16 +57,16 @@ public final class ChessBoardTest {
     @Test
     public void testUnsetPiece() throws IllegalMoveException {
         Square square = Square.H2;
-        ChessBoard instance = new ChessBoard();
         instance.setPiece(square, new Stone(Piece.PAWN, BoardSide.WHITE));
         assertTrue(instance.isOccuped(square));
+        assertThat(instance.getHashing().hashCode64(), is(not(0L)));
         instance.unsetPiece(square);
         assertFalse(instance.isOccuped(square));
+        assertThat(instance.getHashing().hashCode64(), is(0L));
     }
 
     @Test
     public void testTurn() {
-        ChessBoard instance = new ChessBoard();
         BoardSide expResult = BoardSide.BLACK;
         instance.setTurn(expResult);
         assertEquals(expResult, instance.getTurn());
@@ -68,7 +77,6 @@ public final class ChessBoardTest {
     
     @Test
     public void testSnapshot() throws IllegalMoveException {
-        final ChessBoard instance = new ChessBoard();
         instance.setPiece(Square.A1, new Stone(Piece.PAWN, BoardSide.WHITE));
         instance.setPiece(Square.A2, new Stone(Piece.KNIGHT, BoardSide.WHITE));
         instance.setPiece(Square.H4, new Stone(Piece.ROOK, BoardSide.BLACK));
@@ -87,7 +95,6 @@ public final class ChessBoardTest {
     
     @Test
     public void testSnapshotForPieces() throws IllegalMoveException {
-        final ChessBoard instance = new ChessBoard();
         instance.setPiece(Square.A1, new Stone(Piece.PAWN, BoardSide.WHITE));
         instance.setPiece(Square.H4, new Stone(Piece.PAWN, BoardSide.BLACK));
         instance.setPiece(Square.A2, new Stone(Piece.ROOK, BoardSide.WHITE));

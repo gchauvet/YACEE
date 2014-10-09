@@ -58,21 +58,23 @@ public abstract class AbstractMove implements Serializable, Comparable<AbstractM
 
     protected void move(ChessBoard board, Square from, Square to) throws IllegalMoveException {
         final Stone stone = board.getStone(from);
-        final BitBoard bitboard = board.getSide(stone.getSide()).get(stone.getPiece());
-        bitboard.unset(from);
-        bitboard.set(to);
+        board.unsetPiece(from);
+        board.setPiece(to, stone);
     }
 
     protected void unmove(ChessBoard board, Square from, Square to) throws IllegalMoveException {
         final Stone stone = board.getStone(to);
-        final BitBoard bitboard = board.getSide(stone.getSide()).get(stone.getPiece());
-        bitboard.unset(to);
-        bitboard.set(from);
+        board.unsetPiece(to);
+        board.setPiece(from, stone);
     }
 
-    private void checkLegalMove(ChessBoard board) throws SelfMateMoveException {
+    private void checkLegalMove(ChessBoard board) throws SelfMateMoveException, IllegalMoveException {
         final Stone stone = board.getStone(getTo());
-        final Square king = board.getSide(stone.getSide()).get(Piece.KING).iterator().next();
+        final BitBoard kingboard = board.getSide(stone.getSide()).get(Piece.KING);
+        if (kingboard.isEmpty()) {
+            throw new IllegalMoveException("No king");
+        }
+        final Square king = kingboard.iterator().next();
         if (GeneratorFacade.getInstance().isEnPrise(board, king)) {
             throw new SelfMateMoveException();
         }

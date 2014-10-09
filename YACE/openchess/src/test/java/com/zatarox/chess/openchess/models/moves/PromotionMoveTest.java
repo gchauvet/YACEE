@@ -77,7 +77,7 @@ public class PromotionMoveTest {
 
     @Test(expected = IllegalMoveException.class)
     public void replayMove() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.E7, Square.D8, Piece.KNIGHT);
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.E7, Square.D8, new Stone(Piece.KNIGHT, BoardSide.WHITE));
         move.play(board);
         move.play(board);
     }

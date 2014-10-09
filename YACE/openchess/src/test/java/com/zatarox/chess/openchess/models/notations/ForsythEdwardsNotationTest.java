@@ -72,6 +72,7 @@ public class ForsythEdwardsNotationTest {
     public void createDefaultBoard() {
         final Notation instance = new ForsythEdwardsNotation();
         final ChessBoard board = instance.create();
+        assertThat(board.getHashing().hashCode64(), is(not(0L)));
         assertNotNull(board);
         assertFalse(board.isEmpty());
         // Check chessboard side
@@ -141,6 +142,7 @@ public class ForsythEdwardsNotationTest {
     public void testEmptyChessboard() {
         final Notation fen = new ForsythEdwardsNotation("8/8/8/8/8/8/8/8 b - - 0 2");
         final ChessBoard board = fen.create();
+        assertThat(board.getHashing().hashCode64(), is(0L));
         assertTrue(board.isEmpty());
         assertThat(board.getTurn(), is(BoardSide.BLACK));
         assertThat(board.getHalfmove(), is((short) 0));
@@ -151,6 +153,7 @@ public class ForsythEdwardsNotationTest {
     public void testOnlyKings() {
         final Notation fen = new ForsythEdwardsNotation("8/3k4/8/8/8/1K6/8/8 b - - 0 12");
         final ChessBoard board = fen.create();
+        assertThat(board.getHashing().hashCode64(), is(not(0L)));
         assertFalse(board.isEmpty());
         assertThat(board.getStone(Square.D7), equalTo(new Stone(Piece.KING, BoardSide.BLACK)));
         assertThat(board.getStone(Square.B3), equalTo(new Stone(Piece.KING, BoardSide.WHITE)));
@@ -164,6 +167,7 @@ public class ForsythEdwardsNotationTest {
     public void testRookBattery() {
         final Notation fen = new ForsythEdwardsNotation("r3k2r/pp1p1pbp/2n3p1/8/8/2NR1N2/PPP2PPP/5RK1 w - - 0 1");
         final ChessBoard board = fen.create();
+        assertThat(board.getHashing().hashCode64(), is(not(0L)));
         // Pawns
         assertThat(board.getStone(Square.from(File.B, Rank._2)), is(new Stone(Piece.PAWN, BoardSide.WHITE)));
 

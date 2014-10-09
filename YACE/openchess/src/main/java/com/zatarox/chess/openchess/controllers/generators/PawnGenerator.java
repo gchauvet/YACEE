@@ -77,7 +77,7 @@ final class PawnGenerator extends AbstractPushGenerator {
                     result.add(move);
                 }
             } else {
-                final Move move = MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to).getPiece());
+                final Move move = MovesFactorySingleton.getInstance().createCapture(square, to, board.getStone(to));
                 getPonder().compute(board, (MoveVisitable) move);
                 result.add(move);
             }

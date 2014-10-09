@@ -17,7 +17,6 @@ package com.zatarox.chess.openchess.models.materials;
 
 import com.zatarox.chess.openchess.models.materials.Square.File;
 import com.zatarox.chess.openchess.models.materials.Square.Rank;
-import com.zatarox.chess.openchess.models.moves.exceptions.IllegalMoveException;
 import java.io.Serializable;
 import java.util.EnumMap;
 
@@ -27,11 +26,20 @@ public final class ChessBoard implements Serializable {
     private BoardSide turn;
     private short halfmove = 0;
     private short fullmove = 0;
+    private HashStrategy hashing = new ZobristHashStrategy();
 
     public ChessBoard() {
         for (BoardSide trait : BoardSide.values()) {
             sides.put(trait, new Player());
         }
+    }
+
+    public void setHashing(HashStrategy hashing) {
+        this.hashing = hashing;
+    }
+
+    public HashStrategy getHashing() {
+        return hashing;
     }
 
     /**
@@ -108,9 +116,9 @@ public final class ChessBoard implements Serializable {
         return null;
     }
 
-    public void setPiece(Square square, Stone stone) throws IllegalMoveException {
+    public void setPiece(Square square, Stone stone) throws IllegalArgumentException {
         if (isOccuped(square)) {
-            throw new IllegalMoveException("A piece already defined for square " + square.name());
+            throw new IllegalArgumentException("A piece already defined for square " + square.name());
         }
         if (stone.getPiece() == Piece.KING) {
             if (getSide(stone.getSide()).get(stone.getPiece()).getSize() > 0) {
@@ -118,14 +126,13 @@ public final class ChessBoard implements Serializable {
             }
         }
         getSide(stone.getSide()).get(stone.getPiece()).set(square);
+        hashing.add(stone, square);
     }
 
     public void unsetPiece(Square square) {
-        for (BoardSide t : BoardSide.values()) {
-            for (Piece p : Piece.values()) {
-                getSide(t).get(p).unset(square);
-            }
-        }
+        final Stone stone = getStone(square);
+        getSide(stone.getSide()).get(stone.getPiece()).unset(square);
+        hashing.remove(stone, square);
     }
 
     public BoardSide getTurn() {

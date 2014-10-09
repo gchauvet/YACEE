@@ -43,7 +43,7 @@ public class KnightGeneratorTest {
     public void attacks() {
         final Queue<Move> attacks = instance.attacks(board, Square.G6);
         assertThat(attacks.size(), is(1));
-        assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.G6, Square.F4, Piece.PAWN)));
+        assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.G6, Square.F4, new Stone(Piece.PAWN, BoardSide.BLACK))));
     }
 
     @Test

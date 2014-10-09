@@ -15,7 +15,6 @@
  */
 package com.zatarox.chess.openchess.models.materials;
 
-import com.google.common.base.Objects;
 import java.io.Serializable;
 
 public class Stone implements Serializable {
@@ -45,7 +44,7 @@ public class Stone implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(piece, side);
+        return piece.hashCode() ^ side.hashCode();
     }
 
     @Override
@@ -62,7 +61,7 @@ public class Stone implements Serializable {
     public String toString() {
         String result;
         if (piece != null & side != null) {
-            result = piece.name() + " " + side.name();
+            result = side.name() + " " + piece.name();
         } else {
             result = super.toString();
         }

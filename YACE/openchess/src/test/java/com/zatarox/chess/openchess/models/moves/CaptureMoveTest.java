@@ -43,7 +43,7 @@ public class CaptureMoveTest {
 
     @Test(expected = IllegalMoveException.class)
     public void noPieceToMove() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.A2, Square.B3, Piece.PAWN);
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.A2, Square.B3, new Stone(Piece.PAWN, BoardSide.WHITE));
         move.play(board);
     }
 
@@ -55,13 +55,13 @@ public class CaptureMoveTest {
 
     @Test(expected = SelfMateMoveException.class)
     public void playPinnedRookE4() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.E4, Square.H4, Piece.QUEEN);
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.E4, Square.H4, new Stone(Piece.QUEEN, BoardSide.WHITE));
         move.play(board);
     }
 
     @Test
     public void unplayPinnedRookE4() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.E4, Square.H4, Piece.QUEEN);
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.E4, Square.H4, new Stone(Piece.QUEEN, BoardSide.WHITE));
         try {
             move.play(board);
         } catch (SelfMateMoveException ex) {
@@ -73,37 +73,37 @@ public class CaptureMoveTest {
 
     @Test(expected = IllegalMoveException.class)
     public void playUnvalidCaptureRookE4() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.E4, Square.A4, Piece.QUEEN);
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.E4, Square.A4, new Stone(Piece.QUEEN, BoardSide.WHITE));
         move.play(board);
     }
 
     @Test(expected = IllegalMoveException.class)
     public void playNoCaptureQueenH4() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.G4, Piece.PAWN);
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.G4, new Stone(Piece.PAWN, BoardSide.WHITE));
         move.play(board);
     }
 
     @Test(expected = IllegalMoveException.class)
     public void playNoPieceToCapture() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.B4, Square.B2, Piece.PAWN);
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.B4, Square.B2, new Stone(Piece.PAWN, BoardSide.WHITE));
         move.play(board);
     }
 
     @Test
     public void playMove() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.H7, Piece.PAWN);
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.H7, new Stone(Piece.PAWN, BoardSide.WHITE));
         move.play(board);
     }
     
     @Test
     public void playMoveWithMate() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.E4, Piece.ROOK);
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.E4, new Stone(Piece.ROOK, BoardSide.WHITE));
         move.play(board);
     }
 
     @Test(expected = IllegalMoveException.class)
     public void replayMove() throws IllegalMoveException, SelfMateMoveException {
-        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.H7, Piece.PAWN);
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.H7, new Stone(Piece.PAWN, BoardSide.WHITE));
         move.play(board);
         move.play(board);
     }

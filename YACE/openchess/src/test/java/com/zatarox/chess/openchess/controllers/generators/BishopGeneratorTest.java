@@ -43,7 +43,7 @@ public class BishopGeneratorTest {
     public void attacksBishopG2() {
         final Queue<Move> attacks = instance.attacks(board, Square.G2);
         assertThat(attacks.size(), is(1));
-        assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.G2, Square.E4, Piece.KNIGHT)));
+        assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.G2, Square.E4, board.getStone(Square.E4))));
     }
 
     @Test(expected = IllegalArgumentException.class)

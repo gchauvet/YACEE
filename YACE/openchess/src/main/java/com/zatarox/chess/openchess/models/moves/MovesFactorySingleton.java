@@ -32,7 +32,7 @@ public final class MovesFactorySingleton {
         return new ChargeMove(from, to);
     }
 
-    public Move createCapture(Square from, Square to, Piece captured) {
+    public Move createCapture(Square from, Square to, Stone captured) {
         return new CaptureMove(from, to, captured);
     }
 

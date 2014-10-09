@@ -28,44 +28,54 @@ import static org.hamcrest.CoreMatchers.*;
 public class BasicMoveTest {
 
     private ChessBoard board;
+    private long hash;
 
     @Before
     public void setUp() {
         final Notation notation = new ForsythEdwardsNotation("k1r5/8/P1N5/8/2K1n3/6p1/5bB1/8 w - - 0 1");
         board = notation.create();
+        hash = board.getHashing().hashCode64();
+        assertThat(hash, is(not(0L)));
     }
 
     @Test(expected = AssertionError.class)
     public void moveWithNull() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createNormal(null, null);
         move.play(board);
+        assertThat(board.getHashing().hashCode64(), is(not(hash)));
     }
 
     @Test(expected = IllegalMoveException.class)
     public void noPieceToMove() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createNormal(Square.H7, Square.H4);
         move.play(board);
+        assertThat(board.getHashing().hashCode64(), is(not(hash)));
     }
 
     @Test(expected = AssertionError.class)
     public void noMove() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createNormal(Square.H7, Square.H7);
         move.play(board);
+        assertThat(board.getHashing().hashCode64(), is(not(hash)));
     }
 
     @Test(expected = SelfMateMoveException.class)
     public void pinnedPiece() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createNormal(Square.C6, Square.E5);
         move.play(board);
+        assertThat(board.getHashing().hashCode64(), is(not(hash)));
     }
 
     @Test
     public void playBishop() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createNormal(Square.F2, Square.A7);
         move.play(board);
+        assertThat(board.getHashing().hashCode64(), is(not(hash)));
+        assertThat(board.getHashing().hashCode64(), is(not(hash)));
         assertThat(board.getStone(Square.A7), equalTo(new Stone(Piece.BISHOP, BoardSide.BLACK)));
         assertFalse(board.isOccuped(Square.F2));
         move.unplay(board);
+        assertThat(board.getHashing().hashCode64(), is(hash));
         assertTrue(board.isOccuped(Square.F2));
         assertThat(board.getStone(Square.F2), equalTo(new Stone(Piece.BISHOP, BoardSide.BLACK)));
     }
@@ -74,12 +84,14 @@ public class BasicMoveTest {
     public void playIllegalKing() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createNormal(Square.C4, Square.C5);
         move.play(board);
+        assertThat(board.getHashing().hashCode64(), is(not(hash)));
     }
 
     @Test(expected = IllegalMoveException.class)
     public void replayMove() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createNormal(Square.C4, Square.B3);
         move.play(board);
+        assertThat(board.getHashing().hashCode64(), is(not(hash)));
         move.play(board);
     }
 
@@ -87,6 +99,7 @@ public class BasicMoveTest {
     public void unplayedNotPlayedMove() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createNormal(Square.C4, Square.C5);
         move.unplay(board);
+        assertThat(board.getHashing().hashCode64(), is(not(hash)));
     }
 
 }

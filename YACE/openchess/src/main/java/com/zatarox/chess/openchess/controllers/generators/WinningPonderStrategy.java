@@ -35,7 +35,7 @@ public final class WinningPonderStrategy implements MovePonderingStrategy {
 
             @Override
             public void visit(CaptureMove visit) {
-                visit.setScore(visit.getCaptured().getPonderation() * 10 - board.getStone(visit.getFrom()).getPiece().getPonderation());
+                visit.setScore(visit.getCaptured().getPiece().getPonderation() * 10 - board.getStone(visit.getFrom()).getPiece().getPonderation());
             }
 
             @Override

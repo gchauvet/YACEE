@@ -43,7 +43,7 @@ public class RookGeneratorTest {
     public void attacks() {
         final Queue<Move> attacks = instance.attacks(board, Square.D3);
         assertThat(attacks.size(), is(1));
-        assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.D3, Square.D7, Piece.PAWN)));
+        assertThat(attacks, hasItems(MovesFactorySingleton.getInstance().createCapture(Square.D3, Square.D7, new Stone(Piece.PAWN, BoardSide.BLACK))));
     }
 
     @Test

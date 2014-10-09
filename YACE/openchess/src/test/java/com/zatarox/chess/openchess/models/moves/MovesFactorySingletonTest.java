@@ -31,7 +31,7 @@ public final class MovesFactorySingletonTest {
 
     @Test
     public void createNormal() {
-        assertEquals(mover.createCapture(Square.A1, Square.A2, Piece.PAWN).getClass(), CaptureMove.class);
+        assertEquals(mover.createCapture(Square.A1, Square.A2, new Stone(Piece.PAWN, BoardSide.BLACK)).getClass(), CaptureMove.class);
     }
 
     @Test

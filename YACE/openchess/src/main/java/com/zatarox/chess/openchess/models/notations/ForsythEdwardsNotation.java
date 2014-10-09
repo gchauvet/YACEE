@@ -308,7 +308,7 @@ public final class ForsythEdwardsNotation implements Notation {
         for (RankStoneExpression rank : ((List<RankStoneExpression>) parsed.get(0))) {
             for (File f : rank) {
                 final StoneExpression p = rank.get(f);
-                result.getSide(p.getSide()).get(p.getPiece()).set(Square.from(f, Rank.values()[r]));
+                result.setPiece(Square.from(f, Rank.values()[r]), new Stone(p.getPiece(), p.getSide()));
             }
             r--;
         }

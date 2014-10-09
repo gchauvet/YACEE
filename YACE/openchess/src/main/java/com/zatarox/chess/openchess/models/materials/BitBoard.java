@@ -56,7 +56,7 @@ public final class BitBoard implements Serializable, Iterable<Square> {
     /**
      * @param squares Squares used by pieces on this bitboard
      */
-    public void set(Set<Square> squares) {
+    void set(Set<Square> squares) {
         for (Square square : squares) {
             set(square);
         }
@@ -65,14 +65,14 @@ public final class BitBoard implements Serializable, Iterable<Square> {
     /**
      * @param square Add a piece on this bitboard
      */
-    public void set(Square square) {
+    void set(Square square) {
         board |= square.toBitMask();
     }
 
     /**
      * @param square Remove piece on the bitboard
      */
-    public void unset(Square square) {
+    void unset(Square square) {
         board &= ~square.toBitMask();
     }
 

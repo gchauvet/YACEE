@@ -20,15 +20,15 @@ import com.zatarox.chess.openchess.models.materials.*;
 
 public final class CaptureMove extends BasicMove {
 
-    private final Piece captured;
+    private final Stone captured;
 
-    public CaptureMove(Square from, Square to, Piece captured) {
+    public CaptureMove(Square from, Square to, Stone captured) {
         super(from, to);
         assert captured != null;
         this.captured = captured;
     }
 
-    public Piece getCaptured() {
+    public Stone getCaptured() {
         return captured;
     }
 
@@ -40,14 +40,14 @@ public final class CaptureMove extends BasicMove {
         if (board.getStone(getTo()).getSide() == board.getStone(getFrom()).getSide()) {
             throw new IllegalMoveException("Can't capture friend piece");
         }
-        board.getSide(board.getTurn().flip()).get(captured).unset(getTo());
+        board.unsetPiece(getTo());
         super.doPlay(board);
     }
 
     @Override
     protected void doUnplay(ChessBoard board) throws IllegalMoveException {
         super.doUnplay(board);
-        board.getSide(board.getTurn().flip()).get(captured).set(getTo());
+        board.setPiece(getTo(), captured);
     }
 
     @Override
@@ -55,7 +55,7 @@ public final class CaptureMove extends BasicMove {
         boolean result = super.equals((BasicMove) o);
         if (o instanceof CaptureMove) {
             CaptureMove other = (CaptureMove) o;
-            result &= other.captured == captured;
+            result &= other.captured.equals(captured);
         }
         return result;
     }
@@ -73,7 +73,7 @@ public final class CaptureMove extends BasicMove {
 
     @Override
     public String toString() {
-        return getFrom() + "x" + getTo();
+        return getFrom() + "x" + getTo() + " (" + captured + ")";
     }
 
 }
