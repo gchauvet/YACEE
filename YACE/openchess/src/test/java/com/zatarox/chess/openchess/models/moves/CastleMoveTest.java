@@ -109,4 +109,11 @@ public class CastleMoveTest {
         assertThat(board.getStone(Square.E8), equalTo(new Stone(Piece.KING, BoardSide.BLACK)));
         assertThat(board.getStone(Square.A8), equalTo(new Stone(Piece.ROOK, BoardSide.BLACK)));
     }
+
+    @Test(expected = IllegalMoveException.class)
+    public void replayMove() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createCastle(Castle.LONG, BoardSide.BLACK);
+        move.play(board);
+        move.play(board);
+    }
 }

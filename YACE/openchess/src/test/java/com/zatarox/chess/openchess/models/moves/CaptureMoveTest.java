@@ -84,8 +84,27 @@ public class CaptureMoveTest {
     }
 
     @Test(expected = IllegalMoveException.class)
-    public void playNoPieceCapturer() throws IllegalMoveException, SelfMateMoveException {
+    public void playNoPieceToCapture() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createCapture(Square.B4, Square.B2, Piece.PAWN);
+        move.play(board);
+    }
+
+    @Test
+    public void playMove() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.H7, Piece.PAWN);
+        move.play(board);
+    }
+    
+    @Test
+    public void playMoveWithMate() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.E4, Piece.ROOK);
+        move.play(board);
+    }
+
+    @Test(expected = IllegalMoveException.class)
+    public void replayMove() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.H7, Piece.PAWN);
+        move.play(board);
         move.play(board);
     }
 }

@@ -29,7 +29,7 @@ public class ChargeMove extends BasicMove {
     protected void doPlay(ChessBoard board) throws IllegalMoveException {
         super.doPlay(board);
         board.getSide(board.getTurn()).setEnpassant(Square.from(getFrom().getFileIndex(),
-                Rank.values()[getTo().getRankIndex().ordinal() + 8 * (board.getTurn() == BoardSide.WHITE ? -1 : 1)]));
+                Rank.values()[getTo().getRankIndex().ordinal() + (board.getTurn() == BoardSide.WHITE ? -1 : 1)]));
     }
 
     @Override
