@@ -17,10 +17,13 @@ package com.zatarox.chess.openchess.models.moves;
 
 import com.zatarox.chess.openchess.models.moves.exceptions.IllegalMoveException;
 import com.zatarox.chess.openchess.models.materials.*;
+import java.util.EnumSet;
+import java.util.Set;
 
 public final class CastleMove extends AbstractMove {
 
     private final Castle castle;
+    private Set<Castle> rigths = EnumSet.noneOf(Castle.class);
 
     private static Square castleFrom(BoardSide trait) {
         return trait == BoardSide.WHITE ? Square.E1 : Square.E8;
@@ -78,6 +81,9 @@ public final class CastleMove extends AbstractMove {
             default:
                 throw new IllegalArgumentException();
         }
+        final Set<Castle> castles = board.getSide(stone.getSide()).getCastles();
+        rigths.addAll(castles);
+        castles.clear();
     }
 
     @Override
@@ -105,6 +111,9 @@ public final class CastleMove extends AbstractMove {
             default:
                 throw new IllegalArgumentException();
         }
+        final Set<Castle> castles = board.getSide(stone.getSide()).getCastles();
+        castles.addAll(rigths);
+        rigths.clear();
     }
 
     @Override

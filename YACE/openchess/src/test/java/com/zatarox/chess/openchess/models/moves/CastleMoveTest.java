@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.matchers.JUnitMatchers.hasItems;
 
 public class CastleMoveTest {
 
@@ -31,7 +32,7 @@ public class CastleMoveTest {
 
     @Before
     public void setUp() {
-        final Notation notation = new ForsythEdwardsNotation("r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1");
+        final Notation notation = new ForsythEdwardsNotation("r3k2r/ppp1bppp/2np1q1n/1B2pb2/4P3/2NPBN2/PPPQ1PPP/R3K2R b KQkq - 0 1");
         board = notation.create();
     }
 
@@ -40,19 +41,72 @@ public class CastleMoveTest {
         final Move move = MovesFactorySingleton.getInstance().createCastle(null, BoardSide.WHITE);
         move.play(board);
     }
-    
+
     @Test
-    public void playCastle() throws IllegalMoveException, SelfMateMoveException {
+    public void whiteShortCastle() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createCastle(Castle.SHORT, BoardSide.WHITE);
         move.play(board);
+        assertTrue(board.getSide(BoardSide.WHITE).getCastles().isEmpty());
         assertThat(board.getStone(Square.G1), equalTo(new Stone(Piece.KING, BoardSide.WHITE)));
         assertThat(board.getStone(Square.F1), equalTo(new Stone(Piece.ROOK, BoardSide.WHITE)));
         assertFalse(board.isOccuped(Square.E1));
         assertFalse(board.isOccuped(Square.H1));
         move.unplay(board);
+        assertThat(board.getSide(BoardSide.BLACK).getCastles(), hasItems(Castle.LONG, Castle.SHORT));
         assertFalse(board.isOccuped(Square.G1));
         assertFalse(board.isOccuped(Square.F1));
         assertThat(board.getStone(Square.E1), equalTo(new Stone(Piece.KING, BoardSide.WHITE)));
         assertThat(board.getStone(Square.H1), equalTo(new Stone(Piece.ROOK, BoardSide.WHITE)));
+    }
+
+    @Test
+    public void whiteLongCastle() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createCastle(Castle.LONG, BoardSide.WHITE);
+        move.play(board);
+        assertTrue(board.getSide(BoardSide.WHITE).getCastles().isEmpty());
+        assertThat(board.getStone(Square.C1), equalTo(new Stone(Piece.KING, BoardSide.WHITE)));
+        assertThat(board.getStone(Square.D1), equalTo(new Stone(Piece.ROOK, BoardSide.WHITE)));
+        assertFalse(board.isOccuped(Square.E1));
+        assertFalse(board.isOccuped(Square.A1));
+        move.unplay(board);
+        assertThat(board.getSide(BoardSide.BLACK).getCastles(), hasItems(Castle.LONG, Castle.SHORT));
+        assertFalse(board.isOccuped(Square.C1));
+        assertFalse(board.isOccuped(Square.D1));
+        assertThat(board.getStone(Square.E1), equalTo(new Stone(Piece.KING, BoardSide.WHITE)));
+        assertThat(board.getStone(Square.A1), equalTo(new Stone(Piece.ROOK, BoardSide.WHITE)));
+    }
+
+    @Test
+    public void blackShortCastle() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createCastle(Castle.SHORT, BoardSide.BLACK);
+        move.play(board);
+        assertTrue(board.getSide(BoardSide.BLACK).getCastles().isEmpty());
+        assertThat(board.getStone(Square.G8), equalTo(new Stone(Piece.KING, BoardSide.BLACK)));
+        assertThat(board.getStone(Square.F8), equalTo(new Stone(Piece.ROOK, BoardSide.BLACK)));
+        assertFalse(board.isOccuped(Square.E8));
+        assertFalse(board.isOccuped(Square.H8));
+        move.unplay(board);
+        assertThat(board.getSide(BoardSide.BLACK).getCastles(), hasItems(Castle.LONG, Castle.SHORT));
+        assertFalse(board.isOccuped(Square.G8));
+        assertFalse(board.isOccuped(Square.F8));
+        assertThat(board.getStone(Square.E8), equalTo(new Stone(Piece.KING, BoardSide.BLACK)));
+        assertThat(board.getStone(Square.H8), equalTo(new Stone(Piece.ROOK, BoardSide.BLACK)));
+    }
+
+    @Test
+    public void blackLongCastle() throws IllegalMoveException, SelfMateMoveException {
+        final Move move = MovesFactorySingleton.getInstance().createCastle(Castle.LONG, BoardSide.BLACK);
+        move.play(board);
+        assertTrue(board.getSide(BoardSide.BLACK).getCastles().isEmpty());
+        assertThat(board.getStone(Square.C8), equalTo(new Stone(Piece.KING, BoardSide.BLACK)));
+        assertThat(board.getStone(Square.D8), equalTo(new Stone(Piece.ROOK, BoardSide.BLACK)));
+        assertFalse(board.isOccuped(Square.E8));
+        assertFalse(board.isOccuped(Square.A8));
+        move.unplay(board);
+        assertThat(board.getSide(BoardSide.BLACK).getCastles(), hasItems(Castle.LONG, Castle.SHORT));
+        assertFalse(board.isOccuped(Square.C8));
+        assertFalse(board.isOccuped(Square.D8));
+        assertThat(board.getStone(Square.E8), equalTo(new Stone(Piece.KING, BoardSide.BLACK)));
+        assertThat(board.getStone(Square.A8), equalTo(new Stone(Piece.ROOK, BoardSide.BLACK)));
     }
 }
