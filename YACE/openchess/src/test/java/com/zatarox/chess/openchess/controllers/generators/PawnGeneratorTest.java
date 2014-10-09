@@ -76,8 +76,12 @@ public class PawnGeneratorTest {
     @Test
     public void attacksPawnC4() {
         final Queue<Move> fills = instance.attacks(board, Square.C4);
-        assertThat(fills.size(), is(1));
-        assertThat(fills, hasItems(MovesFactorySingleton.getInstance().createEnpassant(Square.C4, Square.D3)));
+        fills.addAll(instance.attacks(board, Square.E4));
+        assertThat(fills.size(), is(2));
+        assertThat(fills, hasItems(
+                MovesFactorySingleton.getInstance().createEnpassant(Square.C4, Square.D3),
+                MovesFactorySingleton.getInstance().createEnpassant(Square.E4, Square.D3)
+        ));
     }
 
     @Test
