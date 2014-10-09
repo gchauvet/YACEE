@@ -86,7 +86,7 @@ public abstract class AbstractGenerator implements Generator {
         for (Square index : board.getSide(stone.getSide().flip()).get(type)) {
             attacks.merge(new BitBoard(coverage(index, all, stone.getSide()) & board.getSide(stone.getSide()).getSnapshot().unwrap()));
         }
-        return (attacks.unwrap() & square.toLong()) != 0;
+        return (attacks.unwrap() & square.toBitMask()) != 0;
     }
 
     /**

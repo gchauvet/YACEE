@@ -23,14 +23,15 @@ import com.zatarox.chess.openchess.models.materials.Square;
 import com.zatarox.chess.openchess.models.materials.Stone;
 import com.zatarox.chess.openchess.models.moves.exceptions.SelfMateMoveException;
 import com.zatarox.chess.openchess.controllers.generators.GeneratorFacade;
+import com.zatarox.chess.openchess.models.materials.BitBoard;
 import java.io.Serializable;
 
 public abstract class AbstractMove implements Serializable, Comparable<AbstractMove>, Move, MoveVisitable {
-    
+
     private final Square from, to;
     private boolean played = false;
     private float score = Float.NaN;
-    
+
     protected AbstractMove(Square from, Square to) {
         assert from != null;
         assert to != null;
@@ -38,24 +39,44 @@ public abstract class AbstractMove implements Serializable, Comparable<AbstractM
         this.from = from;
         this.to = to;
     }
-    
+
     public float getScore() {
         return score;
     }
-    
+
     public void setScore(float score) {
         this.score = score;
     }
-    
+
     public Square getFrom() {
         return from;
     }
-    
+
     public Square getTo() {
         return to;
     }
-    
-    protected void checkLegalMove(ChessBoard board) throws SelfMateMoveException {
+
+    protected void move(ChessBoard board, Square from, Square to) throws IllegalMoveException {
+        final Stone stone = board.getStone(from);
+        if (stone == null) {
+            throw new IllegalMoveException("No piece");
+        }
+        final BitBoard bitboard = board.getSide(stone.getSide()).get(stone.getPiece());
+        bitboard.unset(from);
+        bitboard.set(to);
+    }
+
+    protected void unmove(ChessBoard board, Square from, Square to) throws IllegalMoveException {
+        final Stone stone = board.getStone(to);
+        if (stone == null) {
+            throw new IllegalMoveException("Piece not found");
+        }
+        final BitBoard bitboard = board.getSide(stone.getSide()).get(stone.getPiece());
+        bitboard.unset(to);
+        bitboard.set(from);
+    }
+
+    private void checkLegalMove(ChessBoard board) throws SelfMateMoveException {
         final Stone stone = board.getStone(getTo());
         final Square king = board.getSide(stone.getSide()).get(Piece.KING).iterator().next();
         if (GeneratorFacade.getInstance().isEnPrise(board, king)) {
@@ -78,13 +99,14 @@ public abstract class AbstractMove implements Serializable, Comparable<AbstractM
         played = true;
         checkLegalMove(board);
     }
-    
+
     protected abstract void doPlay(ChessBoard board) throws IllegalMoveException;
 
     /**
      * Unplay a move on chessboard, but not change player turn flag.
      *
      * @param board Chessboard unplay move
+     * @throws com.zatarox.chess.openchess.models.moves.exceptions.IllegalMoveException
      * @throws UnsupportedOperationException
      */
     @Override
@@ -95,15 +117,15 @@ public abstract class AbstractMove implements Serializable, Comparable<AbstractM
         doUnplay(board);
         played = false;
     }
-    
+
     protected abstract void doUnplay(ChessBoard board) throws IllegalMoveException;
-    
+
     @Override
     public final int compareTo(AbstractMove t) {
         // Hight score in first
         return -((Float) getScore()).compareTo(t.getScore());
     }
-    
+
     @Override
     public boolean equals(Object o) {
         boolean result = false;
@@ -113,15 +135,15 @@ public abstract class AbstractMove implements Serializable, Comparable<AbstractM
         }
         return result;
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hashCode(from, to);
     }
-    
+
     @Override
     public String toString() {
         return from + "-" + to;
     }
-    
+
 }

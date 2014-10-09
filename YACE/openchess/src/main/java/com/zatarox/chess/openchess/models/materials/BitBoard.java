@@ -50,7 +50,7 @@ public final class BitBoard implements Serializable, Iterable<Square> {
      * @return True if occuped
      */
     public boolean isOccuped(Square square) {
-        return (board & 1L << square.ordinal()) != 0;
+        return (board & square.toBitMask()) != 0;
     }
 
     /**
@@ -66,14 +66,14 @@ public final class BitBoard implements Serializable, Iterable<Square> {
      * @param square Add a piece on this bitboard
      */
     public void set(Square square) {
-        board |= 1L << square.ordinal();
+        board |= square.toBitMask();
     }
 
     /**
      * @param square Remove piece on the bitboard
      */
     public void unset(Square square) {
-        board &= ~(1L << square.ordinal());
+        board &= ~square.toBitMask();
     }
 
     @Override
@@ -90,7 +90,7 @@ public final class BitBoard implements Serializable, Iterable<Square> {
         }
         return result;
     }
-    
+
     /**
      * @param board board to append
      */
@@ -140,7 +140,7 @@ public final class BitBoard implements Serializable, Iterable<Square> {
         StringBuilder result = new StringBuilder();
         for (Square.Rank r : Square.Rank.reverse()) {
             for (Square.File f : Square.File.values()) {
-                result.append(((1L << Square.from(f, r).ordinal()) & board) != 0 ? 'X' : '.');
+                result.append((Square.from(f, r).toBitMask() & board) != 0 ? 'X' : '.');
                 result.append(' ');
             }
             result.append("\n");

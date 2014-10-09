@@ -32,6 +32,8 @@ public final class CastleMove extends AbstractMove {
     }
 
     private static Square castleTo(BoardSide trait, Castle castle) {
+        assert trait != null;
+        assert castle != null;
         Square result;
         switch (trait) {
             case WHITE:
@@ -53,12 +55,56 @@ public final class CastleMove extends AbstractMove {
 
     @Override
     protected void doPlay(ChessBoard board) throws IllegalMoveException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final Stone stone = board.getStone(getFrom());
+        switch (castle) {
+            case SHORT:
+                if (stone.getSide() == BoardSide.WHITE) {
+                    move(board, Square.E1, Square.G1);
+                    move(board, Square.H1, Square.F1);
+                } else {
+                    move(board, Square.E8, Square.G8);
+                    move(board, Square.H8, Square.F8);
+                }
+                break;
+            case LONG:
+                if (stone.getSide() == BoardSide.WHITE) {
+                    move(board, Square.E1, Square.C1);
+                    move(board, Square.A1, Square.D1);
+                } else {
+                    move(board, Square.E8, Square.C8);
+                    move(board, Square.A8, Square.D8);
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     @Override
-    protected void doUnplay(ChessBoard board) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected void doUnplay(ChessBoard board) throws IllegalMoveException {
+        final Stone stone = board.getStone(getTo());
+        switch (castle) {
+            case SHORT:
+                if (stone.getSide() == BoardSide.WHITE) {
+                    unmove(board, Square.E1, Square.G1);
+                    unmove(board, Square.H1, Square.F1);
+                } else {
+                    unmove(board, Square.E8, Square.G8);
+                    unmove(board, Square.H8, Square.F8);
+                }
+                break;
+            case LONG:
+                if (stone.getSide() == BoardSide.WHITE) {
+                    unmove(board, Square.E1, Square.C1);
+                    unmove(board, Square.A1, Square.D1);
+                } else {
+                    unmove(board, Square.E8, Square.C8);
+                    unmove(board, Square.A8, Square.D8);
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     @Override

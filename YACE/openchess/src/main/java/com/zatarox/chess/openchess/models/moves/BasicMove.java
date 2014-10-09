@@ -26,24 +26,12 @@ public class BasicMove extends AbstractMove {
 
     @Override
     protected void doPlay(ChessBoard board) throws IllegalMoveException {
-        final Stone stone = board.getStone(getFrom());
-        if (stone == null) {
-            throw new IllegalMoveException("No piece");
-        }
-        final BitBoard bitboard = board.getSide(stone.getSide()).get(stone.getPiece());
-        bitboard.unset(getFrom());
-        bitboard.set(getTo());
+        move(board, getFrom(), getTo());
     }
 
     @Override
     protected void doUnplay(ChessBoard board) throws IllegalMoveException {
-        final Stone stone = board.getStone(getTo());
-        if (stone == null) {
-            throw new IllegalMoveException("Piece not found");
-        }
-        final BitBoard bitboard = board.getSide(stone.getSide()).get(stone.getPiece());
-        bitboard.unset(getTo());
-        bitboard.set(getFrom());
+        unmove(board, getFrom(), getTo());
     }
 
     @Override

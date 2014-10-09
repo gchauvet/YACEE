@@ -29,11 +29,10 @@ public final class GeneratorFacade implements Generator {
      *
      * @param board The chessboard
      * @param index Square to check
-     * @param flank of attackers
      * @return
      */
     @Override
-    public boolean isEnPrise(ChessBoard board, Square index) {
+    public boolean isEnPrise(ChessBoard board, Square index) throws IllegalArgumentException {
         boolean result = false;
         for (Piece p : Piece.values()) {
             if (GeneratorsFactorySingleton.getInstance().from(p).isEnPrise(board, index)) {

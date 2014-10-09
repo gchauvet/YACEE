@@ -87,7 +87,7 @@ public enum Square {
         return result;
     }
 
-    public long toLong() {
+    public long toBitMask() {
         return 1L << this.ordinal();
     }
 

@@ -56,9 +56,9 @@ public class SquareTest {
     }
 
     @Test
-    public void testToLong() {
-        assertThat(Square.A1.toLong(), is(1L));
-        assertThat(Square.H8.toLong(), is(1L << 63));
+    public void testToBitMask() {
+        assertThat(Square.A1.toBitMask(), is(1L));
+        assertThat(Square.H8.toBitMask(), is(1L << 63));
     }
 
     @Test

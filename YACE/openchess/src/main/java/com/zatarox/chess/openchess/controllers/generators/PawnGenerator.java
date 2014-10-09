@@ -38,8 +38,8 @@ final class PawnGenerator extends AbstractPushGenerator {
         all.merge(board.getSide(BoardSide.BLACK).getSnapshot());
         final BoardSide color = board.getStone(square).getSide();
         long mask = color == BoardSide.WHITE
-                ? squareAttacked(1L << square.ordinal(), +8, b_u)
-                : squareAttacked(1L << square.ordinal(), -8, b_d);
+                ? squareAttacked(square.toBitMask(), +8, b_u)
+                : squareAttacked(square.toBitMask(), -8, b_d);
         final BitBoard attacks = new BitBoard(mask & ~all.unwrap());
         final Queue<Move> result = new PriorityQueue<>();
         if (!attacks.isEmpty()) {
@@ -49,8 +49,8 @@ final class PawnGenerator extends AbstractPushGenerator {
             attacks.clear();
             if (square.getRankIndex() == Square.Rank._2 || square.getRankIndex() == Square.Rank._7) {
                 mask = color == BoardSide.WHITE
-                        ? squareAttacked(1L << square.ordinal(), +16, b_u)
-                        : squareAttacked(1L << square.ordinal(), -16, b_d);
+                        ? squareAttacked(square.toBitMask(), +16, b_u)
+                        : squareAttacked(square.toBitMask(), -16, b_d);
                 attacks.merge(new BitBoard(mask));
             }
             if (!attacks.isEmpty()) {
@@ -101,7 +101,7 @@ final class PawnGenerator extends AbstractPushGenerator {
             final BoardSide side = board.getStone(square).getSide().flip();
             if(board.getSide(side).isEnpassant()) {
                 final BitBoard pawns = new BitBoard(board.getSide(side).get(Piece.PAWN));
-                pawns.merge(new BitBoard(board.getSide(side).getEnpassant().toLong()));
+                pawns.merge(new BitBoard(board.getSide(side).getEnpassant().toBitMask()));
                 result = coverage(square, pawns, side) != 0;
             }
         }

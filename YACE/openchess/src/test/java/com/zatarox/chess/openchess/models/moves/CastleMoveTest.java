@@ -41,7 +41,7 @@ public class CastleMoveTest {
         move.play(board);
     }
     
-    @Test(expected = AssertionError.class)
+    @Test
     public void playCastle() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createCastle(Castle.SHORT, BoardSide.WHITE);
         move.play(board);
