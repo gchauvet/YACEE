@@ -18,21 +18,14 @@ package com.zatarox.chess.openchess.models.moves;
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.moves.exceptions.IllegalMoveException;
 import com.zatarox.chess.openchess.models.moves.exceptions.SelfMateMoveException;
-import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
-import com.zatarox.chess.openchess.models.notations.Notation;
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-public class CaptureMoveTest {
+public class CaptureMoveTest extends AbstractMoveTest {
 
-    private ChessBoard board;
-
-    @Before
-    public void setUp() {
-        final Notation notation = new ForsythEdwardsNotation("4k3/1p4pp/2p5/8/q3r2Q/3p3P/1P4PK/4R3 b - - 0 1");
-        board = notation.create();
+    public CaptureMoveTest() {
+        super("4k3/1p4pp/2p5/8/q3r2Q/3p3P/1P4PK/4R3 b - - 0 1");
     }
 
     @Test(expected = AssertionError.class)
@@ -94,7 +87,7 @@ public class CaptureMoveTest {
         final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.H7, new Stone(Piece.PAWN, BoardSide.WHITE));
         move.play(board);
     }
-    
+
     @Test
     public void playMoveWithMate() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createCapture(Square.H4, Square.E4, new Stone(Piece.ROOK, BoardSide.WHITE));

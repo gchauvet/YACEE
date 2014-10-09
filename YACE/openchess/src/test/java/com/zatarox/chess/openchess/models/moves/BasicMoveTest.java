@@ -18,24 +18,14 @@ package com.zatarox.chess.openchess.models.moves;
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.moves.exceptions.IllegalMoveException;
 import com.zatarox.chess.openchess.models.moves.exceptions.SelfMateMoveException;
-import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
-import com.zatarox.chess.openchess.models.notations.Notation;
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-public class BasicMoveTest {
+public class BasicMoveTest extends AbstractMoveTest{
 
-    private ChessBoard board;
-    private long hash;
-
-    @Before
-    public void setUp() {
-        final Notation notation = new ForsythEdwardsNotation("k1r5/8/P1N5/8/2K1n3/6p1/5bB1/8 w - - 0 1");
-        board = notation.create();
-        hash = board.getHashing().hashCode64();
-        assertThat(hash, is(not(0L)));
+    public BasicMoveTest() {
+        super("k1r5/8/P1N5/8/2K1n3/6p1/5bB1/8 w - - 0 1");
     }
 
     @Test(expected = AssertionError.class)

@@ -18,21 +18,14 @@ package com.zatarox.chess.openchess.models.moves;
 import com.zatarox.chess.openchess.models.materials.*;
 import com.zatarox.chess.openchess.models.moves.exceptions.IllegalMoveException;
 import com.zatarox.chess.openchess.models.moves.exceptions.SelfMateMoveException;
-import com.zatarox.chess.openchess.models.notations.ForsythEdwardsNotation;
-import com.zatarox.chess.openchess.models.notations.Notation;
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-public class EnPassantMoveTest {
+public class EnPassantMoveTest extends AbstractMoveTest {
 
-    private ChessBoard board;
-
-    @Before
-    public void setUp() {
-        final Notation notation = new ForsythEdwardsNotation("8/6bb/8/R7/2pPppk1/4P3/P7/K7 b - d3 0 1");
-        board = notation.create();
+    public EnPassantMoveTest() {
+        super("8/6bb/8/R7/2pPppk1/4P3/P7/K7 b - d3 0 1");
     }
 
     @Test(expected = AssertionError.class)
@@ -71,7 +64,7 @@ public class EnPassantMoveTest {
         assertFalse(board.isOccuped(Square.D3));
         assertThat(board.getSide(BoardSide.WHITE).getEnpassant(), is(Square.D3));
     }
-    
+
     @Test(expected = IllegalMoveException.class)
     public void replayMove() throws IllegalMoveException, SelfMateMoveException {
         final Move move = MovesFactorySingleton.getInstance().createEnpassant(Square.C4, Square.C3);
