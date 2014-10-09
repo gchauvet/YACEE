@@ -58,9 +58,6 @@ public abstract class AbstractMove implements Serializable, Comparable<AbstractM
 
     protected void move(ChessBoard board, Square from, Square to) throws IllegalMoveException {
         final Stone stone = board.getStone(from);
-        if (stone == null) {
-            throw new IllegalMoveException("No piece");
-        }
         final BitBoard bitboard = board.getSide(stone.getSide()).get(stone.getPiece());
         bitboard.unset(from);
         bitboard.set(to);
@@ -68,9 +65,6 @@ public abstract class AbstractMove implements Serializable, Comparable<AbstractM
 
     protected void unmove(ChessBoard board, Square from, Square to) throws IllegalMoveException {
         final Stone stone = board.getStone(to);
-        if (stone == null) {
-            throw new IllegalMoveException("Piece not found");
-        }
         final BitBoard bitboard = board.getSide(stone.getSide()).get(stone.getPiece());
         bitboard.unset(to);
         bitboard.set(from);
@@ -95,6 +89,10 @@ public abstract class AbstractMove implements Serializable, Comparable<AbstractM
         if (played) {
             throw new IllegalMoveException("Move already played");
         }
+        final Stone stone = board.getStone(from);
+        if (stone == null) {
+            throw new IllegalMoveException("No piece");
+        }
         doPlay(board);
         played = true;
         checkLegalMove(board);
@@ -113,6 +111,10 @@ public abstract class AbstractMove implements Serializable, Comparable<AbstractM
     public final void unplay(ChessBoard board) throws IllegalMoveException {
         if (!played) {
             throw new IllegalMoveException("Move already played");
+        }
+        final Stone stone = board.getStone(to);
+        if (stone == null) {
+            throw new IllegalMoveException("Piece not found");
         }
         doUnplay(board);
         played = false;
