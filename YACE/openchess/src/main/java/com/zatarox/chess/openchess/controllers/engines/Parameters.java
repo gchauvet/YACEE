@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zatarox.chess.openchess.controllers;
+package com.zatarox.chess.openchess.controllers.engines;
 
-public interface Engine {
-
-    float call() throws Exception;
+public interface Parameters {
 
     short getDepth();
 

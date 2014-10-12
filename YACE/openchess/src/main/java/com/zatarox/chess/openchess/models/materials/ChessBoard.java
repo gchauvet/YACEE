@@ -34,10 +34,17 @@ public final class ChessBoard implements Serializable {
         }
     }
 
+    /**
+     * @param hashing The nex chessboard hashing strategy.</b>
+     * <strong>WARNING!</strong>Don't change this function after using other chessboard methods whithout clear transposition table.
+     */
     public void setHashing(HashStrategy hashing) {
         this.hashing = hashing;
     }
 
+    /**
+     * @return Current chessboard hashing strategy implementation
+     */
     public HashStrategy getHashing() {
         return hashing;
     }

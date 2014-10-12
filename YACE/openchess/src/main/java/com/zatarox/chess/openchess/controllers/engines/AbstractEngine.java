@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zatarox.chess.openchess.controllers;
+package com.zatarox.chess.openchess.controllers.engines;
 
 import com.zatarox.chess.openchess.models.materials.ChessBoard;
 import java.io.Serializable;
 
-public abstract class AbstractEngine implements Engine, Serializable {
+public abstract class AbstractEngine implements Parameters, Serializable {
     
     private ChessBoard board = new ChessBoard();
     private short depth;
@@ -80,5 +80,7 @@ public abstract class AbstractEngine implements Engine, Serializable {
     public final void setPonder(boolean ponder) {
         this.ponder = ponder;
     }
+    
+    public abstract void compute() throws EngineException;
     
 }
