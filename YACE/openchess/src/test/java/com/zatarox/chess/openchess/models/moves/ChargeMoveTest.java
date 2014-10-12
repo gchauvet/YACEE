@@ -62,7 +62,7 @@ public class ChargeMoveTest extends AbstractMoveTest {
         move.unplay(board);
         assertThat(board.getStone(Square.F2), equalTo(new Stone(Piece.PAWN, BoardSide.WHITE)));
         assertFalse(board.isOccuped(Square.F4));
-        assertNull(board.getSide(BoardSide.WHITE).getEnpassant());
+        assertFalse(board.getSide(BoardSide.WHITE).isEnpassant());
     }
 
     @Test(expected = IllegalMoveException.class)

@@ -66,7 +66,6 @@ public class BasicMoveTest extends AbstractMoveTest{
         assertFalse(board.isOccuped(Square.F2));
         move.unplay(board);
         assertThat(board.getHashing().hashCode64(), is(hash));
-        assertTrue(board.isOccuped(Square.F2));
         assertThat(board.getStone(Square.F2), equalTo(new Stone(Piece.BISHOP, BoardSide.BLACK)));
     }
 

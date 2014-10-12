@@ -23,7 +23,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
 
-abstract class AbstractMoveTest {
+public abstract class AbstractMoveTest {
 
     private final String fen;
     protected ChessBoard board;
