@@ -19,14 +19,31 @@ import com.zatarox.chess.openchess.models.materials.ChessBoard;
 import java.io.Serializable;
 
 public abstract class AbstractEngine implements Parameters, Serializable {
-    
+
     private ChessBoard board = new ChessBoard();
+    private RatingStrategy rating;
+    private SolverStrategy solver;
     private short depth;
     private int engineTime;
     private int engineIncrement;
     private int moveTime;
-    private boolean ponder;
-    
+
+    public final void setSolver(SolverStrategy solver) {
+        this.solver = solver;
+    }
+
+    public final SolveResult solve() throws EngineException {
+        return solver.compute(this);
+    }
+
+    public final void setRating(RatingStrategy rating) {
+        this.rating = rating;
+    }
+
+    public final float rate() {
+        return rating.rate(board);
+    }
+
     public ChessBoard getBoard() {
         return board;
     }
@@ -52,11 +69,6 @@ public abstract class AbstractEngine implements Parameters, Serializable {
     }
 
     @Override
-    public final boolean isPonder() {
-        return ponder;
-    }
-
-    @Override
     public final void setDepth(short depth) {
         this.depth = depth;
     }
@@ -76,11 +88,4 @@ public abstract class AbstractEngine implements Parameters, Serializable {
         this.moveTime = moveTime;
     }
 
-    @Override
-    public final void setPonder(boolean ponder) {
-        this.ponder = ponder;
-    }
-    
-    public abstract void compute() throws EngineException;
-    
 }

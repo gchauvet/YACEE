@@ -25,8 +25,6 @@ public interface Parameters {
 
     int getMoveTime();
 
-    boolean isPonder();
-
     void setDepth(short depth);
 
     void setEngineIncrement(int engineIncrement);
@@ -34,9 +32,5 @@ public interface Parameters {
     void setEngineTime(int engineTime);
 
     void setMoveTime(int moveTime);
-
-    void setPonder(boolean ponder);
-
-    void stop();
     
 }
