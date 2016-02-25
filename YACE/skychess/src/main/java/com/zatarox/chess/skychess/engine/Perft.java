@@ -15,12 +15,13 @@
  */
 package com.zatarox.chess.skychess.engine;
 
-import chesspresso.move.IllegalMoveException;
-import chesspresso.move.Move;
-import chesspresso.position.Position;
 import com.zatarox.chess.skychess.Notification;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import org.chesspresso.move.IllegalMoveException;
+import org.chesspresso.move.Move;
+import org.chesspresso.position.Position;
 
 /**
  * This class runs has utility methods for perft tests
@@ -50,7 +51,7 @@ public class Perft {
         }
 
         if (zobrist != board.getHashCode()) {
-            Notification.getInstance().getLogger().error("Error in zobrist update!");
+            Notification.getInstance().getLogger().log(Level.SEVERE, "Error in zobrist update!");
         }
 
         return nNodes;

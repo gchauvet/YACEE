@@ -15,13 +15,12 @@
  */
 package com.zatarox.chess.skychess;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 public final class Notification {
 
     static private Notification INSTANCE = null;
-    private Logger logger = LoggerFactory.getLogger(Notification.class);
+    private Logger logger = Logger.getLogger(Notification.class.getSimpleName());
 
     private Notification() {
     }

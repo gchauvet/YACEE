@@ -15,10 +15,10 @@
  */
 package com.zatarox.chess.skychess.tables;
 
-import chesspresso.position.Position;
 import com.zatarox.chess.skychess.engine.Board;
 import java.util.HashSet;
 import java.util.Set;
+import org.chesspresso.position.Position;
 
 /**
  * This class implements a repetition table as a singleton.

@@ -15,12 +15,10 @@
  */
 package com.zatarox.chess.skychess.engine;
 
-import chesspresso.move.Move;
 import com.zatarox.chess.skychess.tables.TranspositionTable;
 import java.io.Serializable;
-import javax.ejb.Singleton;
+import org.chesspresso.move.Move;
 
-@Singleton(name = "SkychessEngine")
 public class DefaultChessEngine implements ChessEngine, Serializable {
 
     private Board board;
@@ -197,6 +195,7 @@ public class DefaultChessEngine implements ChessEngine, Serializable {
         return alpha;
     }
 
+    @Override
     public Short call() {
         stop = false;
         return search();

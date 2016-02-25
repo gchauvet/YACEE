@@ -15,13 +15,13 @@
  */
 package com.zatarox.chess.skychess.engine;
 
-import chesspresso.Chess;
-import chesspresso.move.IllegalMoveException;
-import chesspresso.position.Position;
 import com.fluxchess.jcpi.models.GenericMove;
 import com.zatarox.chess.skychess.tables.RepetitionTable;
 import java.io.Serializable;
 import java.util.List;
+import org.chesspresso.Chess;
+import org.chesspresso.move.IllegalMoveException;
+import org.chesspresso.position.Position;
 
 public final class Board implements Serializable {
 

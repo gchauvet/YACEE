@@ -15,20 +15,20 @@
  */
 package com.zatarox.chess.skychess;
 
-import chesspresso.position.Position;
 import static org.junit.Assert.*;
 
 import com.zatarox.chess.skychess.engine.Perft;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.chesspresso.position.Position;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PerftTest {
 
-    private static Logger logger = LoggerFactory.getLogger(PerftTest.class);
+    private static Logger logger = Logger.getLogger(PerftTest.class.getSimpleName());
 
     private final static int maxPly = 40060325;
     private final static int maxDepth = 20;
@@ -115,7 +115,7 @@ public class PerftTest {
         Position board = new Position();
         /* Check all the positions to the given depth */
         long startTot = System.currentTimeMillis();
-        logger.debug(perftTestPos.getName());
+        logger.log(Level.FINER, perftTestPos.getName());
         boolean allDepthsCorrect = true;
         for (int i = 1; i < maxDepth && i < perftTestPos.answerLength(); i++) {
             if (perftTestPos.getAnswerAtDepth(i) != -1L && perftTestPos.getAnswerAtDepth(i) < maxPly) {
@@ -131,11 +131,11 @@ public class PerftTest {
                     allDepthsCorrect = false;
                 }
                 sb.append(" Time: ").append(Perft.convertMillis(System.currentTimeMillis() - start));
-                logger.debug(sb.toString());
+                logger.log(Level.FINER, sb.toString());
             }
         }
 
-        logger.debug("Total time: " + Perft.convertMillis(System.currentTimeMillis() - startTot));
+        logger.log(Level.FINER, "Total time: " + Perft.convertMillis(System.currentTimeMillis() - startTot));
 
         return allDepthsCorrect;
     }
