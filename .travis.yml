@@ -1,0 +1,10 @@
+dist: trusty
+sudo: required
+
+language: java
+
+install:
+  - mvn install -DskipTests=true -DskipPkg=true
+
+script:
+  - mvn clean test jacoco:report
