@@ -19,9 +19,9 @@ import com.zatarox.chess.skychess.Notification;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
-import org.chesspresso.move.IllegalMoveException;
-import org.chesspresso.move.Move;
-import org.chesspresso.position.Position;
+import chesspresso.move.IllegalMoveException;
+import chesspresso.move.Move;
+import chesspresso.position.Position;
 
 /**
  * This class runs has utility methods for perft tests

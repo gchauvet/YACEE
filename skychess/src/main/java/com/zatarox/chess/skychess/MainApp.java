@@ -28,7 +28,7 @@ import com.zatarox.chess.skychess.tables.RepetitionTable;
 import com.zatarox.chess.skychess.tables.TranspositionTable;
 import java.io.IOException;
 import java.util.logging.Level;
-import org.chesspresso.move.Move;
+import chesspresso.move.Move;
 
 /**
  * This is the main class of SkyChess which is used to connect to a client

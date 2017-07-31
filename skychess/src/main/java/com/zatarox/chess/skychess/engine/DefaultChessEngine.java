@@ -17,7 +17,7 @@ package com.zatarox.chess.skychess.engine;
 
 import com.zatarox.chess.skychess.tables.TranspositionTable;
 import java.io.Serializable;
-import org.chesspresso.move.Move;
+import chesspresso.move.Move;
 
 public class DefaultChessEngine implements ChessEngine, Serializable {
 

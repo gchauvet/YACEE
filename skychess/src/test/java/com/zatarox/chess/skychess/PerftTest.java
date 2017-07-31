@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 import com.zatarox.chess.skychess.engine.Perft;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.chesspresso.position.Position;
+import chesspresso.position.Position;
 
 import org.junit.Before;
 import org.junit.Ignore;
