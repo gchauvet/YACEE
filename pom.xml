@@ -6,6 +6,13 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Yet Another Chess Engine</name>
+    <developers>
+        <developer>
+            <name>Guillaume CHAUVET</name>
+            <organization>Zatarox</organization>
+            <email>gchauvet@gmail.com</email>
+        </developer>
+    </developers>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
