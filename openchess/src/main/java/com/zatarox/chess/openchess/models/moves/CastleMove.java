@@ -23,7 +23,7 @@ import java.util.Set;
 public final class CastleMove extends AbstractMove {
 
     private final Castle castle;
-    private Set<Castle> rigths = EnumSet.noneOf(Castle.class);
+    private final Set<Castle> rigths = EnumSet.noneOf(Castle.class);
 
     private static Square castleFrom(BoardSide trait) {
         return trait == BoardSide.WHITE ? Square.E1 : Square.E8;

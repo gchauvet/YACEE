@@ -11,8 +11,8 @@
     <packaging>jar</packaging>
     <repositories>
         <repository>
-            <id>fluxchess</id>
-            <url>http://maven.fluxchess.com/release</url>
+            <id>clojars</id>
+            <url>https://repo.clojars.org/</url>
         </repository>
     </repositories>
     <build>
@@ -66,9 +66,9 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>com.fluxchess</groupId>
+            <groupId>com.fluxchess.jcpi</groupId>
             <artifactId>jcpi</artifactId>
-            <version>0.3.0</version>
+            <version>1.4.1</version>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
@@ -76,11 +76,9 @@
             <version>3.2.2</version>
         </dependency>
         <dependency>
-            <groupId>org.chesspresso</groupId>
+            <groupId>com._0xab</groupId>
             <artifactId>chesspresso</artifactId>
             <version>0.9.2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/chesspresso-0-9-2.jar</systemPath>
         </dependency>
     </dependencies>
     <properties>

@@ -85,7 +85,7 @@ public class MainApp extends AbstractEngine {
     @Override
     public void receive(EngineAnalyzeCommand command) {
         game.reset(command.board.toString());
-        game.play(command.moveList);
+        game.play(command.moves);
     }
 
     @Override
